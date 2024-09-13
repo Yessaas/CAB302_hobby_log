@@ -22,7 +22,7 @@ public class HelloApplication extends Application {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
         // Set the initial view to explore-view.fxml
-        showExploreView();
+        showLogsView();
 
         // Set the stage to the full size of the screen, but not in fullscreen mode
         primaryStage.setX(screenBounds.getMinX());
@@ -50,6 +50,17 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("home-view.fxml"));
         Parent root = fxmlLoader.load();
         HomeView controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
+    public void showLogsView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs.fxml"));
+        Parent root = fxmlLoader.load();
+        LogsView
+        controller = fxmlLoader.getController();
         controller.setApplication(this);
 
         Scene scene = new Scene(root);

@@ -3,7 +3,7 @@ package com.example.demoplswork;
 import javafx.fxml.FXML;
 import java.io.IOException;
 
-public class HomeView {
+public class LogsView {
     private HelloApplication app;
 
     public void setApplication(HelloApplication app) {
@@ -11,19 +11,16 @@ public class HomeView {
     }
 
     @FXML
-    public void goToExplore() throws IOException {
+    public void goToHome() throws IOException {
         if (app != null) {
-            app.showExploreView();  // Navigate to Explore view
+            app.showHomeView();  // Navigate to Home view
         }
     }
 
     @FXML
-    public void goToLogs() throws IOException {
+    public void goToExplore() throws IOException {
         if (app != null) {
-            app.showLogsView();
+            app.showExploreView();
         }
     }
 }
-
-
-

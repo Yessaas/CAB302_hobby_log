@@ -16,5 +16,12 @@ public class ExploreView {
             app.showHomeView();  // Navigate to Home view
         }
     }
+    @FXML
+    public void goToLogs() throws IOException {
+        if (app != null) {
+            app.showLogsView();
+        }
+    }
+
 }
 
