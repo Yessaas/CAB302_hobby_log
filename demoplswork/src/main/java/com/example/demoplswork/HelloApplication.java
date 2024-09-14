@@ -1,16 +1,16 @@
 package com.example.demoplswork;
 
-import javafx.application.Application;
+import javafx.application.Application; // Make sure this import is present
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class HelloApplication extends Application { // Ensure this extends Application
     public static final String TITLE = "Address Book";
     private Stage primaryStage;
 
@@ -21,7 +21,7 @@ public class HelloApplication extends Application {
         // Get screen size
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-        // Set the initial view to explore-view.fxml
+        // Set the initial view to logs-view.fxml
         showLogsView();
 
         // Set the stage to the full size of the screen, but not in fullscreen mode
@@ -59,8 +59,17 @@ public class HelloApplication extends Application {
     public void showLogsView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs.fxml"));
         Parent root = fxmlLoader.load();
-        LogsView
-        controller = fxmlLoader.getController();
+        LogsView controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
+    public void showLogsCreatorView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs-creator.fxml"));
+        Parent root = fxmlLoader.load();
+        LogsCreatorView controller = fxmlLoader.getController();
         controller.setApplication(this);
 
         Scene scene = new Scene(root);
@@ -68,7 +77,6 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args); // Ensure you pass args to launch()
     }
 }
-
