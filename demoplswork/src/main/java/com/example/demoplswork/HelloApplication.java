@@ -67,6 +67,16 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
     }
 
+    public void showLogsUpdateView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs-view.fxml"));
+        Parent root = fxmlLoader.load();
+        LogsUpdateView controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
     public static void main(String[] args) {
         launch();
     }
