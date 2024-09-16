@@ -1,5 +1,6 @@
 package com.example.demoplswork;
 
+import com.example.demoplswork.controller.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,7 +23,7 @@ public class HelloApplication extends Application {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
         // Set the initial view to explore-view.fxml
-        showLogsView();
+        showLoginView();
 
         // Set the stage to the full size of the screen, but not in fullscreen mode
         primaryStage.setX(screenBounds.getMinX());
@@ -76,6 +77,17 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
     }
+
+    public void showLoginView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+        Parent root = fxmlLoader.load();
+        LoginController controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
 
     public static void main(String[] args) {
         launch();

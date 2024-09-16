@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<GridPane alignment="CENTER" hgap="10" vgap="10"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="com.example.demoplswork.controller.LoginController">
+
+    <!-- Title -->
+    <Label text="Login" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-font-size: 24px;"/>
+
+    <!-- Email Subtitle -->
+    <Label text="Email" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+
+    <!-- Email Field -->
+    <TextField fx:id="emailField" promptText="Enter your email" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+    <!-- Password Subtitle -->
+    <Label text="Password" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+
+    <!-- Password Field -->
+    <PasswordField fx:id="passwordField" promptText="Enter your password" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+    <!-- Login Button -->
+    <Button fx:id="loginButton" text="Login" onAction="#onLogin" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+    <!-- "Don't have an account?" Label -->
+    <Label text="Don't have an account?" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+
+    <!-- Create Account Button -->
+    <Button fx:id="createAccountButton" text="Create Account" onAction="#onCreateAccount" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+</GridPane>
