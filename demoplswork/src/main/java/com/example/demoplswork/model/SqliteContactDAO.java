@@ -6,6 +6,7 @@ import java.util.List;
 
 public class SqliteContactDAO implements IContactDAO {
 
+    private static final String DB_URL = "jdbc:sqlite:contacts.db";
     private Connection connection;
 
     public SqliteContactDAO() {
@@ -104,5 +105,8 @@ public class SqliteContactDAO implements IContactDAO {
             e.printStackTrace();
         }
     }
+
+
+
 }
 

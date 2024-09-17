@@ -24,6 +24,7 @@ public class HomeView {
             app.showLogsView();
         }
     }
+
 }
 
 

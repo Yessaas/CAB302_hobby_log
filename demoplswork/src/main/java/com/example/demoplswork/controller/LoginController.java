@@ -17,6 +17,8 @@ import java.io.IOException;
 
 public class LoginController {
 
+    private HelloApplication app;
+
     // Fields for the login and account creation form
     @FXML
     private TextField emailField;
@@ -33,7 +35,7 @@ public class LoginController {
     @FXML
     private Button createAccountSubmitButton;
 
-    private HelloApplication app;
+
 
     private SqliteContactDAO contactDAO;
 
@@ -66,7 +68,7 @@ public class LoginController {
         if (contactDAO.authenticateUser(email, password)) {
             // Handle successful login, such as redirecting to the main view
             System.out.println("Login successful!");
-            goToHome();
+            app.showHomeView();
         } else {
             // Handle failed login, show error message
             System.out.println("Invalid credentials.");
@@ -78,15 +80,7 @@ public class LoginController {
     @FXML
     private void onCreateAccount() {
         try {
-            // Load the create-account-view.fxml
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("create-account-view.fxml"));
-            Parent accountCreationView = fxmlLoader.load();
-
-            // Switch to account creation view
-            Scene scene = new Scene(accountCreationView);
-            Stage stage = (Stage) createAccountButton.getScene().getWindow(); // Get the current window
-            stage.setScene(scene);
-            stage.show();
+            app.showCreateAccountView();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -107,22 +101,14 @@ public class LoginController {
 
         if (contactDAO.createAccount(firstName, lastName, email, password)) {
             try {
-                // Load the login-view.fxml
-                FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-                Parent loginView = fxmlLoader.load();
-
-                // Switch back to login view
-                Scene scene = new Scene(loginView);
-                Stage stage = (Stage) createAccountSubmitButton.getScene().getWindow(); // Get the current window
-                stage.setScene(scene);
-                stage.show();
+                app.showLoginView();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             System.out.println("Account created successfully!");
             showAlert("Success", "Account created successfully. You can now log in.");
         } else {
-            // Handle failure in account creation (e.g., duplicate email)
+            // Handle failure in account creation
             System.out.println("Account creation failed.");
             showAlert("Error", "Account creation failed. Email may already be in use.");
         }

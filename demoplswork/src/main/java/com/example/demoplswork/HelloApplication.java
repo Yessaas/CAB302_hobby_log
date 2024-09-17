@@ -88,6 +88,16 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
     }
 
+    public void showCreateAccountView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("create-account-view.fxml"));
+        Parent root = fxmlLoader.load();
+        LoginController controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
 
     public static void main(String[] args) {
         launch();
