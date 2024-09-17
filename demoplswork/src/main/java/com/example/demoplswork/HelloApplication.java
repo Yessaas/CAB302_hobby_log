@@ -1,6 +1,5 @@
 package com.example.demoplswork;
 
-import com.example.demoplswork.controller.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,7 +21,7 @@ public class HelloApplication extends Application {
         // Get screen size
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-        // Set the initial view to explore-view.fxml
+        // Set the initial view to login-view.fxml
         showLoginView();
 
         // Set the stage to the full size of the screen, but not in fullscreen mode
@@ -34,7 +33,19 @@ public class HelloApplication extends Application {
         primaryStage.show();
     }
 
-    // Method to show the Explore view
+    // Method to show the Login view
+    public void showLoginView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+        Parent root = fxmlLoader.load();
+        LoginController controller = fxmlLoader.getController();
+        controller.setMainApp(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("Login - " + TITLE);
+        primaryStage.setScene(scene);
+    }
+
+    // Method to show the Explore view after successful login
     public void showExploreView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("explore-view.fxml"));
         Parent root = fxmlLoader.load();
@@ -57,40 +68,35 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
     }
 
+    // Method to show the Logs view
     public void showLogsView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs.fxml"));
         Parent root = fxmlLoader.load();
-        LogsView
-        controller = fxmlLoader.getController();
+        LogsView controller = fxmlLoader.getController();
         controller.setApplication(this);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
     }
 
-    public void showLogsUpdateView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs-view.fxml"));
-        Parent root = fxmlLoader.load();
-        LogsUpdateView controller = fxmlLoader.getController();
-        controller.setApplication(this);
+    // Method to show the SignUp view
+    public void showSignUpView() throws IOException {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("signup-view.fxml"));
+            Parent root = fxmlLoader.load();
+            SignUpController controller = fxmlLoader.getController();
+            controller.setMainApp(this);
 
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Sign Up - " + TITLE);
+            primaryStage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error loading signup-view.fxml");
+        }
     }
-
-    public void showLoginView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-        Parent root = fxmlLoader.load();
-        LoginController controller = fxmlLoader.getController();
-        controller.setApplication(this);
-
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-    }
-
 
     public static void main(String[] args) {
         launch();
     }
 }
-
