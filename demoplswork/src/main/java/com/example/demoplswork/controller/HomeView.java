@@ -25,6 +25,12 @@ public class HomeView {
         }
     }
     @FXML
+    public void goToAccount() throws IOException {
+        if (app != null) {
+            app.showAccountView();
+        }
+    }
+    @FXML
     private void onLogout() {
         try {
             app.showLoginView();
