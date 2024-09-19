@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Button?>
-<GridPane alignment="CENTER" hgap="10" vgap="10"
-          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="com.example.demoplswork.controller.LoginController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.LoginController">
 
     <!-- Title -->
-    <Label text="Login" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-font-size: 24px;"/>
+    <Label style="-fx-font-size: 24px;" text="Login" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
 
     <!-- Email Subtitle -->
-    <Label text="Email" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
     <!-- Email Field -->
-    <TextField fx:id="emailField" promptText="Enter your email" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    <TextField fx:id="emailField" onAction="#onLogin" promptText="Enter your email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
     <!-- Password Subtitle -->
-    <Label text="Password" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <Label text="Password" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
     <!-- Password Field -->
-    <PasswordField fx:id="passwordField" promptText="Enter your password" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    <PasswordField fx:id="passwordField" onAction="#onLogin" promptText="Enter your password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
     <!-- Login Button -->
-    <Button fx:id="loginButton" text="Login" onAction="#onLogin" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+    <Button fx:id="loginButton" onAction="#onLogin" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
     <!-- "Don't have an account?" Label -->
-    <Label text="Don't have an account?" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <Label text="Don't have an account?" GridPane.columnIndex="0" GridPane.rowIndex="4" />
 
     <!-- Create Account Button -->
-    <Button fx:id="createAccountButton" text="Create Account" onAction="#onCreateAccount" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    <Button fx:id="createAccountButton" onAction="#onCreateAccount" text="Create Account" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
 </GridPane>
