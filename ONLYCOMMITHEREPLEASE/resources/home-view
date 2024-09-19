@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" prefHeight="1080.0" prefWidth="1920.0" spacing="20.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.HomeView">
+<VBox alignment="TOP_CENTER" prefHeight="1065.0" prefWidth="1920.0" spacing="20.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.HomeView">
 
 
 
@@ -53,59 +54,110 @@
 
 
     </HBox>
-
-    <!-- Content below the navigation bar with padding -->
-    <VBox alignment="TOP_CENTER" spacing="20.0">
-        <!-- Adding padding to the rest of the content -->
-        <padding>
-            <Insets bottom="20" left="200" right="200" top="20" />
-        </padding>
-
-        <!-- Page Title -->
-        <Label style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" text="Home" />
-
-        <Label style="-fx-font-size: 12px; -fx-font-family: 'Roboto'; " text="Continue working on:" />
-
-
-        <!-- Recommended Project Section -->
-        <HBox alignment="CENTER_LEFT" prefHeight="250.0" prefWidth="1240.0" spacing="70" style="-fx-border-color: black; -fx-border-width: 5;">
-            <!-- Project Image Placeholder (Left 2/3rd) -->
-            <ImageView fitHeight="250.0" fitWidth="800.0" preserveRatio="true">
-                <image>
-                    <Image url="@image 1.jpg" />
-                </image>
-            </ImageView>
-
-            <!-- Project Details (Right 1/3rd) -->
-            <VBox alignment="CENTER" prefWidth="440.0" spacing="25">
-                <!-- Project Title -->
-                <Label style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" text="Wooden Bench (outdoor)" />
-
-                <!-- Progress Bar -->
-                <ProgressBar prefWidth="400.0" progress="0.5" />
-
-                <!-- To-Do Checkbox -->
-                <CheckBox text="Make the kerf cuts" />
-
-                <!-- View Log Button -->
-                <Button prefWidth="120" style="-fx-background-color: #d3d3d3;" text="View Log" />
-            </VBox>
-        </HBox>
-    </VBox>
-   <HBox prefHeight="53.0" prefWidth="1920.0">
-      <children>
-         <Label alignment="CENTER" prefHeight="94.0" prefWidth="510.0" style="-fx-font-size: 12px; -fx-font-family: 'Roboto'; " text="My Analytics:">
-            <font>
-               <Font name="System Bold" size="20.0" />
-            </font>
-         </Label>
-      </children>
-   </HBox>
-   <HBox alignment="CENTER" prefHeight="434.0" prefWidth="1920.0">
-      <children>
-         <ListView prefHeight="388.0" prefWidth="1240.0" style="-fx-border-color: black; -fx-border-width: 5;" />
-      </children>
-   </HBox>
+   <ScrollPane hbarPolicy="NEVER" prefHeight="938.0" prefWidth="1920.0" style="-fx-background-color: White;" vbarPolicy="NEVER" vmax="20.0">
+      <content>
+         <VBox alignment="CENTER" prefHeight="921.0" prefWidth="1983.0" style="-fx-background-color: White;">
+            <children>
+            
+                <!-- Content below the navigation bar with padding -->
+                <VBox alignment="TOP_CENTER" prefHeight="346.0" prefWidth="1983.0" spacing="20.0" style="-fx-background-color: White;">
+                    <!-- Adding padding to the rest of the content -->
+                    <padding>
+                        <Insets bottom="20" left="200" right="200" top="20" />
+                    </padding>
+            
+                    <!-- Page Title -->
+                    <Label style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" text="Home" />
+            
+                    <Label style="-fx-font-size: 12px; -fx-font-family: 'Roboto'; " text="Continue working on:" />
+            
+            
+                    <!-- Recommended Project Section -->
+                    <HBox alignment="CENTER_LEFT" prefHeight="293.0" prefWidth="1321.0" spacing="70" style="-fx-border-color: black; -fx-border-width: 5;">
+                        <!-- Project Image Placeholder (Left 2/3rd) -->
+                        <ImageView fitHeight="283.0" fitWidth="621.0" preserveRatio="true">
+                            <image>
+                                <Image url="@image 1.jpg" />
+                            </image>
+                        </ImageView>
+            
+                        <!-- Project Details (Right 1/3rd) -->
+                        <VBox alignment="CENTER" prefWidth="440.0" spacing="25">
+                            <!-- Project Title -->
+                            <Label style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" text="Wooden Bench (outdoor)" />
+            
+                            <!-- Progress Bar -->
+                            <ProgressBar prefWidth="400.0" progress="0.5" />
+            
+                            <!-- To-Do Checkbox -->
+                            <CheckBox text="Make the kerf cuts" />
+            
+                            <!-- View Log Button -->
+                            <Button prefWidth="120" style="-fx-background-color: #d3d3d3;" text="View Log" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+               <HBox prefHeight="198.0" prefWidth="1983.0" style="-fx-background-color: White;">
+                  <children>
+                     <Label alignment="CENTER" prefHeight="198.0" prefWidth="586.0" text="My Analytics">
+                        <font>
+                           <Font name="System Bold" size="30.0" />
+                        </font>
+                     </Label>
+                  </children>
+               </HBox>
+               <HBox alignment="CENTER" prefHeight="496.0" prefWidth="1898.0" style="-fx-background-color: White;">
+                  <children>
+                     <VBox prefHeight="399.0" prefWidth="1300.0" style="-fx-border-color: black; -fx-border-width: 5;">
+                        <children>
+                           <HBox prefHeight="70.0" prefWidth="1240.0" style="-fx-background-color: #FFD643;">
+                              <children>
+                                 <Label alignment="CENTER" prefHeight="18.0" prefWidth="288.0" text="Total $ Spent" translateX="50.0" translateY="20.0">
+                                    <font>
+                                       <Font name="System Bold" size="24.0" />
+                                    </font>
+                                 </Label>
+                                 <Label alignment="CENTER" prefHeight="18.0" prefWidth="288.0" text="Tasks: Completed" translateX="225.0" translateY="20.0">
+                                    <font>
+                                       <Font name="System Bold" size="24.0" />
+                                    </font>
+                                 </Label>
+                                 <Label alignment="CENTER" prefHeight="18.0" prefWidth="288.0" text="Projects Completed" translateX="350.0" translateY="20.0">
+                                    <font>
+                                       <Font name="System Bold" size="24.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                           </HBox>
+                           <ListView prefHeight="140.0" prefWidth="1230.0" style="-fx-background-color: white;" />
+                           <HBox prefHeight="70.0" prefWidth="1240.0" style="-fx-background-color: #FFD643;">
+                              <children>
+                                 <Label alignment="CENTER" prefHeight="18.0" prefWidth="288.0" text="Materials Used:" translateX="40.0" translateY="20.0">
+                                    <font>
+                                       <Font name="System Bold" size="24.0" />
+                                    </font>
+                                 </Label>
+                                 <Label alignment="CENTER" prefHeight="18.0" prefWidth="288.0" text="Likes:" translateX="225.0" translateY="20.0">
+                                    <font>
+                                       <Font name="System Bold" size="24.0" />
+                                    </font>
+                                 </Label>
+                                 <Label alignment="CENTER" prefHeight="18.0" prefWidth="288.0" text="Followers:" translateX="350.0" translateY="20.0">
+                                    <font>
+                                       <Font name="System Bold" size="24.0" />
+                                    </font>
+                                 </Label>
+                              </children>
+                           </HBox>
+                           <ListView prefHeight="140.0" prefWidth="1230.0" style="-fx-background-color: white;" />
+                        </children>
+                     </VBox>
+                  </children>
+               </HBox>
+            </children>
+         </VBox>
+      </content>
+   </ScrollPane>
 
 
 </VBox>
