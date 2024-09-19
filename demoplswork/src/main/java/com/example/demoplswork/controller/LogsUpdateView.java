@@ -72,6 +72,12 @@ public class LogsUpdateView {
             app.showLogsView();  // Navigate to Explore view
         }
     }
+    @FXML
+    public void goToAccount() throws IOException {
+        if (app != null) {
+            app.showAccountView();
+        }
+    }
 
 
 
