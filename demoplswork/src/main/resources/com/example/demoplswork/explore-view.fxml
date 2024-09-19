@@ -38,6 +38,8 @@
          <Button text="Home" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;"  onAction="#goToHome"/>
          <Button text="My Logs" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToLogs"/>
          <Button text="Explore" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;"  />
+         <Button text="Profile" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToAccount"/>
+
          <ImageView fitHeight="50.0" fitWidth="50.0">
             <image>
                <Image url="@account_circle.png" />
