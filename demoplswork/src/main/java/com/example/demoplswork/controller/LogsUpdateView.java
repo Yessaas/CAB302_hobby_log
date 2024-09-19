@@ -2,7 +2,9 @@ package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
 import com.example.demoplswork.model.Material;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -22,6 +24,12 @@ import java.io.IOException;
 public class LogsUpdateView {
 
     private HelloApplication app;
+
+    private ContextMenu accountMenu;
+
+
+    @FXML
+    private Button accountButton;
 
     @FXML
     private VBox toDoListVBox;
@@ -53,6 +61,33 @@ public class LogsUpdateView {
     }
 
     @FXML
+    public void initialize() {
+        // init columns for materials table
+        materialNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
+
+        // Create the dropdown menu
+        accountMenu = new ContextMenu();
+
+        MenuItem viewProfile = new MenuItem("View Profile");
+        viewProfile.setOnAction(event -> {
+            try {
+                goToAccount();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        MenuItem logout = new MenuItem("Log Out");
+        logout.setOnAction(event -> onLogout());
+
+        accountMenu.getItems().addAll(viewProfile, logout);
+
+
+    }
+
+    @FXML
     public void goToHome() throws IOException {
         if (app != null) {
             app.showHomeView();  // Navigate to Home view
@@ -73,9 +108,22 @@ public class LogsUpdateView {
         }
     }
     @FXML
+    private void showAccountMenu(ActionEvent event) {
+        accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
+    }
+
+    @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
             app.showAccountView();
+        }
+    }
+    @FXML
+    private void onLogout() {
+        try {
+            app.showLoginView();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -148,13 +196,7 @@ public class LogsUpdateView {
         nextButton.setDisable(currentIndex == images.size() - 1);
     }
 
-    // Initialize method to set up columns
-    @FXML
-    public void initialize() {
-        materialNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
-    }
+
 
     // Method to handle adding a new material
     @FXML

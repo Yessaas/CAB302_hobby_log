@@ -1,20 +1,20 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import java.io.IOException;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javafx.geometry.Side;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.control.TextInputDialog;
+
 import java.util.Optional;
 
 
@@ -30,8 +30,36 @@ public class LogsView {
 
     private static final int LOGS_PER_ROW = 3;  // Number of logs per row
 
+    private ContextMenu accountMenu;
+
+
+    @FXML
+    private Button accountButton;
+
     public void setApplication(HelloApplication app) {
         this.app = app;
+    }
+
+    @FXML
+    public void initialize() {
+        // Create the dropdown menu
+        accountMenu = new ContextMenu();
+
+        MenuItem viewProfile = new MenuItem("View Profile");
+        viewProfile.setOnAction(event -> {
+            try {
+                goToAccount();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        MenuItem logout = new MenuItem("Log Out");
+        logout.setOnAction(event -> onLogout());
+
+        accountMenu.getItems().addAll(viewProfile, logout);
+
+
     }
 
     @FXML
@@ -55,9 +83,22 @@ public class LogsView {
         }
     }
     @FXML
+    private void showAccountMenu(ActionEvent event) {
+        accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
+    }
+
+    @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
             app.showAccountView();
+        }
+    }
+    @FXML
+    private void onLogout() {
+        try {
+            app.showLoginView();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     // Method to handle creating a new log

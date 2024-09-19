@@ -39,14 +39,18 @@
          <Button text="Home" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToHome" />
          <Button text="My Logs" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" />
          <Button text="Explore" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToExplore" />
-         <ImageView fitHeight="50.0" fitWidth="50.0">
-            <image>
-               <Image url="@account_circle.png" />
-            </image>
-            <HBox.margin>
-               <Insets right="80" />
-            </HBox.margin>
-         </ImageView>
+         <Button fx:id="accountButton" style="-fx-background-color: transparent; -fx-border-color: transparent;" onAction="#showAccountMenu">
+            <graphic>
+               <ImageView fitHeight="50.0" fitWidth="50.0">
+                  <image>
+                     <Image url="@account_circle.png" />
+                  </image>
+               </ImageView>
+            </graphic>
+         </Button>
+         <HBox.margin>
+            <Insets right="80" />
+         </HBox.margin>
       </HBox>
    </HBox>
 
