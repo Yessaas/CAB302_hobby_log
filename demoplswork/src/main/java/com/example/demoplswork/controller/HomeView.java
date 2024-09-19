@@ -24,8 +24,13 @@ public class HomeView {
             app.showLogsView();
         }
     }
+    @FXML
+    private void onLogout() {
+        try {
+            app.showLoginView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
-
-
-
