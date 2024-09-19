@@ -23,6 +23,12 @@ public class ExploreView {
             app.showLogsView();
         }
     }
+    @FXML
+    public void goToAccount() throws IOException {
+        if (app != null) {
+            app.showAccountView();
+        }
+    }
 
 }
 
