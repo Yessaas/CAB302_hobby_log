@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.DropShadow?>
+
+<VBox alignment="TOP_CENTER" spacing="20.0" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.demoplswork.controller.AccountView">
+    <HBox spacing="10" alignment="CENTER" prefWidth="1440" prefHeight="108" style="-fx-background-color: #FFD643;">
+        <effect>
+            <DropShadow radius="10" color="rgba(0, 0, 0, 0.5)" />
+        </effect>
+
+        <ImageView fitHeight="108.0" preserveRatio="true">
+            <image>
+                <Image url="@logo.jpg" />
+            </image>
+        </ImageView>
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <HBox spacing="30" alignment="CENTER">
+            <Button text="Home" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToHome"/>
+            <Button text="My Logs" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToLogs"/>
+            <Button text="Explore" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToExplore" />
+            <Button fx:id="accountButton" style="-fx-background-color: transparent; -fx-border-color: transparent;" onAction="#showAccountMenu">
+                <graphic>
+                    <ImageView fitHeight="50.0" fitWidth="50.0">
+                        <image>
+                            <Image url="@account_circle.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <HBox.margin>
+                <Insets right="80" />
+            </HBox.margin>
+        </HBox>
+    </HBox>
+
+    <VBox alignment="TOP_CENTER" spacing="20.0">
+        <padding>
+            <Insets top="20" right="200" bottom="20" left="200" />
+        </padding>
+
+        <VBox alignment="TOP_CENTER" spacing="10">
+            <Label text="Jesse Pinkman" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" alignment="TOP_CENTER" />
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="20">
+            <Label text="80 followers" style="-fx-font-size: 14px; -fx-font-family: 'Roboto';" />
+            <ImageView fitHeight="20.0" fitWidth="20.0">
+                <image>
+                    <Image url="@comment-icon.png" />
+                </image>
+            </ImageView>
+            <Label text="4034" style="-fx-font-size: 14px; -fx-font-family: 'Roboto';" />
+
+            <ImageView fitHeight="20.0" fitWidth="20.0">
+                <image>
+                    <Image url="@like-icon.png" />
+                </image>
+            </ImageView>
+        </HBox>
+
+        <VBox alignment="CENTER_RIGHT" spacing="10">
+            <Button text="Edit profile" style="-fx-background-color: #e0e0e0; -fx-font-size: 14px; -fx-text-fill: black;" prefWidth="120"/>
+        </VBox>
+
+        <VBox spacing="10">
+            <Label text="Bio" style="-fx-font-size: 16px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
+            <Label wrapText="true" maxWidth="500" text="My name is Henry, I mainly build projects based with timber. I love DIY as it is an easy and fun hobby, and there is an awesome result at the end." style="-fx-font-size: 16px; -fx-font-family: 'Roboto';" />
+            <Label text="Father of 3 dogs." style="-fx-font-size: 14px; -fx-font-family: 'Roboto';" />
+        </VBox>
+
+        <Region prefHeight="20"/>
+
+        <HBox alignment="CENTER_LEFT">
+            <Label text="My Logs" style="-fx-font-size: 18px; -fx-font-family: 'Roboto'; -fx-font-weight: bold; " />
+        </HBox>
+
+        <VBox alignment="BOTTOM_CENTER" spacing="5" prefWidth="800.0">
+            <HBox alignment="BOTTOM_CENTER" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
+                <Label text="Wooden Bench (outdoor)" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" />
+                <ProgressBar progress="0.5" prefWidth="400.0" />
+                <HBox spacing="10">
+                    <Label text="59" />
+                    <ImageView fitHeight="20.0" fitWidth="20.0">
+                        <image>
+                            <Image url="@like-icon.png" />
+                        </image>
+                    </ImageView>
+                    <Label text="22" />
+                    <ImageView fitHeight="20.0" fitWidth="20.0">
+                        <image>
+                            <Image url="@comment-icon.png" />
+                        </image>
+                    </ImageView>
+                </HBox>
+                <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
+            </HBox>
+
+            <HBox alignment="CENTER" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
+                <Label text="Built in Mission Oak Bookcase" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" />
+                <ProgressBar progress="0.3" prefWidth="400.0" />
+                <HBox spacing="10">
+                    <Label text="1" />
+                    <ImageView fitHeight="20.0" fitWidth="20.0">
+                        <image>
+                            <Image url="@like-icon.png" />
+                        </image>
+                    </ImageView>
+                    <Label text="0" />
+                    <ImageView fitHeight="20.0" fitWidth="20.0">
+                        <image>
+                            <Image url="@comment-icon.png" />
+                        </image>
+                    </ImageView>
+                </HBox>
+                <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
+            </HBox>
+
+            <HBox alignment="CENTER" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
+                <Label text="Giant Backyard Jenga Game" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" />
+                <ProgressBar progress="0.9" prefWidth="400.0" />
+                <HBox spacing="10">
+                    <Label text="20" />
+                    <ImageView fitHeight="20.0" fitWidth="20.0">
+                        <image>
+                            <Image url="@like-icon.png" />
+                        </image>
+                    </ImageView>
+                    <Label text="3" />
+                    <ImageView fitHeight="20.0" fitWidth="20.0">
+                        <image>
+                            <Image url="@comment-icon.png" />
+                        </image>
+                    </ImageView>
+                </HBox>
+                <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
+            </HBox>
+        </VBox>
+    </VBox>
+</VBox>
