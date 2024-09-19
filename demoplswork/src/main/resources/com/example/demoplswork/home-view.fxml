@@ -38,6 +38,7 @@
             <Button text="Home" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;"  />
             <Button text="My Logs" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction ="#goToLogs" />
             <Button text="Explore" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToExplore" />
+            <Button text="Profile" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToAccount"/>
             <Button text="Logout" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#onLogout" />
             <ImageView fitHeight="50.0" fitWidth="50.0">
                 <image>
