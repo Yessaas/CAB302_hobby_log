@@ -54,7 +54,12 @@ public class LogsView {
             app.showLogsUpdateView();  // Navigate to Explore view
         }
     }
-
+    @FXML
+    public void goToAccount() throws IOException {
+        if (app != null) {
+            app.showAccountView();
+        }
+    }
     // Method to handle creating a new log
     @FXML
     public void handleAddNewProject() {
