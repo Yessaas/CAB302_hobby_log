@@ -1,85 +1,115 @@
-package com.example.demoplswork.controller;
+package com.example.demoplswork;
 
-import com.example.demoplswork.HelloApplication;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.geometry.Side;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import com.example.demoplswork.controller.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.Parent;
+import javafx.stage.Screen;
+import javafx.geometry.Rectangle2D;
 
 import java.io.IOException;
 
-public class HomeView {
-    private HelloApplication app;
+public class HelloApplication extends Application {
+    public static final String TITLE = "Address Book";
+    private Stage primaryStage;
 
+    @Override
+    public void start(Stage stage) throws IOException {
+        this.primaryStage = stage;
 
-    private ContextMenu accountMenu;
+        // Get screen size
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
+        // Set the initial view to explore-view.fxml
+        showLoginView();
 
-    @FXML
-    private Button accountButton;
+        // Set the stage to the full size of the screen, but not in fullscreen mode
+        primaryStage.setX(screenBounds.getMinX());
+        primaryStage.setY(screenBounds.getMinY());
+        primaryStage.setWidth(screenBounds.getWidth());
+        primaryStage.setHeight(screenBounds.getHeight());
 
-
-    public void setApplication(HelloApplication app) {
-        this.app = app;
+        primaryStage.show();
     }
 
-    @FXML
-    public void initialize() {
-        // Create the dropdown menu
-        accountMenu = new ContextMenu();
+    // Method to show the Explore view
+    public void showExploreView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("explore-view.fxml"));
+        Parent root = fxmlLoader.load();
+        ExploreView controller = fxmlLoader.getController();
+        controller.setApplication(this);
 
-        MenuItem viewProfile = new MenuItem("View Profile");
-        viewProfile.setOnAction(event -> {
-            try {
-                goToAccount();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        Scene scene = new Scene(root);
+        primaryStage.setTitle(TITLE);
+        primaryStage.setScene(scene);
+    }
 
-        MenuItem logout = new MenuItem("Log Out");
-        logout.setOnAction(event -> onLogout());
+    // Method to show the Home view
+    public void showHomeView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("home-view.fxml"));
+        Parent root = fxmlLoader.load();
+        HomeView controller = fxmlLoader.getController();
+        controller.setApplication(this);
 
-        accountMenu.getItems().addAll(viewProfile, logout);
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
 
+    public void showLogsView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs.fxml"));
+        Parent root = fxmlLoader.load();
+        LogsView
+        controller = fxmlLoader.getController();
+        controller.setApplication(this);
 
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
+    public void showLogsUpdateView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs-view.fxml"));
+        Parent root = fxmlLoader.load();
+        LogsUpdateView controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
+    public void showLoginView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+        Parent root = fxmlLoader.load();
+        LoginController controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+
+    public void showCreateAccountView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("create-account-view.fxml"));
+        Parent root = fxmlLoader.load();
+        LoginController controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
+    }
+    public void showAccountView() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("profile-view.fxml"));
+        Parent root = fxmlLoader.load();
+        AccountView controller = fxmlLoader.getController();
+        controller.setApplication(this);
+
+        Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
     }
 
 
-    @FXML
-    public void goToExplore() throws IOException {
-        if (app != null) {
-            app.showExploreView();  // Navigate to Explore view
-        }
+    public static void main(String[] args) {
+        launch();
     }
-
-    @FXML
-    public void goToLogs() throws IOException {
-        if (app != null) {
-            app.showLogsView();
-        }
-    }
-
-    @FXML
-    private void showAccountMenu(ActionEvent event) {
-        accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
-    }
-
-    @FXML
-    public void goToAccount() throws IOException {
-        if (app != null) {
-            app.showAccountView();
-        }
-    }
-    @FXML
-    private void onLogout() {
-        try {
-            app.showLoginView();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }
+
