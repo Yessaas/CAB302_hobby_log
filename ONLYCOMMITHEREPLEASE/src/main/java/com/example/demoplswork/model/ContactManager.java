@@ -23,14 +23,19 @@ public class ContactManager {
 
         String lowerCaseQuery = query.toLowerCase();
         for (Contact contact : allContacts) {
-            if (contact.getFirstName().toLowerCase().contains(lowerCaseQuery) || //OR
-                    contact.getLastName().toLowerCase().contains(lowerCaseQuery) ||//OR
-                    contact.getEmail().toLowerCase().contains(lowerCaseQuery)) {//OR
+            String fullName = contact.getFullName().toLowerCase(); //bothname
+            if (fullName.contains(lowerCaseQuery) ||
+                    contact.getFirstName().toLowerCase().contains(lowerCaseQuery) || //Fname
+                    contact.getLastName().toLowerCase().contains(lowerCaseQuery) || //LName
+                    contact.getEmail().toLowerCase().contains(lowerCaseQuery) || //EMail
+                    contact.getPhone().contains(query)) { //Check phone
                 filteredContacts.add(contact);
             }
         }
         return filteredContacts;
     }
+
+
 
 
     public void createAccount(Contact contact) {
