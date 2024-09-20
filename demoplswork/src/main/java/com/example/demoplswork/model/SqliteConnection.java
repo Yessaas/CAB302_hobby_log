@@ -22,4 +22,8 @@ public class SqliteConnection {
         }
         return instance;
     }
+
+    public static Connection getConnection() {
+        return getInstance();
+    }
 }

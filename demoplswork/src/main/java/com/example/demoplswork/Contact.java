@@ -1,5 +1,7 @@
 package com.example.demoplswork;
 
+import java.util.Objects;
+
 public class Contact {
     private int id;
     private String firstName;
@@ -56,5 +58,21 @@ public class Contact {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Contact contact = (Contact) obj;
+        return firstName.equals(contact.firstName) &&
+                lastName.equals(contact.lastName) &&
+                email.equals(contact.email) &&
+                phone.equals(contact.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, email, phone);
     }
 }

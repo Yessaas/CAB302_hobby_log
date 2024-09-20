@@ -1,5 +1,7 @@
 package com.example.demoplswork.model;
 
+import com.example.demoplswork.Contact;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +95,26 @@ public class SqliteContactDAO implements IContactDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Contact> getAllContacts() {
+        List<Contact> contacts = new ArrayList<>();
+        String query = "SELECT * FROM users";
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                String email = rs.getString("email");
+                String password = rs.getString("password"); // You might want to omit password here
+                contacts.add(new Contact(firstName, lastName, email, password)); // Adjust according to your Contact class
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return contacts;
     }
 
     // Close the database connection
