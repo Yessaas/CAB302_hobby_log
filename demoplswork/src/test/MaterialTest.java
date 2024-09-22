@@ -2,7 +2,8 @@ import com.example.demoplswork.model.Material;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MaterialTest {
     private Material material;
@@ -16,26 +17,19 @@ public class MaterialTest {
     public void getName() {
         assertEquals("Screws", material.getName());
     }
+    @Test
+    public void testString() { assertInstanceOf(String.class, material.getName()); }
 
     @Test
     public void getQuantity() {
         assertEquals(50, material.getQuantity());
     }
+    @Test
+    public void testPositive1() { assertTrue(material.getQuantity() > 0); }
 
     @Test
-    public void getCost() {
-        assertEquals(3.5, material.getCost());
-    }
+    public void getCost() { assertEquals(3.5, material.getCost()); }
+    @Test
+    public void testPositive2() { assertTrue(material.getCost() > 0); }
 
-//    @Test
-//    public void testGetLastName() {
-//        assertEquals("Doe", contact.getLastName());
-//    }
-//
-//    @Test
-//    public void testSetLastName() {
-//        contact.setLastName("Smith");
-//        assertEquals("Smith", contact.getLastName());
-//    }
-//
 }
