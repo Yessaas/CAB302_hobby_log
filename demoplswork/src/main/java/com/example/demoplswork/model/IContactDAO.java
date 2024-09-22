@@ -12,7 +12,6 @@ public interface IContactDAO {
 
     boolean updateUser(int id, String firstName, String lastName, String email, String password); //implement later
 
-
     boolean deleteUser(int id);
 
     List<Contact> getAllContacts();

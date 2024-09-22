@@ -131,4 +131,3 @@ public class SqliteContactDAO implements IContactDAO {
 
 
 }
-
