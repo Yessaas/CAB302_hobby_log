@@ -1,49 +1,35 @@
 package com.example.demoplswork.model;
 
-
 import com.example.demoplswork.Contact;
+import com.example.demoplswork.ContactDAO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContactManager {
-    private IContactDAO sqliteContactDAO;
+    private ContactDAO contactDAO;
 
-    public ContactManager(IContactDAO contactDAO) {
-        this.sqliteContactDAO = contactDAO;
+    public ContactManager(ContactDAO contactDAO) {
+        this.contactDAO = contactDAO;
     }
 
     public List<Contact> searchContacts(String query) {
-        List<Contact> allContacts = sqliteContactDAO.getAllContacts();
-        List<Contact> filteredContacts = new ArrayList<>();
-
-        if (query == null || query.isEmpty()) {
-            return allContacts;
-        }
-
-        String lowerCaseQuery = query.toLowerCase();
-        for (Contact contact : allContacts) {
-            String fullName = contact.getFullName().toLowerCase(); //bothname
-            if (fullName.contains(lowerCaseQuery) ||
-                    contact.getFirstName().toLowerCase().contains(lowerCaseQuery) || //Fname
-                    contact.getLastName().toLowerCase().contains(lowerCaseQuery) || //LName
-                    contact.getEmail().toLowerCase().contains(lowerCaseQuery) || //EMail
-                    contact.getPhone().contains(query)) { //Check phone
-                filteredContacts.add(contact);
-            }
-        }
-        return filteredContacts;
+        return contactDAO.searchContacts(query);
     }
 
 
+    public void addContact(Contact contact) {
+        contactDAO.addContact(contact);
+    }
 
+    public void updateContact(Contact contact) {
+        contactDAO.updateContact(contact);
+    }
 
-    public void createAccount(Contact contact) {
-        sqliteContactDAO.createAccount(
-                contact.getFirstName(),
-                contact.getLastName(),
-                contact.getEmail(),
-                "password"
-        );
+    public void deleteContact(Contact contact) {
+        contactDAO.deleteContact(contact);
+    }
+
+    public List<Contact> getAllContacts() {
+        return contactDAO.getAllContacts();
     }
 }

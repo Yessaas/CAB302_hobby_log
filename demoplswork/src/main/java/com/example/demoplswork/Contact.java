@@ -65,7 +65,8 @@ public class Contact {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Contact contact = (Contact) obj;
-        return firstName.equals(contact.firstName) &&
+        return id == contact.id &&
+                firstName.equals(contact.firstName) &&
                 lastName.equals(contact.lastName) &&
                 email.equals(contact.email) &&
                 phone.equals(contact.phone);
@@ -73,6 +74,6 @@ public class Contact {
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName, lastName, email, phone);
+        return Objects.hash(id, firstName, lastName, email, phone);
     }
 }
