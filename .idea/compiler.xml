@@ -9,5 +9,8 @@
         <module name="demoplswork" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CAB302_hobby_log" target="" />
+    </bytecodeTargetLevel>
   </component>
 </project>
