@@ -1,6 +1,8 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
+import com.example.demoplswork.model.Logs;
+import com.example.demoplswork.model.LogsDAO;
 import com.example.demoplswork.model.Material;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,9 @@ public class LogsUpdateView {
 
     private ContextMenu accountMenu;
 
+    private int logId;  // The ID of the log being updated
+
+    private LogsDAO logsDAO = new LogsDAO();
 
     @FXML
     private Button accountButton;
@@ -42,6 +48,12 @@ public class LogsUpdateView {
     @FXML
     private Button backButton;  // Button to go to the previous image
 
+    @FXML
+    private Label logTitleLabel;
+
+    @FXML
+    private ProgressBar progressBar;
+
     private List<Image> images = new ArrayList<>();  // List to store the images
     private int currentIndex = -1;  // Track the current image index
 
@@ -54,10 +66,25 @@ public class LogsUpdateView {
     private TableColumn<Material, Integer> quantityCol;  // Quantity column
     @FXML
     private TableColumn<Material, Double> costCol;  // Cost column
+    private Logs log;
+
+    public LogsUpdateView() throws SQLException {
+    }
 
     @FXML
     public void setApplication(HelloApplication app) {
         this.app = app;
+    }
+
+    public void setLogId(int logId) {
+        this.logId = logId;
+    }
+
+    public void setLog(Logs log) {
+        this.log = log;  // Set the log object
+
+        // Populate the page with log details
+        populateLogDetails();
     }
 
     @FXML
@@ -127,6 +154,38 @@ public class LogsUpdateView {
         }
     }
 
+    // Populate the log details on the page
+    private void populateLogDetails() {
+        // Set the log title in the label
+        logTitleLabel.setText(log.getLogName());
+        progressBar.setProgress(log.getProgress() / 100);
+
+        // Clear existing items in the VBox and Table to prevent duplication
+        toDoListVBox.getChildren().clear();
+        materialsTable.getItems().clear();
+
+        // Populate To-Do items in the VBox
+        for (Pair<String, Boolean> toDoItem : log.getToDoItems()) {
+            String task = toDoItem.getKey();      // The task description
+            Boolean isChecked = toDoItem.getValue();  // The task checked state
+
+            CheckBox checkBox = new CheckBox(task);
+            checkBox.setSelected(isChecked);      // Set checkbox to the stored checked state
+            toDoListVBox.getChildren().add(checkBox);
+
+            // Event listener to update the log when a checkbox is checked/unchecked
+            checkBox.setOnAction(event -> {
+                log.updateToDoItemStatus(task, checkBox.isSelected());  // Custom method to update the task's checked state
+                double progress = logsDAO.updateToDoItemStatus(logId, task, checkBox.isSelected());
+                progressBar.setProgress(progress / 100);
+            });
+        }
+
+        // Populate the materials in the table
+        materialsTable.getItems().addAll(log.getMaterials());
+    }
+
+
 
 
     public void handleAddToDo() {
@@ -141,8 +200,25 @@ public class LogsUpdateView {
         result.ifPresent(task -> {
             // Add the new task to your to-do list (e.g., a VBox or ListView)
             CheckBox newTask = new CheckBox(task);
-            // Assuming you have a VBox for your To-Do list
+
+            // Store the checkbox state (unchecked by default) along with the task
+            boolean isChecked = newTask.isSelected();  // This will be false by default
+
+            // Add to VBox
             toDoListVBox.getChildren().add(newTask);
+
+            // Store the to-do item and its state in the database for the specific log
+            logsDAO.addToDoItem(logId, task, isChecked);
+            double newProgress = logsDAO.updateToDoItemStatus(logId, task, newTask.isSelected());
+            progressBar.setProgress(newProgress / 100);
+
+
+            // Event listener to update the log when a checkbox is checked/unchecked
+            newTask.setOnAction(event -> {
+                log.updateToDoItemStatus(task, newTask.isSelected());  // Custom method to update the task's checked state
+                double progress = logsDAO.updateToDoItemStatus(logId, task, newTask.isSelected());
+                progressBar.setProgress(progress / 100);
+            });
         });
     }
 

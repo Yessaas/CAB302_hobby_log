@@ -1,0 +1,333 @@
+package com.example.demoplswork.model;
+
+import com.example.demoplswork.Contact;
+import javafx.util.Pair;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LogsDAO implements IContactDAO{
+
+    private static final String DB_URL = "jdbc:sqlite:contacts.db";
+    private Connection connection;
+
+    public LogsDAO() throws SQLException {
+        connection = SqliteConnection.getInstance();
+        createLogsTable(); // Create the users table if it doesn't exist
+    }
+
+    // Create the logs table
+    public void createLogsTable() throws SQLException {
+        if (connection != null && connection.isClosed()) {
+            System.out.println("Connection is closed");
+        } else {
+            System.out.println("Connection is open");
+        }
+        String query = "CREATE TABLE IF NOT EXISTS logs (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "user_id INTEGER NOT NULL," +
+                "log_name TEXT NOT NULL," +
+                "to_do_items TEXT," +
+                "images TEXT," +
+                "progress REAL," +
+                "materials TEXT," +
+                "FOREIGN KEY (user_id) REFERENCES users(id))";
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Insert a new log into the database
+    public int insertLog(int userId, Logs log) {
+        String query = "INSERT INTO logs(user_id, log_name, to_do_items, images, progress, materials) VALUES(?, ?, ?, ?, ?, ?)";
+        ResultSet rs = null;
+        int logId = -1;
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, log.getLogName());
+
+            // Serialize the to-do items (task:checked format)
+            String serializedToDoItems = serializeToDoItems(log.getToDoItems());
+            pstmt.setString(3, serializedToDoItems);
+
+            // Serialize images into a comma-separated string
+            pstmt.setString(4, String.join(",", log.getImages()));
+
+            // Set progress value
+            pstmt.setDouble(5, log.getProgress());
+
+            // Serialize materials
+            pstmt.setString(6, serializeMaterials(log.getMaterials()));
+
+            // Execute the update
+            pstmt.executeUpdate();
+
+            // Retrieve the generated log ID
+            rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                logId = rs.getInt(1);  // This will be the generated ID
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return logId;
+    }
+
+    // Serialize to-do items as task:isChecked format
+    private String serializeToDoItems(List<Pair<String, Boolean>> toDoItems) {
+        StringBuilder sb = new StringBuilder();
+
+        for (Pair<String, Boolean> toDoItem : toDoItems) {
+            sb.append(toDoItem.getKey())  // Task description
+                    .append(":")
+                    .append(toDoItem.getValue())  // Checked state
+                    .append(",");
+        }
+
+        // Remove the trailing comma if any
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
+
+        return sb.toString();
+    }
+
+
+    // Method to add a to-do item to a specific log
+    public void addToDoItem(int logId, String toDoItem, boolean isChecked) {
+        String query = "UPDATE logs SET to_do_items = CASE " +
+                "WHEN to_do_items IS NULL OR to_do_items = '' THEN ? " +
+                "ELSE to_do_items || ',' || ? " +
+                "END WHERE id = ?";
+
+        // Prepare the to-do item with its state
+        String toDoWithState = toDoItem + ":" + (isChecked ? "true" : "false");
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, toDoWithState);  // If empty, just add the to-do item
+            pstmt.setString(2, toDoWithState);  // Append the new to-do item with its state
+            pstmt.setInt(3, logId);  // Specify which log to update
+            pstmt.executeUpdate();
+            System.out.println("To-do item added to log " + logId + " with state: " + isChecked);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Object[]> getLogsForUser(int userId) {
+        String query = "SELECT id, log_name, to_do_items, images, materials, progress FROM logs WHERE user_id = ?";
+        List<Object[]> logsList = new ArrayList<>();
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, userId);
+            var rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                // Extract the log details, including the log ID
+                int logID = rs.getInt("id");
+                String logName = rs.getString("log_name");
+                List<Pair<String, Boolean>> toDoItems = parseToDoItems(rs.getString("to_do_items"));
+                List<String> images = parseImages(rs.getString("images")); // Deserialize images
+                List<Material> materials = parseMaterials(rs.getString("materials")); // Deserialize materials
+                double progress = rs.getDouble("progress");
+
+                // Create a Logs object without the ID
+                Logs log = new Logs(logName, toDoItems, images, materials);
+                log.setProgress(progress);
+
+                System.out.println("Log retrieved: " + logName + ". Progress: " + progress);
+
+                // Add the log and its ID to the list
+                logsList.add(new Object[] { logID, log });
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return logsList;
+    }
+
+
+    // Helper method to serialize materials into a string format (e.g., name:quantity:cost)
+    private String serializeMaterials(List<Material> materials) {
+        StringBuilder sb = new StringBuilder();
+        for (Material material : materials) {
+            sb.append(material.getName()).append(":")
+                    .append(material.getQuantity()).append(":")
+                    .append(material.getCost()).append(",");
+        }
+        return sb.toString();
+    }
+
+    // Helper method to deserialize materials from a string format
+    private List<Material> parseMaterials(String materialsStr) {
+        List<Material> materials = new ArrayList<>();
+
+        // Check if materialsStr is null or empty
+        if (materialsStr == null || materialsStr.isEmpty()) {
+            return materials;  // Return an empty list if there's no material data
+        }
+
+        // Split the string by commas to get each material
+        String[] materialArr = materialsStr.split(",");
+
+        for (String mat : materialArr) {
+            // Split each material string by colon to get details (name, quantity, price)
+            String[] details = mat.split(":");
+
+            // Check if the details array has the correct number of parts (3 parts: name, quantity, price)
+            if (details.length == 3) {
+                try {
+                    String name = details[0];
+                    int quantity = Integer.parseInt(details[1]);  // Parse the quantity as an integer
+                    double price = Double.parseDouble(details[2]);  // Parse the price as a double
+
+                    // Add the material to the list
+                    materials.add(new Material(name, quantity, price));
+                } catch (NumberFormatException e) {
+                    // Handle any parsing errors gracefully (e.g., log the error)
+                    System.err.println("Error parsing material: " + mat);
+                }
+            } else {
+                // Handle the case where details do not have exactly 3 parts
+                System.err.println("Invalid material format: " + mat);
+            }
+        }
+
+        return materials;
+    }
+
+    // Update a specific to-do item's status in the database and recalculate progress
+    public double updateToDoItemStatus(int logId, String task, boolean isChecked) {
+        String querySelect = "SELECT to_do_items, progress FROM logs WHERE id = ?";
+        String queryUpdate = "UPDATE logs SET to_do_items = ?, progress = ? WHERE id = ?";
+
+        try {
+            // Step 1: Retrieve the current to-do items and progress
+            PreparedStatement pstmtSelect = connection.prepareStatement(querySelect);
+            pstmtSelect.setInt(1, logId);
+            ResultSet rs = pstmtSelect.executeQuery();
+
+            if (rs.next()) {
+                String toDoItemsStr = rs.getString("to_do_items");
+                List<Pair<String, Boolean>> toDoItems = parseToDoItems(toDoItemsStr);
+
+                // Step 2: Update the status of the specific task
+                for (int i = 0; i < toDoItems.size(); i++) {
+                    if (toDoItems.get(i).getKey().equals(task)) {
+                        toDoItems.set(i, new Pair<>(task, isChecked));
+                        break;
+                    }
+                }
+
+                // Step 3: Calculate the new progress
+                double progress = calculateProgress(toDoItems);
+
+                // Step 4: Serialize the updated to-do items back into the string format
+                String updatedToDoItemsStr = serializeToDoItems(toDoItems);
+
+                // Step 5: Update the database with the new to-do list and progress
+                PreparedStatement pstmtUpdate = connection.prepareStatement(queryUpdate);
+                pstmtUpdate.setString(1, updatedToDoItemsStr);
+                pstmtUpdate.setDouble(2, progress);  // Update progress
+                pstmtUpdate.setInt(3, logId);
+                pstmtUpdate.executeUpdate();
+
+                System.out.println("Updated to-do item: " + task + " to " + isChecked + ". Progress: " + progress);
+                return progress;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
+
+    // Method to calculate progress as a percentage of completed tasks
+    private double calculateProgress(List<Pair<String, Boolean>> toDoItems) {
+        int completedCount = 0;
+        for (Pair<String, Boolean> item : toDoItems) {
+            if (item.getValue()) {
+                completedCount++;
+            }
+        }
+        if (toDoItems.isEmpty()) {
+            return 0.0;
+        }
+        return (double) completedCount / toDoItems.size() * 100;
+    }
+
+    // Helper method to deserialize to-do items from a comma-separated string
+    private List<Pair<String, Boolean>> parseToDoItems(String toDoItemsStr) {
+        List<Pair<String, Boolean>> toDoItems = new ArrayList<>();
+
+        if (toDoItemsStr == null || toDoItemsStr.isEmpty()) {
+            return toDoItems;  // Return an empty list if there's no data
+        }
+
+        // Split the string into individual tasks
+        String[] itemsArray = toDoItemsStr.split(",");
+
+        for (String item : itemsArray) {
+            String[] taskDetails = item.split(":");
+            if (taskDetails.length == 2) {
+                String taskDescription = taskDetails[0].trim();
+                boolean isChecked = Boolean.parseBoolean(taskDetails[1].trim());
+                toDoItems.add(new Pair<>(taskDescription, isChecked));  // Store task and its checked state
+            }
+        }
+
+        return toDoItems;
+    }
+
+
+    // Helper method to deserialize images from a comma-separated string
+    private List<String> parseImages(String imagesStr) {
+        return List.of(imagesStr.split(","));
+    }
+
+    @Override
+    public boolean createAccount(String firstName, String lastName, String email, String password) {
+        return false;
+    }
+
+    @Override
+    public boolean authenticateUser(String email, String password) {
+        return false;
+    }
+
+    @Override
+    public boolean updateUser(int id, String firstName, String lastName, String email, String password) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteUser(int id) {
+        return false;
+    }
+
+    @Override
+    public List<Contact> getAllContacts() {
+        return List.of();
+    }
+}
+
+

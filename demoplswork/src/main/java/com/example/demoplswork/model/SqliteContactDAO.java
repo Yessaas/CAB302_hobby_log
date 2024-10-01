@@ -117,17 +117,40 @@ public class SqliteContactDAO implements IContactDAO {
         return contacts;
     }
 
-    // Close the database connection
-    public void closeConnection() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
+    public int getUserIDByEmail(String email) {
+        String sql = "SELECT id FROM users WHERE email = ?";
+        try (Connection conn = SqliteConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id");
+            } else {
+                return -1; // No user found with the given email
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return -1;
+        }
+    }
+
+
+    // Close the database connection
+    public void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+                System.out.println("Database connection closed.");
+                connection = null; // Set instance to null after closing
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
 
 }
+
