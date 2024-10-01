@@ -63,11 +63,11 @@
             </padding>
 
             <!-- Page Title -->
-            <Label text="Project Name" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
+            <Label fx:id="logTitleLabel" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
 
             <Label text="Progress:" style="-fx-font-size: 12px;" />
             <HBox alignment="CENTER">
-                <ProgressBar progress="0.5" prefWidth="900.0" prefHeight="20.0" />
+                <ProgressBar fx:id="progressBar" prefWidth="900.0" prefHeight="20.0" />
             </HBox>
 
             <!-- Two Columns-->
