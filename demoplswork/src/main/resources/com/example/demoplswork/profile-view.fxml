@@ -29,18 +29,14 @@
             <Button text="Home" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToHome"/>
             <Button text="My Logs" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToLogs"/>
             <Button text="Explore" prefWidth="100" prefHeight="40" style="-fx-background-color: #ffffff;" onAction="#goToExplore" />
-            <Button fx:id="accountButton" style="-fx-background-color: transparent; -fx-border-color: transparent;" onAction="#showAccountMenu">
-                <graphic>
-                    <ImageView fitHeight="50.0" fitWidth="50.0">
-                        <image>
-                            <Image url="@account_circle.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
-            <HBox.margin>
-                <Insets right="80" />
-            </HBox.margin>
+            <ImageView fitHeight="50.0" fitWidth="50.0">
+                <image>
+                    <Image url="@account_circle.png" />
+                </image>
+                <HBox.margin>
+                    <Insets right="80" />
+                </HBox.margin>
+            </ImageView>
         </HBox>
     </HBox>
 
@@ -50,7 +46,12 @@
         </padding>
 
         <VBox alignment="TOP_CENTER" spacing="10">
-            <Label text="Jesse Pinkman" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" alignment="TOP_CENTER" />
+            <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" preserveRatio="true" />
+            <Button text="Change Profile Photo" onAction="#handleChangeProfilePhoto" />
+        </VBox>
+
+        <VBox alignment="TOP_CENTER" spacing="10">
+            <Label fx:id="nameLabel" text="Jesse Pinkman" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" alignment="TOP_CENTER" />
         </VBox>
 
         <HBox alignment="CENTER" spacing="20">
@@ -70,13 +71,13 @@
         </HBox>
 
         <VBox alignment="CENTER_RIGHT" spacing="10">
-            <Button text="Edit profile" style="-fx-background-color: #e0e0e0; -fx-font-size: 14px; -fx-text-fill: black;" prefWidth="120"/>
+            <Button text="Edit profile" style="-fx-background-color: #e0e0e0; -fx-font-size: 14px; -fx-text-fill: black;" prefWidth="120" onAction="#showEditProfileDialog"/>
         </VBox>
 
         <VBox spacing="10">
             <Label text="Bio" style="-fx-font-size: 16px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
-            <Label wrapText="true" maxWidth="500" text="My name is Henry, I mainly build projects based with timber. I love DIY as it is an easy and fun hobby, and there is an awesome result at the end." style="-fx-font-size: 16px; -fx-font-family: 'Roboto';" />
-            <Label text="Father of 3 dogs." style="-fx-font-size: 14px; -fx-font-family: 'Roboto';" />
+            <Label fx:id="bioLabel" wrapText="true" maxWidth="500" text="My name is Henry, I mainly build projects based with timber. I love DIY as it is an easy and fun hobby, and there is an awesome result at the end." style="-fx-font-size: 16px; -fx-font-family: 'Roboto';" />
+            <Label fx:id="aboutLabel" text="Father of 3 dogs." style="-fx-font-size: 14px; -fx-font-family: 'Roboto';" />
         </VBox>
 
         <Region prefHeight="20"/>
@@ -85,65 +86,74 @@
             <Label text="My Logs" style="-fx-font-size: 18px; -fx-font-family: 'Roboto'; -fx-font-weight: bold; " />
         </HBox>
 
-        <VBox alignment="BOTTOM_CENTER" spacing="5" prefWidth="800.0">
-            <HBox alignment="BOTTOM_CENTER" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
-                <Label text="Wooden Bench (outdoor)" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" />
+        <VBox alignment="CENTER" spacing="5" prefWidth="800.0">
+            <HBox alignment="CENTER_LEFT" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
+                <Label text="Wooden Bench (outdoor)" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" prefWidth="250" />
                 <ProgressBar progress="0.5" prefWidth="400.0" />
-                <HBox spacing="10">
-                    <Label text="59" />
-                    <ImageView fitHeight="20.0" fitWidth="20.0">
-                        <image>
-                            <Image url="@like-icon.png" />
-                        </image>
-                    </ImageView>
-                    <Label text="22" />
-                    <ImageView fitHeight="20.0" fitWidth="20.0">
-                        <image>
-                            <Image url="@comment-icon.png" />
-                        </image>
-                    </ImageView>
+                <HBox alignment="CENTER_LEFT" spacing="30" HBox.hgrow="ALWAYS">
+                    <Region HBox.hgrow="SOMETIMES"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="200">
+                        <Label text="59" />
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                            <image>
+                                <Image url="@like-icon.png" />
+                            </image>
+                        </ImageView>
+                        <Label text="22" />
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                            <image>
+                                <Image url="@comment-icon.png" />
+                            </image>
+                        </ImageView>
+                    </HBox>
+                    <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
                 </HBox>
-                <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
             </HBox>
 
-            <HBox alignment="CENTER" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
-                <Label text="Built in Mission Oak Bookcase" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" />
+            <HBox alignment="CENTER_LEFT" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
+                <Label text="Built in Mission Oak Bookcase" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" prefWidth="250" />
                 <ProgressBar progress="0.3" prefWidth="400.0" />
-                <HBox spacing="10">
-                    <Label text="1" />
-                    <ImageView fitHeight="20.0" fitWidth="20.0">
-                        <image>
-                            <Image url="@like-icon.png" />
-                        </image>
-                    </ImageView>
-                    <Label text="0" />
-                    <ImageView fitHeight="20.0" fitWidth="20.0">
-                        <image>
-                            <Image url="@comment-icon.png" />
-                        </image>
-                    </ImageView>
+                <HBox alignment="CENTER_LEFT" spacing="30" HBox.hgrow="ALWAYS">
+                    <Region HBox.hgrow="SOMETIMES"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="200">
+                        <Label text="14" />
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                            <image>
+                                <Image url="@like-icon.png" />
+                            </image>
+                        </ImageView>
+                        <Label text="10" />
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                            <image>
+                                <Image url="@comment-icon.png" />
+                            </image>
+                        </ImageView>
+                    </HBox>
+                    <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
                 </HBox>
-                <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
             </HBox>
 
-            <HBox alignment="CENTER" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
-                <Label text="Giant Backyard Jenga Game" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" />
+            <HBox alignment="CENTER_LEFT" spacing="30" style="-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;">
+                <Label text="Giant Backyard Jenga Game" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';" prefWidth="250" />
                 <ProgressBar progress="0.9" prefWidth="400.0" />
-                <HBox spacing="10">
-                    <Label text="20" />
-                    <ImageView fitHeight="20.0" fitWidth="20.0">
-                        <image>
-                            <Image url="@like-icon.png" />
-                        </image>
-                    </ImageView>
-                    <Label text="3" />
-                    <ImageView fitHeight="20.0" fitWidth="20.0">
-                        <image>
-                            <Image url="@comment-icon.png" />
-                        </image>
-                    </ImageView>
+                <HBox alignment="CENTER_LEFT" spacing="30" HBox.hgrow="ALWAYS">
+                    <Region HBox.hgrow="SOMETIMES"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10" prefWidth="200">
+                        <Label text="20" />
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                            <image>
+                                <Image url="@like-icon.png" />
+                            </image>
+                        </ImageView>
+                        <Label text="13" />
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                            <image>
+                                <Image url="@comment-icon.png" />
+                            </image>
+                        </ImageView>
+                    </HBox>
+                    <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
                 </HBox>
-                <Button text="View Log" prefWidth="120" style="-fx-background-color: #d3d3d3;" />
             </HBox>
         </VBox>
     </VBox>
