@@ -66,9 +66,9 @@ public class LoginController {
         }
 
         if (contactDAO.authenticateUser(email, password)) {
-            // Handle successful login, such as redirecting to the main view
+            // Handle successful login
             System.out.println("Login successful!");
-            // Now, we need to retrieve the userID from the database for the logged-in user
+            // Retrieve the userID from the database for the logged-in user
             int userID = contactDAO.getUserIDByEmail(email);
 
             if (userID != -1) {

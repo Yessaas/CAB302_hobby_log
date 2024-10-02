@@ -73,8 +73,7 @@ public class HelloApplication extends Application {
     public void showLogsView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs.fxml"));
         Parent root = fxmlLoader.load();
-        LogsView
-        controller = fxmlLoader.getController();
+        LogsView controller = fxmlLoader.getController();
         controller.setApplication(this);
 
         Scene scene = new Scene(root);
