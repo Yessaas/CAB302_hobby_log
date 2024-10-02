@@ -130,6 +130,26 @@ public class LogsDAO implements IContactDAO{
         }
     }
 
+    // Method to add an image path to a specific log
+    public void addImage(int logId, String imagePath) {
+        String query = "UPDATE logs SET images = CASE " +
+                "WHEN images IS NULL OR images = '' THEN ? " +
+                "ELSE images || ',' || ? " +
+                "END WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, imagePath);  // If empty, just add the image path
+            pstmt.setString(2, imagePath);  // Append the new image path
+            pstmt.setInt(3, logId);  // Specify which log to update
+            pstmt.executeUpdate();
+            System.out.println("Image added to log " + logId + ": " + imagePath);
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public List<Object[]> getLogsForUser(int userId) {
         String query = "SELECT id, log_name, to_do_items, images, materials, progress FROM logs WHERE user_id = ?";
         List<Object[]> logsList = new ArrayList<>();

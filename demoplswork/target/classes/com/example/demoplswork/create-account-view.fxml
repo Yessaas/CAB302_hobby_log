@@ -18,7 +18,7 @@
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@account_circle.png" />
+                  <Image url="@../../../images/account_circle.png" />
                </image>
             </ImageView>
             <GridPane alignment="CENTER" hgap="10" style="-fx-background-color: #FFD643;" vgap="10">

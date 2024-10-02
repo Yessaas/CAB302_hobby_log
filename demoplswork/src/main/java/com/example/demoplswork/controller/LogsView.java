@@ -11,6 +11,7 @@ import java.io.IOException;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -18,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -124,8 +126,8 @@ public class LogsView {
     @FXML
     public void handleAddNewProject() {
         // Create the log UI elements
-        VBox logModule = createLogModule();
-
+        // VBox logModule = createLogModule();
+        /*
         // Add the log to the GridPane
         projectsGrid.add(logModule, currentColumn, currentRow);
 
@@ -134,7 +136,8 @@ public class LogsView {
         if (currentColumn >= LOGS_PER_ROW) {
             currentColumn = 0;
             currentRow++;
-        }
+        }*/
+        createLogModule();
     }
 
     private void loadLogsForUser() {
@@ -174,10 +177,21 @@ public class LogsView {
         imageBackground.setFill(javafx.scene.paint.Color.WHITE);
         imageBackground.setStroke(javafx.scene.paint.Color.BLACK);
 
+        String imageName = log.getImages().getFirst();
+        String relativePath = "/images/" + imageName;
+
         ImageView imageView = new ImageView();
         imageView.setFitHeight(200);
         imageView.setFitWidth(250);
         imageView.setPreserveRatio(true);
+
+        // Load the image using the image name
+        InputStream imageStream = getClass().getResourceAsStream(relativePath);
+        if (imageStream != null) {
+            Image image = new Image(imageStream);
+            imageView.setImage(image);
+        }
+
 
         imageContainer.getChildren().addAll(imageBackground, imageView);
 
@@ -250,7 +264,35 @@ public class LogsView {
 
 
     // Method to create a log module
-    private VBox createLogModule() {
+    private void createLogModule() {
+        // Create a dialog to get the project name
+        TextInputDialog dialog = new TextInputDialog("New Project");
+        dialog.setTitle("Create New Project");
+        dialog.setHeaderText("Enter the name of your new project:");
+        dialog.setContentText("Project Name:");
+
+        // Show the dialog and capture the result
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(projectName -> {
+            // Retrieve the userID from the main application class
+            int userID = app.getLoggedInUserID();
+
+            // Create a new Logs object with the captured name (no content for now)
+            Logs newLog = new Logs(projectName, List.of(), List.of(), List.of());
+
+            // Insert the new log into the database with the correct userID
+            int logID = logsDAO.insertLog(userID, newLog);
+
+            // Redirect the user to the logs update view
+            try {
+                goToUpdateLogs(logID, newLog);  // This will let the user input log information
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    /*private VBox createLogModule() {
         // Create a dialog to get the project name
         TextInputDialog dialog = new TextInputDialog("New Project");
         dialog.setTitle("Create New Project");
@@ -299,7 +341,7 @@ public class LogsView {
         titleContainer.getChildren().addAll(titleBackground, projectTitle);
 
         // Progress bar
-        ProgressBar progressBar = new ProgressBar(0.5);
+        ProgressBar progressBar = new ProgressBar(0);
         progressBar.setPrefWidth(250);
         progressBar.setPrefHeight(40);
         progressBar.setStyle("-fx-border-color: black; -fx-border-width: 1;");
@@ -353,7 +395,7 @@ public class LogsView {
         logModule.getChildren().addAll(imageContainer, titleContainer, progressBar, buttonContainer);
 
         return logModule; // Return the complete log module
-    }
+    }*/
 
 
 

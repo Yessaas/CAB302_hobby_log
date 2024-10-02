@@ -13,6 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +185,10 @@ public class LogsUpdateView {
 
         // Populate the materials in the table
         materialsTable.getItems().addAll(log.getMaterials());
+
+        // Load and display the images
+        loadImagesFromLog();
+
     }
 
 
@@ -222,6 +228,38 @@ public class LogsUpdateView {
         });
     }
 
+    // Method to load images from the log
+    private void loadImagesFromLog() {
+        images.clear();  // Clear any previously loaded images
+        List<String> imageFileNames = log.getImages();
+
+        if (imageFileNames != null && !imageFileNames.isEmpty()) {
+            for (String imageName : imageFileNames) {
+
+                String imagePath = "/images/" + imageName;
+
+                // Load the image
+                Image image = new Image(getClass().getResourceAsStream(imagePath));
+
+                // Add to the images list
+                images.add(image);
+            }
+
+            // Display the first image
+            currentIndex = 0;
+            mediaImageView.setImage(images.get(currentIndex));
+
+            // Update the navigation button states
+            updateButtonState();
+        } /*else {
+            // No images available, set default behavior if necessary
+            mediaImageView.setImage(null);  // Clear the ImageView or show a placeholder image
+            backButton.setDisable(true);
+            nextButton.setDisable(true);
+        }*/
+    }
+
+
     @FXML
     public void handleAddImages() {
         FileChooser fileChooser = new FileChooser();
@@ -233,16 +271,39 @@ public class LogsUpdateView {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            // Add the selected image to the list
-            Image image = new Image(selectedFile.toURI().toString());
-            images.add(image);
+            // Get the current working directory (project root)
+            String projectDirectory = System.getProperty("user.dir");
 
-            // Set the current index to the last image in the list (newly added)
-            currentIndex = images.size() - 1;
-            mediaImageView.setImage(images.get(currentIndex));
+            // Define the target directory relative to the project directory
+            String targetDirectory = projectDirectory + "/src/main/resources/images";
 
-            // Update the button state
-            updateButtonState();
+            // Construct the target file path
+            File targetFile = new File(targetDirectory, selectedFile.getName());
+
+            try {
+                // Copy the selected image to the target directory
+                Files.copy(selectedFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image copied to " + targetFile.getAbsolutePath());
+
+                // Add the selected image to the list
+                Image image = new Image(targetFile.toURI().toString());
+                images.add(image);
+
+                // Set the current index to the last image in the list (newly added)
+                currentIndex = images.size() - 1;
+                mediaImageView.setImage(images.get(currentIndex));
+
+                // Update the button state
+                updateButtonState();
+
+                // Store the image path in the database
+                String imageName = selectedFile.getName(); // Get the name of the file only
+                logsDAO.addImage(logId, imageName);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Failed to add image");
+            }
         }
     }
 

@@ -29,7 +29,7 @@
         <!-- Logo aligned to the left -->
         <ImageView fitHeight="108.0" preserveRatio="true">
             <image>
-                <Image url="@logo.jpg" />
+                <Image url="@../../../images/logo.jpg" />
             </image>
         </ImageView>
 
@@ -45,7 +45,7 @@
                 <graphic>
                     <ImageView fitHeight="50.0" fitWidth="50.0">
                         <image>
-                            <Image url="@account_circle.png" />
+                            <Image url="@../../../images/account_circle.png" />
                         </image>
                     </ImageView>
                 </graphic>
@@ -80,7 +80,7 @@
                             <!-- Project Image Placeholder (Left 2/3rd) -->
                             <ImageView fitHeight="283.0" fitWidth="621.0" preserveRatio="true">
                                 <image>
-                                    <Image url="@image 1.jpg" />
+                                    <Image url="@../../../images/image 1.jpg" />
                                 </image>
                             </ImageView>
 

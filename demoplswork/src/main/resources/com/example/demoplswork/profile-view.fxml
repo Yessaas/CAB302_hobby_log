@@ -22,7 +22,7 @@
     <!-- Logo aligned to the left -->
     <ImageView fitHeight="108.0" preserveRatio="true">
         <image>
-            <Image url="@logo.jpg" />
+            <Image url="@../../../images/logo.jpg" />
         </image>
     </ImageView>
 
@@ -38,7 +38,7 @@
             <graphic>
                 <ImageView fitHeight="50.0" fitWidth="50.0">
                     <image>
-                        <Image url="@account_circle.png" />
+                        <Image url="@../../../images/account_circle.png" />
                     </image>
                 </ImageView>
             </graphic>
@@ -67,14 +67,14 @@
             <Label text="80 followers" style="-fx-font-size: 14px; -fx-font-family: 'Roboto';" />
             <ImageView fitHeight="20.0" fitWidth="20.0">
                 <image>
-                    <Image url="@comment-icon.png" />
+                    <Image url="@../../../images/comment-icon.png" />
                 </image>
             </ImageView>
             <Label text="4034" style="-fx-font-size: 14px; -fx-font-family: 'Roboto';" />
 
             <ImageView fitHeight="20.0" fitWidth="20.0">
                 <image>
-                    <Image url="@like-icon.png" />
+                    <Image url="@../../../images/like-icon.png" />
                 </image>
             </ImageView>
         </HBox>
@@ -105,13 +105,13 @@
                         <Label text="59" />
                         <ImageView fitHeight="20.0" fitWidth="20.0">
                             <image>
-                                <Image url="@like-icon.png" />
+                                <Image url="@../../../images/like-icon.png" />
                             </image>
                         </ImageView>
                         <Label text="22" />
                         <ImageView fitHeight="20.0" fitWidth="20.0">
                             <image>
-                                <Image url="@comment-icon.png" />
+                                <Image url="@../../../images/comment-icon.png" />
                             </image>
                         </ImageView>
                     </HBox>
@@ -128,13 +128,13 @@
                         <Label text="14" />
                         <ImageView fitHeight="20.0" fitWidth="20.0">
                             <image>
-                                <Image url="@like-icon.png" />
+                                <Image url="@../../../images/like-icon.png" />
                             </image>
                         </ImageView>
                         <Label text="10" />
                         <ImageView fitHeight="20.0" fitWidth="20.0">
                             <image>
-                                <Image url="@comment-icon.png" />
+                                <Image url="@../../../images/comment-icon.png" />
                             </image>
                         </ImageView>
                     </HBox>
@@ -151,13 +151,13 @@
                         <Label text="20" />
                         <ImageView fitHeight="20.0" fitWidth="20.0">
                             <image>
-                                <Image url="@like-icon.png" />
+                                <Image url="@../../../images/like-icon.png" />
                             </image>
                         </ImageView>
                         <Label text="13" />
                         <ImageView fitHeight="20.0" fitWidth="20.0">
                             <image>
-                                <Image url="@comment-icon.png" />
+                                <Image url="@../../../images/comment-icon.png" />
                             </image>
                         </ImageView>
                     </HBox>
