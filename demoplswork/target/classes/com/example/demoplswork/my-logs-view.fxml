@@ -102,10 +102,13 @@
                     <columns>
                         <TableColumn fx:id="materialNameCol" text="Material Name" prefWidth="200" />
                         <TableColumn fx:id="quantityCol" text="QTY" prefWidth="100" />
-                        <TableColumn fx:id="costCol" text="Cost" prefWidth="100" />
+                        <TableColumn fx:id="priceCol" text="Price (each)" prefWidth="100" />
                     </columns>
                 </TableView>
                 <Button text="Add Material" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddMaterial"/>
+                <HBox alignment="CENTER_RIGHT">
+                    <Label fx:id="totalCostLabel" text="Total Cost: $0.00" />
+                </HBox>
             </VBox>
         </VBox>
     </ScrollPane>

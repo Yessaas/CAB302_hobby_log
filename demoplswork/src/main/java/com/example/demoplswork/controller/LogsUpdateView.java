@@ -54,6 +54,9 @@ public class LogsUpdateView {
     private Label logTitleLabel;
 
     @FXML
+    private Label totalCostLabel; // Link to your Label
+
+    @FXML
     private ProgressBar progressBar;
 
     private List<Image> images = new ArrayList<>();  // List to store the images
@@ -67,7 +70,7 @@ public class LogsUpdateView {
     @FXML
     private TableColumn<Material, Integer> quantityCol;  // Quantity column
     @FXML
-    private TableColumn<Material, Double> costCol;  // Cost column
+    private TableColumn<Material, Double> priceCol;  // Cost column
     private Logs log;
 
     public LogsUpdateView() throws SQLException {
@@ -94,7 +97,7 @@ public class LogsUpdateView {
         // init columns for materials table
         materialNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         // Create the dropdown menu
         accountMenu = new ContextMenu();
@@ -189,6 +192,18 @@ public class LogsUpdateView {
         // Load and display the images
         loadImagesFromLog();
 
+        getTotalCost(log.getMaterials());
+
+    }
+
+    // Method to calculate total cost and update the label
+    public void getTotalCost(List<Material> materials) {
+        double totalCost = materials.stream()
+                .mapToDouble(material -> material.getPrice() * material.getQuantity()) // Multiply price and quantity
+                .sum(); // Calculate total cost
+
+        // Update the label with the formatted total cost
+        totalCostLabel.setText(String.format("Total Cost: $%.2f", totalCost));
     }
 
 
@@ -355,7 +370,7 @@ public class LogsUpdateView {
         quantityField.setPromptText("Quantity");
 
         TextField costField = new TextField();
-        costField.setPromptText("Cost");
+        costField.setPromptText("Price (Each)");
 
         // Create a layout and add the input fields
         GridPane grid = new GridPane();
@@ -366,7 +381,7 @@ public class LogsUpdateView {
         grid.add(materialNameField, 1, 0);
         grid.add(new Label("Quantity:"), 0, 1);
         grid.add(quantityField, 1, 1);
-        grid.add(new Label("Cost:"), 0, 2);
+        grid.add(new Label("Price (Each):"), 0, 2);
         grid.add(costField, 1, 2);
 
         dialog.getDialogPane().setContent(grid);
@@ -395,7 +410,7 @@ public class LogsUpdateView {
                     double cost = Double.parseDouble(costField.getText());
                     return new Pair<>(materialName, new Pair<>(quantity, cost));
                 } catch (NumberFormatException e) {
-                    showAlert("Invalid Input", "Please enter valid numeric values for Quantity and Cost.");
+                    showAlert("Invalid Input", "Please enter valid numeric values for Quantity and Price.");
                     return null;
                 }
             }
@@ -405,14 +420,21 @@ public class LogsUpdateView {
         // Display the dialog and wait for the user to input values
         Optional<Pair<String, Pair<Integer, Double>>> result = dialog.showAndWait();
 
-        // If the user entered valid data, add it to the table
+        // If the user entered valid data, add it to the table and database
         result.ifPresent(materialData -> {
             String materialName = materialData.getKey();
             int quantity = materialData.getValue().getKey();
             double cost = materialData.getValue().getValue();
 
             // Add the material to the table
-            materialsTable.getItems().add(new Material(materialName, quantity, cost));
+            Material material = new Material(materialName, quantity, cost);
+            materialsTable.getItems().add(material);
+            log.addMaterial(material);
+
+            // Add the material to the database (replace logId with the actual log ID you're working with)
+            logsDAO.addMaterial(logId, material);
+
+            getTotalCost(log.getMaterials());
         });
     }
 

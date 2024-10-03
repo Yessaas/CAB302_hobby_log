@@ -143,11 +143,33 @@ public class LogsDAO implements IContactDAO{
             pstmt.setInt(3, logId);  // Specify which log to update
             pstmt.executeUpdate();
             System.out.println("Image added to log " + logId + ": " + imagePath);
-            connection.commit();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    // Method to add a material to a specific log
+    public void addMaterial(int logId, Material material) {
+        String query = "UPDATE logs SET materials = CASE " +
+                "WHEN materials IS NULL OR materials = '' THEN ? " +
+                "ELSE materials || ',' || ? " +
+                "END WHERE id = ?";
+
+        String serializedMaterial = material.getName() + ":" + material.getQuantity() + ":" + material.getPrice();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, serializedMaterial);  // If empty, just add the material
+            pstmt.setString(2, serializedMaterial);  // Append the new material
+            pstmt.setInt(3, logId);  // Specify which log to update
+            pstmt.executeUpdate();
+            System.out.println("Material added to log " + logId + ": " + serializedMaterial);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public List<Object[]> getLogsForUser(int userId) {
@@ -191,7 +213,7 @@ public class LogsDAO implements IContactDAO{
         for (Material material : materials) {
             sb.append(material.getName()).append(":")
                     .append(material.getQuantity()).append(":")
-                    .append(material.getCost()).append(",");
+                    .append(material.getPrice()).append(",");
         }
         return sb.toString();
     }

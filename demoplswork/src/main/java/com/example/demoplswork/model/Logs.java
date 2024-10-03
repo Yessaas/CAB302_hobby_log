@@ -41,6 +41,16 @@ public class Logs {
         }
     }
 
+    // Method to add a material to the materials list
+    public void addMaterial(Material material) {
+        if (material != null) {
+            materials.add(material); // Add the material to the list
+        } else {
+            System.err.println("Cannot add null material.");
+        }
+    }
+
+
     public List<Pair<String, Boolean>> getToDoItems() {
         return toDoItems;
     }
