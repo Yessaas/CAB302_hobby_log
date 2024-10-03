@@ -3,12 +3,14 @@ package com.example.demoplswork.controller;
 import com.example.demoplswork.HelloApplication;
 import com.example.demoplswork.model.Logs;
 import com.example.demoplswork.model.LogsDAO;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -89,6 +91,26 @@ public class HomeView {
             // Display the selected log in the featured log section
             displayFeaturedLog(randomLog);
         }
+        else {
+            // If there are no logs, show a message indicating no logs exist
+            featuredLogTitle.setText("You don't have any logs.");
+            featuredLogProgress.setProgress(0.0); // Set progress to 0
+            featuredLogImageView.setScaleX(0.4); // Scale to 50% of the original size
+            featuredLogImageView.setScaleY(0.4); // Scale to 50% of the original size
+            featuredLogImageView.setPreserveRatio(true);
+
+            // Update the button text and action to navigate to the LogsView
+            featuredLogButton.setText("My Logs");
+            featuredLogButton.setOnAction(event -> {
+                try {
+                    goToLogs(); // Navigate to LogsView
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            return;
+
+        }
     }
 
     // Method to get a random log
@@ -127,10 +149,14 @@ public class HomeView {
             Image image = new Image(imageStream);
             featuredLogImageView.setImage(image);
         }
+        else{
+            featuredLogImageView.setImage(null);
+        }
         // Find the first incomplete to-do item
         String incompleteToDo = getFirstIncompleteToDoItem(log);
         if (incompleteToDo != null) {
             featuredLogToDo.setText(incompleteToDo);
+
         }
 
         // Set up the "View Log" button

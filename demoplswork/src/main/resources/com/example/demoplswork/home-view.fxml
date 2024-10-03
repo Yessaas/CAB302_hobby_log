@@ -73,12 +73,13 @@
 
             <HBox alignment="CENTER" prefHeight="270.0" prefWidth="1200.0" spacing="5" style="-fx-border-color: black; -fx-border-width: 1;">
                 <!-- Project Image Placeholder (Left 2/3rd) -->
-                <ImageView fx:id="featuredLogImageView" fitHeight="300.0" fitWidth="600.0" preserveRatio="false">
-                    <image>
-                        <Image url="@../../../images/image 1.jpg" />
-                    </image>
-                </ImageView>
-
+                <VBox prefHeight="300.0" prefWidth="600.0" alignment="CENTER">
+                    <ImageView fx:id="featuredLogImageView" fitHeight="300.0" fitWidth="600.0" >
+                        <image>
+                            <Image url="@../../../images/OOjs_UI_icon_yellow.png" />
+                        </image>
+                    </ImageView>
+                </VBox>
                 <!-- Project Details (Right 1/3rd) -->
                 <VBox alignment="CENTER" prefWidth="600.0" spacing="30">
                     <!-- Project Title -->
@@ -88,7 +89,7 @@
                     <ProgressBar fx:id="featuredLogProgress" prefWidth="400.0" progress="0.5" />
 
                     <!-- To-Do Checkbox -->
-                    <CheckBox fx:id="featuredLogToDo" text="Make the kerf cuts" />
+                    <CheckBox fx:id="featuredLogToDo" disable="true" text="Start Logging!" style="-fx-opacity: 0.8; -fx-text-fill: #505050;" />
 
                     <!-- View Log Button -->
                     <Button fx:id="featuredLogButton" prefWidth="120" style="-fx-background-color: #d3d3d3;" text="View Log" />
