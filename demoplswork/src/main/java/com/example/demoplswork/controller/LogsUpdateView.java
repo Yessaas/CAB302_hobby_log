@@ -1,6 +1,8 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
+import com.example.demoplswork.model.Logs;
+import com.example.demoplswork.model.LogsDAO;
 import com.example.demoplswork.model.Material;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +13,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +32,9 @@ public class LogsUpdateView {
 
     private ContextMenu accountMenu;
 
+    private int logId;  // The ID of the log being updated
+
+    private LogsDAO logsDAO = new LogsDAO();
 
     @FXML
     private Button accountButton;
@@ -42,6 +50,15 @@ public class LogsUpdateView {
     @FXML
     private Button backButton;  // Button to go to the previous image
 
+    @FXML
+    private Label logTitleLabel;
+
+    @FXML
+    private Label totalCostLabel; // Link to your Label
+
+    @FXML
+    private ProgressBar progressBar;
+
     private List<Image> images = new ArrayList<>();  // List to store the images
     private int currentIndex = -1;  // Track the current image index
 
@@ -53,11 +70,26 @@ public class LogsUpdateView {
     @FXML
     private TableColumn<Material, Integer> quantityCol;  // Quantity column
     @FXML
-    private TableColumn<Material, Double> costCol;  // Cost column
+    private TableColumn<Material, Double> priceCol;  // Cost column
+    private Logs log;
+
+    public LogsUpdateView() throws SQLException {
+    }
 
     @FXML
     public void setApplication(HelloApplication app) {
         this.app = app;
+    }
+
+    public void setLogId(int logId) {
+        this.logId = logId;
+    }
+
+    public void setLog(Logs log) {
+        this.log = log;  // Set the log object
+
+        // Populate the page with log details
+        populateLogDetails();
     }
 
     @FXML
@@ -65,7 +97,7 @@ public class LogsUpdateView {
         // init columns for materials table
         materialNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        costCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         // Create the dropdown menu
         accountMenu = new ContextMenu();
@@ -127,6 +159,54 @@ public class LogsUpdateView {
         }
     }
 
+    // Populate the log details on the page
+    private void populateLogDetails() {
+        // Set the log title in the label
+        logTitleLabel.setText(log.getLogName());
+        progressBar.setProgress(log.getProgress() / 100);
+
+        // Clear existing items in the VBox and Table to prevent duplication
+        toDoListVBox.getChildren().clear();
+        materialsTable.getItems().clear();
+
+        // Populate To-Do items in the VBox
+        for (Pair<String, Boolean> toDoItem : log.getToDoItems()) {
+            String task = toDoItem.getKey();      // The task description
+            Boolean isChecked = toDoItem.getValue();  // The task checked state
+
+            CheckBox checkBox = new CheckBox(task);
+            checkBox.setSelected(isChecked);      // Set checkbox to the stored checked state
+            toDoListVBox.getChildren().add(checkBox);
+
+            // Event listener to update the log when a checkbox is checked/unchecked
+            checkBox.setOnAction(event -> {
+                log.updateToDoItemStatus(task, checkBox.isSelected());  // Custom method to update the task's checked state
+                double progress = logsDAO.updateToDoItemStatus(logId, task, checkBox.isSelected());
+                progressBar.setProgress(progress / 100);
+            });
+        }
+
+        // Populate the materials in the table
+        materialsTable.getItems().addAll(log.getMaterials());
+
+        // Load and display the images
+        loadImagesFromLog();
+
+        getTotalCost(log.getMaterials());
+
+    }
+
+    // Method to calculate total cost and update the label
+    public void getTotalCost(List<Material> materials) {
+        double totalCost = materials.stream()
+                .mapToDouble(material -> material.getPrice() * material.getQuantity()) // Multiply price and quantity
+                .sum(); // Calculate total cost
+
+        // Update the label with the formatted total cost
+        totalCostLabel.setText(String.format("Total Cost: $%.2f", totalCost));
+    }
+
+
 
 
     public void handleAddToDo() {
@@ -141,10 +221,59 @@ public class LogsUpdateView {
         result.ifPresent(task -> {
             // Add the new task to your to-do list (e.g., a VBox or ListView)
             CheckBox newTask = new CheckBox(task);
-            // Assuming you have a VBox for your To-Do list
+
+            // Store the checkbox state (unchecked by default) along with the task
+            boolean isChecked = newTask.isSelected();  // This will be false by default
+
+            // Add to VBox
             toDoListVBox.getChildren().add(newTask);
+
+            // Store the to-do item and its state in the database for the specific log
+            logsDAO.addToDoItem(logId, task, isChecked);
+            double newProgress = logsDAO.updateToDoItemStatus(logId, task, newTask.isSelected());
+            progressBar.setProgress(newProgress / 100);
+
+
+            // Event listener to update the log when a checkbox is checked/unchecked
+            newTask.setOnAction(event -> {
+                log.updateToDoItemStatus(task, newTask.isSelected());  // Custom method to update the task's checked state
+                double progress = logsDAO.updateToDoItemStatus(logId, task, newTask.isSelected());
+                progressBar.setProgress(progress / 100);
+            });
         });
     }
+
+    // Method to load images from the log
+    private void loadImagesFromLog() {
+        images.clear();  // Clear any previously loaded images
+        List<String> imageFileNames = log.getImages();
+
+        if (imageFileNames != null && !imageFileNames.isEmpty()) {
+            for (String imageName : imageFileNames) {
+
+                String imagePath = "/images/" + imageName;
+
+                // Load the image
+                Image image = new Image(getClass().getResourceAsStream(imagePath));
+
+                // Add to the images list
+                images.add(image);
+            }
+
+            // Display the first image
+            currentIndex = 0;
+            mediaImageView.setImage(images.get(currentIndex));
+
+            // Update the navigation button states
+            updateButtonState();
+        } /*else {
+            // No images available, set default behavior if necessary
+            mediaImageView.setImage(null);  // Clear the ImageView or show a placeholder image
+            backButton.setDisable(true);
+            nextButton.setDisable(true);
+        }*/
+    }
+
 
     @FXML
     public void handleAddImages() {
@@ -157,16 +286,39 @@ public class LogsUpdateView {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            // Add the selected image to the list
-            Image image = new Image(selectedFile.toURI().toString());
-            images.add(image);
+            // Get the current working directory (project root)
+            String projectDirectory = System.getProperty("user.dir");
 
-            // Set the current index to the last image in the list (newly added)
-            currentIndex = images.size() - 1;
-            mediaImageView.setImage(images.get(currentIndex));
+            // Define the target directory relative to the project directory
+            String targetDirectory = projectDirectory + "/src/main/resources/images";
 
-            // Update the button state
-            updateButtonState();
+            // Construct the target file path
+            File targetFile = new File(targetDirectory, selectedFile.getName());
+
+            try {
+                // Copy the selected image to the target directory
+                Files.copy(selectedFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image copied to " + targetFile.getAbsolutePath());
+
+                // Add the selected image to the list
+                Image image = new Image(targetFile.toURI().toString());
+                images.add(image);
+
+                // Set the current index to the last image in the list (newly added)
+                currentIndex = images.size() - 1;
+                mediaImageView.setImage(images.get(currentIndex));
+
+                // Update the button state
+                updateButtonState();
+
+                // Store the image path in the database
+                String imageName = selectedFile.getName(); // Get the name of the file only
+                logsDAO.addImage(logId, imageName);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Failed to add image");
+            }
         }
     }
 
@@ -218,7 +370,7 @@ public class LogsUpdateView {
         quantityField.setPromptText("Quantity");
 
         TextField costField = new TextField();
-        costField.setPromptText("Cost");
+        costField.setPromptText("Price (Each)");
 
         // Create a layout and add the input fields
         GridPane grid = new GridPane();
@@ -229,7 +381,7 @@ public class LogsUpdateView {
         grid.add(materialNameField, 1, 0);
         grid.add(new Label("Quantity:"), 0, 1);
         grid.add(quantityField, 1, 1);
-        grid.add(new Label("Cost:"), 0, 2);
+        grid.add(new Label("Price (Each):"), 0, 2);
         grid.add(costField, 1, 2);
 
         dialog.getDialogPane().setContent(grid);
@@ -258,7 +410,7 @@ public class LogsUpdateView {
                     double cost = Double.parseDouble(costField.getText());
                     return new Pair<>(materialName, new Pair<>(quantity, cost));
                 } catch (NumberFormatException e) {
-                    showAlert("Invalid Input", "Please enter valid numeric values for Quantity and Cost.");
+                    showAlert("Invalid Input", "Please enter valid numeric values for Quantity and Price.");
                     return null;
                 }
             }
@@ -268,14 +420,21 @@ public class LogsUpdateView {
         // Display the dialog and wait for the user to input values
         Optional<Pair<String, Pair<Integer, Double>>> result = dialog.showAndWait();
 
-        // If the user entered valid data, add it to the table
+        // If the user entered valid data, add it to the table and database
         result.ifPresent(materialData -> {
             String materialName = materialData.getKey();
             int quantity = materialData.getValue().getKey();
             double cost = materialData.getValue().getValue();
 
             // Add the material to the table
-            materialsTable.getItems().add(new Material(materialName, quantity, cost));
+            Material material = new Material(materialName, quantity, cost);
+            materialsTable.getItems().add(material);
+            log.addMaterial(material);
+
+            // Add the material to the database (replace logId with the actual log ID you're working with)
+            logsDAO.addMaterial(logId, material);
+
+            getTotalCost(log.getMaterials());
         });
     }
 

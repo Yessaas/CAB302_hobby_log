@@ -1,6 +1,9 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
+import com.example.demoplswork.model.Logs;
+import com.example.demoplswork.model.LogsDAO;
+import com.example.demoplswork.model.SqliteContactDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import java.io.IOException;
@@ -8,6 +11,7 @@ import java.io.IOException;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +19,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,6 +31,9 @@ public class LogsView {
 
     @FXML
     private GridPane projectsGrid;  // The GridPane where logs will be added
+
+    private TableView<Logs> logsTable;  // TableView for logs
+
 
     private int currentRow = 0;  // Track the current row in the grid
     private int currentColumn = 0;  // Track the current column in the grid
@@ -36,8 +46,18 @@ public class LogsView {
     @FXML
     private Button accountButton;
 
+    private LogsDAO logsDAO;
+
+    // Constructor
+    public LogsView() throws SQLException {
+        logsDAO = new LogsDAO();
+    }
+
     public void setApplication(HelloApplication app) {
         this.app = app;
+
+        // Load logs from the database for the current user
+        loadLogsForUser();
     }
 
     @FXML
@@ -60,6 +80,7 @@ public class LogsView {
         accountMenu.getItems().addAll(viewProfile, logout);
 
 
+
     }
 
     @FXML
@@ -77,9 +98,9 @@ public class LogsView {
     }
 
     @FXML
-    public void goToUpdateLogs() throws IOException {
+    public void goToUpdateLogs(int id, Logs log) throws IOException {
         if (app != null) {
-            app.showLogsUpdateView();  // Navigate to Explore view
+            app.showLogsUpdateView(id, log);  // Navigate to Explore view
         }
     }
     @FXML
@@ -105,8 +126,8 @@ public class LogsView {
     @FXML
     public void handleAddNewProject() {
         // Create the log UI elements
-        VBox logModule = createLogModule();
-
+        // VBox logModule = createLogModule();
+        /*
         // Add the log to the GridPane
         projectsGrid.add(logModule, currentColumn, currentRow);
 
@@ -115,21 +136,38 @@ public class LogsView {
         if (currentColumn >= LOGS_PER_ROW) {
             currentColumn = 0;
             currentRow++;
+        }*/
+        createLogModule();
+    }
+
+    private void loadLogsForUser() {
+        // Retrieve the userID from the main application class
+        int userID = app.getLoggedInUserID();
+
+        // Fetch logs from the database for the specific user
+        List<Object[]> logsList = logsDAO.getLogsForUser(userID);
+
+        for (Object[] logData : logsList) {
+            int logID = (int) logData[0]; // Extract the log ID
+            Logs log = (Logs) logData[1]; // Extract the Logs object
+
+            // Create a log module for each log
+            VBox logModule = createLogModuleFromDatabase(log, logID);
+
+            // Add the log to the GridPane
+            projectsGrid.add(logModule, currentColumn, currentRow);
+
+            // Update the column and row for the next log
+            currentColumn++;
+            if (currentColumn >= LOGS_PER_ROW) {
+                currentColumn = 0;
+                currentRow++;
+            }
         }
     }
 
-    // Method to create a log module
-    private VBox createLogModule() {
-        // Create a dialog to get the project name
-        TextInputDialog dialog = new TextInputDialog("New Project");
-        dialog.setTitle("Create New Project");
-        dialog.setHeaderText("Enter the name of your new project:");
-        dialog.setContentText("Project Name:");
 
-        // Show the dialog and capture the result
-        Optional<String> result = dialog.showAndWait();
-        String projectName = result.orElse("New Project");
-
+    private VBox createLogModuleFromDatabase(Logs log, int logID) {
         VBox logModule = new VBox();
         logModule.setSpacing(0); // Adds spacing between elements
 
@@ -139,10 +177,21 @@ public class LogsView {
         imageBackground.setFill(javafx.scene.paint.Color.WHITE);
         imageBackground.setStroke(javafx.scene.paint.Color.BLACK);
 
+        String imageName = log.getImages().getFirst();
+        String relativePath = "/images/" + imageName;
+
         ImageView imageView = new ImageView();
         imageView.setFitHeight(200);
         imageView.setFitWidth(250);
-        imageView.setPreserveRatio(true);
+        imageView.setPreserveRatio(false);
+
+        // Load the image using the image name
+        InputStream imageStream = getClass().getResourceAsStream(relativePath);
+        if (imageStream != null) {
+            Image image = new Image(imageStream);
+            imageView.setImage(image);
+        }
+
 
         imageContainer.getChildren().addAll(imageBackground, imageView);
 
@@ -152,12 +201,13 @@ public class LogsView {
         titleBackground.setFill(javafx.scene.paint.Color.web("#ffee00"));
         titleBackground.setStroke(javafx.scene.paint.Color.BLACK);
 
-        Label projectTitle = new Label(projectName);
+        Label projectTitle = new Label(log.getLogName());
         projectTitle.setStyle("-fx-font-size: 14px; -fx-font-family: 'Roboto'; -fx-text-fill: black;");
         titleContainer.getChildren().addAll(titleBackground, projectTitle);
 
         // Progress bar
-        ProgressBar progressBar = new ProgressBar(0.5);
+        System.out.println("Creating log module: " + ". Progress: " + log.getProgress());
+        ProgressBar progressBar = new ProgressBar(log.getProgress() / 100.0);
         progressBar.setPrefWidth(250);
         progressBar.setPrefHeight(40);
         progressBar.setStyle("-fx-border-color: black; -fx-border-width: 1;");
@@ -177,7 +227,7 @@ public class LogsView {
         viewButton.setStyle("-fx-background-color: #d3d3d3;");
         viewButton.setOnAction(actionEvent -> {
             try {
-                goToUpdateLogs();
+                goToUpdateLogs(logID, log);  // Use logID here to open the correct log
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -210,6 +260,36 @@ public class LogsView {
         logModule.getChildren().addAll(imageContainer, titleContainer, progressBar, buttonContainer);
 
         return logModule; // Return the complete log module
+    }
+
+
+    // Method to create a log module
+    private void createLogModule() {
+        // Create a dialog to get the project name
+        TextInputDialog dialog = new TextInputDialog("New Project");
+        dialog.setTitle("Create New Project");
+        dialog.setHeaderText("Enter the name of your new project:");
+        dialog.setContentText("Project Name:");
+
+        // Show the dialog and capture the result
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(projectName -> {
+            // Retrieve the userID from the main application class
+            int userID = app.getLoggedInUserID();
+
+            // Create a new Logs object with the captured name (no content for now)
+            Logs newLog = new Logs(projectName, List.of(), List.of(), List.of());
+
+            // Insert the new log into the database with the correct userID
+            int logID = logsDAO.insertLog(userID, newLog);
+
+            // Redirect the user to the logs update view
+            try {
+                goToUpdateLogs(logID, newLog);  // This will let the user input log information
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 

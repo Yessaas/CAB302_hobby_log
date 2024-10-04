@@ -27,7 +27,7 @@
         <!-- Logo aligned to the left -->
         <ImageView fitHeight="108.0" preserveRatio="true">
             <image>
-                <Image url="@logo.jpg" />
+                <Image url="@../../../images/logo.jpg" />
             </image>
         </ImageView>
 
@@ -43,7 +43,7 @@
                 <graphic>
                     <ImageView fitHeight="50.0" fitWidth="50.0">
                         <image>
-                            <Image url="@account_circle.png" />
+                            <Image url="@../../../images/account_circle.png" />
                         </image>
                     </ImageView>
                 </graphic>
@@ -63,11 +63,11 @@
             </padding>
 
             <!-- Page Title -->
-            <Label text="Project Name" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
+            <Label fx:id="logTitleLabel" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
 
             <Label text="Progress:" style="-fx-font-size: 12px;" />
             <HBox alignment="CENTER">
-                <ProgressBar progress="0.5" prefWidth="900.0" prefHeight="20.0" />
+                <ProgressBar fx:id="progressBar" prefWidth="900.0" prefHeight="20.0" />
             </HBox>
 
             <!-- Two Columns-->
@@ -102,10 +102,13 @@
                     <columns>
                         <TableColumn fx:id="materialNameCol" text="Material Name" prefWidth="200" />
                         <TableColumn fx:id="quantityCol" text="QTY" prefWidth="100" />
-                        <TableColumn fx:id="costCol" text="Cost" prefWidth="100" />
+                        <TableColumn fx:id="priceCol" text="Price (each)" prefWidth="100" />
                     </columns>
                 </TableView>
                 <Button text="Add Material" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddMaterial"/>
+                <HBox alignment="CENTER_RIGHT">
+                    <Label fx:id="totalCostLabel" text="Total Cost: $0.00" />
+                </HBox>
             </VBox>
         </VBox>
     </ScrollPane>

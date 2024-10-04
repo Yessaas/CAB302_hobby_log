@@ -1,32 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane alignment="CENTER" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.LoginController">
-
-    <!-- Title -->
-    <Label style="-fx-font-size: 24px;" text="Login" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
-
-    <!-- Email Subtitle -->
-    <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-
-    <!-- Email Field -->
-    <TextField fx:id="emailField" onAction="#onLogin" promptText="Enter your email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-    <!-- Password Subtitle -->
-    <Label text="Password" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-
-    <!-- Password Field -->
-    <PasswordField fx:id="passwordField" onAction="#onLogin" promptText="Enter your password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-
-    <!-- Login Button -->
-    <Button fx:id="loginButton" onAction="#onLogin" text="Login" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-    <!-- "Don't have an account?" Label -->
-    <Label text="Don't have an account?" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-
-    <!-- Create Account Button -->
-    <Button fx:id="createAccountButton" onAction="#onCreateAccount" text="Create Account" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-
-</GridPane>
+<VBox style="-fx-background-color: #FFD643;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.LoginController">
+   <children>
+      <ImageView fitHeight="150.0" fitWidth="401.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../images/logo.jpg" />
+         </image>
+      </ImageView>
+      <GridPane alignment="CENTER" hgap="10.0" prefWidth="346.0" style="-fx-background-color: #FFD643;" vgap="10">
+      
+          <!-- Title -->
+          <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 24px;" text="Login" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      
+          <!-- Email Subtitle -->
+          <Label text="Email" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      
+          <!-- Email Field -->
+          <TextField fx:id="emailField" onAction="#onLogin" promptText="Enter your email" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+      
+          <!-- Password Subtitle -->
+          <Label text="Password" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      
+          <!-- Password Field -->
+          <PasswordField fx:id="passwordField" onAction="#onLogin" promptText="Enter your password" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+      
+          <!-- Login Button -->
+          <Button fx:id="loginButton" onAction="#onLogin" text="Login" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+      
+          <!-- "Don't have an account?" Label -->
+          <Label text="Don't have an account?" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      
+          <!-- Create Account Button -->
+          <Button fx:id="createAccountButton" onAction="#onCreateAccount" text="Create Account" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+      
+      </GridPane>
+   </children>
+</VBox>
