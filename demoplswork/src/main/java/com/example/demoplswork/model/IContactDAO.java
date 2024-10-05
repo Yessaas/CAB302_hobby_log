@@ -1,7 +1,5 @@
 package com.example.demoplswork.model;
 
-import com.example.demoplswork.Contact;
-
 import java.util.List;
 
 public interface IContactDAO {

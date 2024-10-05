@@ -42,7 +42,7 @@
                 <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             
                 <!-- Email Field -->
-                <TextField fx:id="emailField" promptText="Enter your email" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="emailField" promptText="Enter your bio" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             
                 <!-- Password Subtitle -->
                 <Label text="Password" GridPane.columnIndex="0" GridPane.rowIndex="4" />

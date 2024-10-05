@@ -27,7 +27,7 @@
           <Label text="Email" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       
           <!-- Email Field -->
-          <TextField fx:id="emailField" onAction="#onLogin" promptText="Enter your email" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+          <TextField fx:id="emailField" onAction="#onLogin" promptText="Enter your bio" GridPane.columnIndex="2" GridPane.rowIndex="3" />
       
           <!-- Password Subtitle -->
           <Label text="Password" GridPane.columnIndex="1" GridPane.rowIndex="4" />

@@ -1,8 +1,6 @@
 package com.example.demoplswork.model;
 
 
-import com.example.demoplswork.Contact;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +25,8 @@ public class ContactManager {
             if (fullName.contains(lowerCaseQuery) ||
                     contact.getFirstName().toLowerCase().contains(lowerCaseQuery) || //Fname
                     contact.getLastName().toLowerCase().contains(lowerCaseQuery) || //LName
-                    contact.getEmail().toLowerCase().contains(lowerCaseQuery) || //EMail
-                    contact.getPhone().contains(query)) { //Check phone
+                    contact.getBio().toLowerCase().contains(lowerCaseQuery) || //EMail
+                    contact.getPhoto().contains(query)) { //Check phone
                 filteredContacts.add(contact);
             }
         }
@@ -42,7 +40,7 @@ public class ContactManager {
         sqliteContactDAO.createAccount(
                 contact.getFirstName(),
                 contact.getLastName(),
-                contact.getEmail(),
+                contact.getBio(),
                 "password"
         );
     }

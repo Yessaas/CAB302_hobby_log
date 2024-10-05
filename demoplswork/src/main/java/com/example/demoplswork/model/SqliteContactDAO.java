@@ -1,7 +1,5 @@
 package com.example.demoplswork.model;
 
-import com.example.demoplswork.Contact;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class SqliteContactDAO implements IContactDAO {
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, email);
-            pstmt.setString(2, password);  // Password should be hashed and compared in production
+            pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             return rs.next();  // Returns true if a match is found, otherwise false
         } catch (SQLException e) {
@@ -134,6 +132,25 @@ public class SqliteContactDAO implements IContactDAO {
             System.out.println(e.getMessage());
             return -1;
         }
+    }
+
+    public Contact getContactById(int userId) {
+        Contact contact = null;
+        String query = "SELECT firstName, lastName FROM users WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                contact = new Contact(firstName, lastName, " ", " ");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return contact;
     }
 
 

@@ -1,6 +1,5 @@
 package com.example.demoplswork.model;
 
-import com.example.demoplswork.Contact;
 import javafx.util.Pair;
 
 import java.sql.*;
