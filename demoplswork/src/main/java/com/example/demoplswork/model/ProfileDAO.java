@@ -8,7 +8,10 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
 
 
     @Override
-    public void insertProfile(int userId, String bio, String photo) {
+    public void insertProfile(int userId, String bio, String photo) throws SQLException {
+        if (userId <= 0) {
+            throw new SQLException("Invalid user ID.");
+        }
         if (!profileExists(userId)) {  // Check if profile exists
             String query = "INSERT INTO user_profiles (user_id, bio, photo) VALUES (?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -42,6 +45,10 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
 
     @Override
     public void getProfileByUserId(Contact contact, int userId) {
+        if (userId <= 0) {
+            // Invalid userId, so don't set bio and photo
+            return;
+        }
         String query = "SELECT bio, photo FROM user_profiles WHERE user_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -62,8 +69,11 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
     }
 
     @Override
-    public void updateProfile(int userId, String bio, String photo) {
+    public void updateProfile(int userId, String bio, String photo) throws SQLException {
         // Build the query dynamically based on which fields are non-null
+        if (userId <= 0) {
+            throw new SQLException("Invalid user ID.");
+        }
         StringBuilder queryBuilder = new StringBuilder("UPDATE user_profiles SET ");
         boolean addComma = false;
 

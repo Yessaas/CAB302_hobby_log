@@ -10,7 +10,14 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
 
     // Insert a new log into the database
     @Override
-    public int insertLog(int userId, Logs log) {
+    public int insertLog(int userId, Logs log) throws SQLException {
+        if (log == null) {
+            throw new SQLException("Log cannot be null.");
+        }
+        if (userId <= 0) {
+            throw new SQLException("Invalid user ID.");
+        }
+
         String query = "INSERT INTO logs(user_id, log_name, to_do_items, images, progress, materials) VALUES(?, ?, ?, ?, ?, ?)";
         ResultSet rs = null;
         int logId = -1;
@@ -79,7 +86,10 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
 
     // Method to add a to-do item to a specific log
     @Override
-    public void addToDoItem(int logId, String toDoItem, boolean isChecked) {
+    public void addToDoItem(int logId, String toDoItem, boolean isChecked) throws SQLException {
+        if (logId <= 0) {
+            throw new SQLException("Invalid log ID.");
+        }
         String query = "UPDATE logs SET to_do_items = CASE " +
                 "WHEN to_do_items IS NULL OR to_do_items = '' THEN ? " +
                 "ELSE to_do_items || ',' || ? " +
@@ -101,7 +111,10 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
 
     // Method to add an image path to a specific log
     @Override
-    public void addImage(int logId, String imagePath) {
+    public void addImage(int logId, String imagePath) throws SQLException {
+        if (logId <= 0) {
+            throw new SQLException("Invalid log ID.");
+        }
         String query = "UPDATE logs SET images = CASE " +
                 "WHEN images IS NULL OR images = '' THEN ? " +
                 "ELSE images || ',' || ? " +
@@ -273,7 +286,26 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return 0;
     }
 
+    @Override
+    public void updateLogName(int logId, String newLogName) throws SQLException {
+        String query = "UPDATE logs SET log_name = ? WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, newLogName);
+            pstmt.setInt(2, logId);
+            pstmt.executeUpdate();
+        }
+    }
 
+    @Override
+    public void deleteLog(int logId) {
+        String sql = "DELETE FROM logs WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, logId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     // Method to calculate progress as a percentage of completed tasks
     private double calculateProgress(List<Pair<String, Boolean>> toDoItems) {

@@ -11,6 +11,7 @@ import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class HelloApplication extends Application {
     public static final String TITLE = "Address Book";

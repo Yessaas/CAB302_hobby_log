@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
@@ -229,7 +230,11 @@ public class LogsUpdateView {
             toDoListVBox.getChildren().add(newTask);
 
             // Store the to-do item and its state in the database for the specific log
-            logsDAO.addToDoItem(logId, task, isChecked);
+            try {
+                logsDAO.addToDoItem(logId, task, isChecked);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             double newProgress = logsDAO.updateToDoItemStatus(logId, task, newTask.isSelected());
             progressBar.setProgress(newProgress / 100);
 
@@ -253,25 +258,27 @@ public class LogsUpdateView {
 
                 String imagePath = "/images/" + imageName;
 
-                // Load the image
-                Image image = new Image(getClass().getResourceAsStream(imagePath));
+                InputStream imageStream = getClass().getResourceAsStream(imagePath);
+                if (imageStream != null) {
+                    Image image = new Image(imageStream);
+                    images.add(image);
+                }
 
-                // Add to the images list
-                images.add(image);
+
             }
 
-            // Display the first image
-            currentIndex = 0;
-            mediaImageView.setImage(images.get(currentIndex));
+            if(!images.isEmpty())
+            {
+                // Display the first image
+                currentIndex = 0;
+                mediaImageView.setImage(images.get(currentIndex));
 
-            // Update the navigation button states
-            updateButtonState();
-        } /*else {
-            // No images available, set default behavior if necessary
-            mediaImageView.setImage(null);  // Clear the ImageView or show a placeholder image
-            backButton.setDisable(true);
-            nextButton.setDisable(true);
-        }*/
+                // Update the navigation button states
+                updateButtonState();
+            }
+
+
+        }
     }
 
 
@@ -318,6 +325,8 @@ public class LogsUpdateView {
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Failed to add image");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }

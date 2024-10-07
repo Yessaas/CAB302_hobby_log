@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.demoplswork.model.BaseDAO;
 import com.example.demoplswork.model.LogsDAO;
 import com.example.demoplswork.model.Logs;
 import com.example.demoplswork.model.Material;
@@ -19,13 +20,11 @@ public class LogsDAOTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
-
-
         // Set up an in-memory SQLite database for testing
         String url = "jdbc:sqlite::memory:";
         connection = DriverManager.getConnection(url);
         logsDAO = new LogsDAO();
-        logsDAO.connection = connection; // Directly set the inherited connection from BaseDAO
+        BaseDAO.setConnection(connection); // Use the setter method
 
         logsDAO.createLogsTable();
     }

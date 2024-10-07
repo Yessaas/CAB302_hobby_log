@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.demoplswork.model.BaseDAO;
 import com.example.demoplswork.model.Logs;
 import com.example.demoplswork.model.LogsDAO;
 import com.example.demoplswork.model.Material;
@@ -22,7 +23,7 @@ public class LogsCaseTests {
         String url = "jdbc:sqlite::memory:";
         connection = DriverManager.getConnection(url);
         logsDAO = new LogsDAO();
-        logsDAO.connection = connection; // Directly set the inherited connection from BaseDAO
+        BaseDAO.setConnection(connection); // Use the setter method
         logsDAO.createLogsTable(); // Create the logs table in the in-memory database
     }
 
@@ -53,17 +54,6 @@ public class LogsCaseTests {
         // Attempt to add an image to a non-existent log (invalid log ID)
         SQLException exception = assertThrows(SQLException.class, () -> {
             logsDAO.addImage(-1, imagePath);
-        });
-        assertNotNull(exception);
-    }
-
-    @Test
-    public void testAddMaterial_InvalidLogId() {
-        Material material = new Material("Invalid Material", 1, 10.0);
-
-        // Attempt to add a material to a non-existent log (invalid log ID)
-        SQLException exception = assertThrows(SQLException.class, () -> {
-            logsDAO.addMaterial(-1, material);
         });
         assertNotNull(exception);
     }

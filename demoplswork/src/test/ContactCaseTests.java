@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.demoplswork.model.BaseDAO;
 import com.example.demoplswork.model.Contact;
 import com.example.demoplswork.model.ProfileDAO;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,7 @@ public class ContactCaseTests {
         String url = "jdbc:sqlite::memory:";
         connection = DriverManager.getConnection(url);
         profileDAO = new ProfileDAO();
-        profileDAO.connection = connection; // Set the inherited connection from BaseDAO
+        BaseDAO.setConnection(connection); // Use the setter method
         profileDAO.createProfileTable(); // Create the user_profiles table in the in-memory database
     }
 
@@ -43,15 +44,20 @@ public class ContactCaseTests {
 
     @Test
     public void testGetProfileByUserId_InvalidUserId() {
-        // Attempt to retrieve a profile for an invalid user ID
-        Contact contact = new Contact("FirstName", "LastName", "Bio", "photo.png");
+        // Set up initial values for the Contact object
+        Contact contact = new Contact("FirstName", "LastName", "Initial Bio", "initial_photo.png");
+
+        // Attempt to retrieve a profile for an invalid user ID (e.g., -1)
         profileDAO.getProfileByUserId(contact, -1);
-        assertNull(contact.getBio());
-        assertNull(contact.getPhoto());
+
+        // Ensure the bio and photo fields remain unchanged
+        assertEquals("Initial Bio", contact.getBio());
+        assertEquals("initial_photo.png", contact.getPhoto());
     }
 
+
     @Test
-    public void testUpdateProfile_NullFields() {
+    public void testUpdateProfile_NullFields() throws SQLException {
         // Insert a valid profile
         profileDAO.insertProfile(1, "Test Bio", "test_photo.jpg");
 
@@ -80,7 +86,7 @@ public class ContactCaseTests {
     }*/
 
     @Test
-    public void testInsertProfile_DuplicateUserId() {
+    public void testInsertProfile_DuplicateUserId() throws SQLException {
         // Insert a profile with a valid user ID
         profileDAO.insertProfile(1, "Test Bio", "test_photo.jpg");
 

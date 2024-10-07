@@ -6,16 +6,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public abstract class BaseDAO {
-    public Connection connection;
+    protected static Connection connection;
 
     public BaseDAO() {
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:contacts.db");
-            initializeDatabase();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (connection == null) {
+            try {
+                connection = DriverManager.getConnection("jdbc:sqlite:contacts.db");
+                initializeDatabase();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
+    public static void setConnection(Connection conn) {
+        connection = conn;
+    }
+
+
 
     // Method to initialize the database and create tables
     private void initializeDatabase() {

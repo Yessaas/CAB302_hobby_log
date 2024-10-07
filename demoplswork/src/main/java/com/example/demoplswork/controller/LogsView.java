@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +21,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,8 @@ public class LogsView {
     @FXML
     private GridPane projectsGrid;  // The GridPane where logs will be added
 
-    private TableView<Logs> logsTable;  // TableView for logs
+    @FXML
+    private Label logNameText;
 
 
     private int currentRow = 0;  // Track the current row in the grid
@@ -121,10 +124,11 @@ public class LogsView {
             e.printStackTrace();
         }
     }
+
     // Method to handle creating a new log
     @FXML
     public void handleAddNewProject() {
-        createLogModule();
+        createNewLog();
     }
 
     private void loadLogsForUser() {
@@ -188,9 +192,9 @@ public class LogsView {
         titleBackground.setFill(javafx.scene.paint.Color.web("#ffee00"));
         titleBackground.setStroke(javafx.scene.paint.Color.BLACK);
 
-        Label projectTitle = new Label(log.getLogName());
-        projectTitle.setStyle("-fx-font-size: 14px; -fx-font-family: 'Roboto'; -fx-text-fill: black;");
-        titleContainer.getChildren().addAll(titleBackground, projectTitle);
+        logNameText = new Label(log.getLogName());
+        logNameText.setStyle("-fx-font-size: 14px; -fx-font-family: 'Roboto'; -fx-text-fill: black;");
+        titleContainer.getChildren().addAll(titleBackground, logNameText);
 
         // Progress bar
         System.out.println("Creating log module: " + ". Progress: " + log.getProgress());
@@ -224,7 +228,8 @@ public class LogsView {
         HBox buttonsHBox = new HBox(10);
         buttonsHBox.setAlignment(Pos.CENTER);
 
-        Button editButton = new Button("Edit Log");
+        Button editButton = new Button("Rename Log");
+        editButton.setOnAction(event -> renameLog(logID, log));
         editButton.setPrefWidth(90);
         editButton.setPrefHeight(35);
         editButton.setStyle("-fx-background-color: #ffffff;");
@@ -246,12 +251,107 @@ public class LogsView {
         // Add all elements to the main log module VBox
         logModule.getChildren().addAll(imageContainer, titleContainer, progressBar, buttonContainer);
 
+        deleteButton.setOnAction(event -> handleDeleteLog(logID, log, logModule));
+
         return logModule; // Return the complete log module
     }
 
+    private void renameLog(int currentLogId, Logs log) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Rename Log");
+        dialog.setHeaderText("Rename Log");
+        dialog.setContentText("New log name:");
+        dialog.getEditor().setText(log.getLogName());
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            String newLogName = result.get().trim();
+
+            if (newLogName.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("Log name cannot be empty!");
+                alert.showAndWait();
+                return;
+            }
+
+            try {
+                logsDAO.updateLogName(currentLogId, newLogName);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Log name updated successfully!");
+                logNameText.setText(newLogName);
+                log.setLogName(newLogName);
+                alert.showAndWait();
+            } catch (SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Failed to update log name. Please try again.");
+                alert.showAndWait();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Method to handle deleting a log
+    private void handleDeleteLog(int logID, Logs selectedLog, VBox logModule) {
+
+        if (selectedLog != null) {
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Delete Log");
+            confirmationAlert.setHeaderText("Are you sure you want to delete this log?");
+            confirmationAlert.setContentText("Log: " + selectedLog.getLogName());
+
+            Optional<ButtonType> result = confirmationAlert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                deleteLogFromDatabase(logID);
+                projectsGrid.getChildren().remove(logModule);
+                rearrangeGrid();
+            }
+        } else {
+            Alert warningAlert = new Alert(Alert.AlertType.WARNING);
+            warningAlert.setTitle("No Selection");
+            warningAlert.setHeaderText("No Log Selected");
+            warningAlert.setContentText("Please select a log to delete.");
+            warningAlert.showAndWait();
+        }
+    }
+
+    // Method to delete the log from the database
+    private void deleteLogFromDatabase(int logId) {
+        // Assuming you have a LogsDAO class to interact with the database
+        LogsDAO logsDAO = new LogsDAO();
+        logsDAO.deleteLog(logId);
+    }
+
+    private void rearrangeGrid() {
+        List<Node> remainingLogs = new ArrayList<>(projectsGrid.getChildren());
+
+        // Clear the GridPane
+        projectsGrid.getChildren().clear();
+
+        // Reset row and column
+        currentRow = 0;
+        currentColumn = 0;
+
+        // Re-add the logs in order
+        for (Node logNode : remainingLogs) {
+            projectsGrid.add(logNode, currentColumn, currentRow);
+
+            // Update column and row
+            currentColumn++;
+            if (currentColumn >= LOGS_PER_ROW) {
+                currentColumn = 0;
+                currentRow++;
+            }
+        }
+    }
 
     // Method to create a log module
-    private void createLogModule() {
+    private void createNewLog() {
         // Create a dialog to get the project name
         TextInputDialog dialog = new TextInputDialog("New Project");
         dialog.setTitle("Create New Project");
@@ -268,7 +368,12 @@ public class LogsView {
             Logs newLog = new Logs(projectName, List.of(), List.of(), List.of());
 
             // Insert the new log into the database with the correct userID
-            int logID = logsDAO.insertLog(userID, newLog);
+            int logID;
+            try {
+                logID = logsDAO.insertLog(userID, newLog);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             // Redirect the user to the logs update view
             try {

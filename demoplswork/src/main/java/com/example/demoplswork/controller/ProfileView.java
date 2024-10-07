@@ -85,7 +85,7 @@ public class ProfileView {
 
     }
 
-    private void loadUser(){
+    private void loadUser() {
         int userID = app.getLoggedInUserID();
         contactDAO = new ContactDAO();
 
@@ -94,7 +94,11 @@ public class ProfileView {
 
         // Now update the contact with profile details (bio, photo)
         ProfileDAO profileDAO = new ProfileDAO();
-        profileDAO.insertProfile(userID, " ", " ");
+        try {
+            profileDAO.insertProfile(userID, " ", " ");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         profileDAO.getProfileByUserId(contact, userID);
 
         if (contact != null) {
@@ -205,6 +209,9 @@ public class ProfileView {
         }
     }
 
+
+
+
     @FXML
     private void showEditProfileDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -218,6 +225,7 @@ public class ProfileView {
         TextArea bioArea = new TextArea(userBio);
         bioArea.setPrefHeight(100); // Set the preferred height to allow multiple lines
         bioArea.setWrapText(true);  // Ensure text wraps within the TextArea
+        bioArea.setText(bioText.getText());
 
         vbox.getChildren().addAll(new Label("Bio:"), bioArea);
 
@@ -235,7 +243,11 @@ public class ProfileView {
                 // Update bio in the database
                 int userID = app.getLoggedInUserID();
                 ProfileDAO profileDAO = new ProfileDAO();
-                profileDAO.updateProfile(userID, userBio, null);  // update bio only
+                try {
+                    profileDAO.updateProfile(userID, userBio, null);  // update bio only
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
 
             }
             return null;
@@ -286,6 +298,8 @@ public class ProfileView {
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Failed to add image");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
