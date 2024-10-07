@@ -73,12 +73,12 @@
       </children>
    </VBox>
 
-   <ScrollPane hbarPolicy="NEVER" prefHeight="501.0" prefWidth="1920.0">
+   <ScrollPane hbarPolicy="NEVER" fitToWidth="true" prefHeight="501.0" prefWidth="1920.0">
       <content>
-         <VBox alignment="CENTER" prefHeight="758.0" prefWidth="1984.0">
+         <VBox alignment="CENTER" prefHeight="758.0" prefWidth="1984.0" >
             <HBox prefHeight="150.0" prefWidth="1440.0">
                <children>
-                  <StackPane fx:id="post1" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;">
+                  <StackPane fx:id="post1" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="80">
                      <children>
                         <VBox prefHeight="150.0" prefWidth="300.0" spacing="10" style="-fx-padding: 10;">
                            <children>
@@ -110,7 +110,7 @@
                      </children>
                   </StackPane>
                   <VBox prefHeight="277.0" prefWidth="300.0" VBox.vgrow="ALWAYS" />
-                  <StackPane fx:id="post2" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;">
+                  <StackPane fx:id="post2" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="85">
                      <children>
                         <VBox prefHeight="150.0" prefWidth="100.0" spacing="10" style="-fx-padding: 10;">
                            <children>
@@ -133,6 +133,7 @@
                                     </Label>
                                  </children>
                               </HBox>
+                              <Label fx:id="introLine1" alignment="CENTER_LEFT" contentDisplay="CENTER" prefHeight="20.0" prefWidth="561.0" text="" />
                               <ImageView fx:id="placeholderImage2" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" >
                                  <image>
                                     <Image url="@../../../images/post-ph.jpg" />
@@ -150,7 +151,7 @@
 
             <HBox prefHeight="150.0" prefWidth="1440.0">
                <children>
-                  <StackPane fx:id="post3" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;">
+                  <StackPane fx:id="post3" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="80">
                      <children>
                         <VBox prefHeight="150.0" prefWidth="300.0" spacing="10" style="-fx-padding: 10;">
                            <children>
@@ -182,7 +183,7 @@
                      </children>
                   </StackPane>
                   <VBox prefHeight="277.0" prefWidth="300.0" />
-                  <StackPane fx:id="post4" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;">
+                  <StackPane fx:id="post4" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="85">
                      <children>
                         <VBox prefHeight="150.0" prefWidth="100.0" spacing="10" style="-fx-padding: 10;">
                            <children>
@@ -205,6 +206,7 @@
                                     </Label>
                                  </children>
                               </HBox>
+                              <Label fx:id="introLine2" alignment="CENTER_LEFT" contentDisplay="CENTER" prefHeight="20.0" prefWidth="561.0" text="" />
                               <ImageView fx:id="placeholderImage4" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../images/post-ph.jpg" />
