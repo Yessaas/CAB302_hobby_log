@@ -1,4 +1,4 @@
-import com.example.demoplswork.Contact;
+import com.example.demoplswork.model.Contact;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,61 +8,71 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ContactTest
 {
     private Contact contact;
+
     @BeforeEach
     public void setUp()
     {
         contact = new Contact("John","Doe",
-                "john.doe@example.com","1234567890");
+                "Hi my name is John","image.png");
     }
+
     @Test
     public void testGetId()
     {
         contact.setId(1);
         assertEquals(1,contact.getId());
     }
+
     @Test
     public void testGetFirstName()
     {
         assertEquals("John", contact.getFirstName());
     }
+
     @Test
     public void testSetFirstName()
     {
         contact.setFirstName("Jane");
         assertEquals("Jane", contact.getFirstName());
     }
+
     @Test
     public void testGetLastName()
     {
         assertEquals("Doe", contact.getLastName());
     }
+
     @Test
     public void testSetLastName()
     {
         contact.setLastName("Smith");
         assertEquals("Smith", contact.getLastName());
     }
+
     @Test
-    public void testGetEmail()
+    public void testGetBio()
     {
-        assertEquals("john.doe@example.com", contact.getEmail());
+        assertEquals("Hi my name is John", contact.getBio());
     }
+
     @Test
     public void testSetEmail()
     {
-        contact.setEmail("jane.smith@example.com");
-        assertEquals("jane.smith@example.com", contact.getEmail());
+        contact.setBio("Hi my name is Jane");
+        assertEquals("Hi my name is Jane", contact.getBio());
     }
+
     @Test
-    public void testGetPhone()
+    public void testGetPhoto()
     {
-        assertEquals("1234567890", contact.getPhone());
+        assertEquals("image.png", contact.getPhoto());
     }
+
     @Test
-    public void testSetPhone()
+    public void testSetPhoto()
     {
-        contact.setPhone("0987654321");
-        assertEquals("0987654321", contact.getPhone());
+        contact.setPhoto("random_image.jpg");
+        assertEquals("random_image.jpg", contact.getPhoto());
     }
     @Test
     public void testGetFullName()

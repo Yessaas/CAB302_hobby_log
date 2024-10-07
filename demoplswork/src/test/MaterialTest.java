@@ -28,8 +28,8 @@ public class MaterialTest {
     public void testPositive1() { assertTrue(material.getQuantity() > 0); }
 
     @Test
-    public void getCost() { assertEquals(3.5, material.getCost()); }
+    public void getCost() { assertEquals(3.5, material.getPrice()); }
     @Test
-    public void testPositive2() { assertTrue(material.getCost() > 0); }
+    public void testPositive2() { assertTrue(material.getPrice() > 0); }
 
 }

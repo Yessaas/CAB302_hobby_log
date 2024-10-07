@@ -6,41 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogsDAO implements IContactDAO{
-
-    private static final String DB_URL = "jdbc:sqlite:contacts.db";
-    private Connection connection;
-
-    public LogsDAO() throws SQLException {
-        connection = SqliteConnection.getInstance();
-        createLogsTable(); // Create the users table if it doesn't exist
-    }
-
-    // Create the logs table
-    public void createLogsTable() throws SQLException {
-        if (connection != null && connection.isClosed()) {
-            System.out.println("Connection is closed");
-        } else {
-            System.out.println("Connection is open");
-        }
-        String query = "CREATE TABLE IF NOT EXISTS logs (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "user_id INTEGER NOT NULL," +
-                "log_name TEXT NOT NULL," +
-                "to_do_items TEXT," +
-                "images TEXT," +
-                "progress REAL," +
-                "materials TEXT," +
-                "FOREIGN KEY (user_id) REFERENCES users(id))";
-        try {
-            Statement stmt = connection.createStatement();
-            stmt.execute(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+public class LogsDAO extends BaseDAO implements ILogsDAO{
 
     // Insert a new log into the database
+    @Override
     public int insertLog(int userId, Logs log) {
         String query = "INSERT INTO logs(user_id, log_name, to_do_items, images, progress, materials) VALUES(?, ?, ?, ?, ?, ?)";
         ResultSet rs = null;
@@ -109,6 +78,7 @@ public class LogsDAO implements IContactDAO{
 
 
     // Method to add a to-do item to a specific log
+    @Override
     public void addToDoItem(int logId, String toDoItem, boolean isChecked) {
         String query = "UPDATE logs SET to_do_items = CASE " +
                 "WHEN to_do_items IS NULL OR to_do_items = '' THEN ? " +
@@ -130,6 +100,7 @@ public class LogsDAO implements IContactDAO{
     }
 
     // Method to add an image path to a specific log
+    @Override
     public void addImage(int logId, String imagePath) {
         String query = "UPDATE logs SET images = CASE " +
                 "WHEN images IS NULL OR images = '' THEN ? " +
@@ -149,6 +120,7 @@ public class LogsDAO implements IContactDAO{
     }
 
     // Method to add a material to a specific log
+    @Override
     public void addMaterial(int logId, Material material) {
         String query = "UPDATE logs SET materials = CASE " +
                 "WHEN materials IS NULL OR materials = '' THEN ? " +
@@ -170,7 +142,7 @@ public class LogsDAO implements IContactDAO{
     }
 
 
-
+    @Override
     public List<Object[]> getLogsForUser(int userId) {
         String query = "SELECT id, log_name, to_do_items, images, materials, progress FROM logs WHERE user_id = ?";
         List<Object[]> logsList = new ArrayList<>();
@@ -256,6 +228,7 @@ public class LogsDAO implements IContactDAO{
     }
 
     // Update a specific to-do item's status in the database and recalculate progress
+    @Override
     public double updateToDoItemStatus(int logId, String task, boolean isChecked) {
         String querySelect = "SELECT to_do_items, progress FROM logs WHERE id = ?";
         String queryUpdate = "UPDATE logs SET to_do_items = ?, progress = ? WHERE id = ?";
@@ -345,30 +318,7 @@ public class LogsDAO implements IContactDAO{
         return List.of(imagesStr.split(","));
     }
 
-    @Override
-    public boolean createAccount(String firstName, String lastName, String email, String password) {
-        return false;
-    }
 
-    @Override
-    public boolean authenticateUser(String email, String password) {
-        return false;
-    }
-
-    @Override
-    public boolean updateUser(int id, String firstName, String lastName, String email, String password) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteUser(int id) {
-        return false;
-    }
-
-    @Override
-    public List<Contact> getAllContacts() {
-        return List.of();
-    }
 }
 
 

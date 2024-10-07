@@ -1,17 +1,13 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
-import com.example.demoplswork.model.SqliteContactDAO;
+import com.example.demoplswork.model.ContactDAO;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -37,11 +33,11 @@ public class LoginController {
 
 
 
-    private SqliteContactDAO contactDAO;
+    private ContactDAO contactDAO;
 
     // Constructor
     public LoginController() {
-        contactDAO = new SqliteContactDAO();
+        contactDAO = new ContactDAO();
     }
 
     public void setApplication(HelloApplication app) {

@@ -3,7 +3,6 @@ package com.example.demoplswork.controller;
 import com.example.demoplswork.HelloApplication;
 import com.example.demoplswork.model.Logs;
 import com.example.demoplswork.model.LogsDAO;
-import com.example.demoplswork.model.SqliteContactDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import java.io.IOException;
@@ -125,18 +124,6 @@ public class LogsView {
     // Method to handle creating a new log
     @FXML
     public void handleAddNewProject() {
-        // Create the log UI elements
-        // VBox logModule = createLogModule();
-        /*
-        // Add the log to the GridPane
-        projectsGrid.add(logModule, currentColumn, currentRow);
-
-        // Update the column and row for the next log
-        currentColumn++;
-        if (currentColumn >= LOGS_PER_ROW) {
-            currentColumn = 0;
-            currentRow++;
-        }*/
         createLogModule();
     }
 

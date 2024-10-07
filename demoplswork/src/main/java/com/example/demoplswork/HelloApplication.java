@@ -114,7 +114,7 @@ public class HelloApplication extends Application {
     public void showAccountView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("profile-view.fxml"));
         Parent root = fxmlLoader.load();
-        AccountView controller = fxmlLoader.getController();
+        ProfileView controller = fxmlLoader.getController();
         controller.setApplication(this);
 
         Scene scene = new Scene(root);
