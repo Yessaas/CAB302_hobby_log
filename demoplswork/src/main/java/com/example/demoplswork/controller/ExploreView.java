@@ -106,6 +106,11 @@ public class ExploreView {
             }
         });
 
+        introLine1.setText("This is a detailed view of the blog.");
+        introLine1.setStyle("-fx-padding: 0 0 0 10;");
+        introLine2.setText("This is a detailed view of the blog.");
+        introLine2.setStyle("-fx-padding: 0 0 0 10;");
+
         MenuItem logout = new MenuItem("Log Out");
         logout.setOnAction(event -> onLogout());
 
@@ -246,14 +251,23 @@ public class ExploreView {
     }
 
     @FXML
+    private Label introLine1;
+
+    @FXML
+    private Label introLine2;
+
+    @FXML
     public void viewBlog(ActionEvent event) {
-        String blogContent = "This is a detailed view of the blog. \n\n" +
+        String blogIntro = "This is a detailed view of the blog.";
+        introLine1.setText(blogIntro);
+        introLine2.setText(blogIntro);
+        String blogContent = blogIntro + "\n\n" +
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n" +
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \n" +
                 "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \n" +
                 "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
-        Alert alert = new Alert(AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Blog Content");
         alert.setHeaderText(null);
         alert.setContentText(blogContent);
