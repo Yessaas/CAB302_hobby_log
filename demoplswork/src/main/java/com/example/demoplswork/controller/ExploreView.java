@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.stage.FileChooser;
+import java.io.File;
 
 public class ExploreView {
 
@@ -81,12 +83,6 @@ public class ExploreView {
     private VBox commentsContainer4;
 
     @FXML
-    void search(ActionEvent event) {
-        listView.getItems().clear();
-        listView.getItems().addAll(searchList(searchBar.getText(), hobbys));
-    }
-
-    @FXML
     private Button accountButton;
 
     public void setApplication(HelloApplication app) {
@@ -96,6 +92,7 @@ public class ExploreView {
     @FXML
     public void initialize() {
         accountMenu = new ContextMenu();
+        hobbyChoiceBox.getItems().addAll(hobbys);
 
         MenuItem viewProfile = new MenuItem("View Profile");
         viewProfile.setOnAction(event -> {
@@ -115,8 +112,6 @@ public class ExploreView {
         logout.setOnAction(event -> onLogout());
 
         accountMenu.getItems().addAll(viewProfile, logout);
-
-        listView.getItems().addAll(hobbys);
     }
 
     private List<String> searchList(String searchHobby, List<String> listOfStrings) {
@@ -273,4 +268,79 @@ public class ExploreView {
         alert.setContentText(blogContent);
         alert.showAndWait();
     }
+
+    @FXML
+    private ComboBox<String> hobbyChoiceBox;
+
+    @FXML
+    void searchByHobby(ActionEvent event) {
+        listView.getItems().clear();
+
+        String selectedHobby = hobbyChoiceBox.getValue();
+        if (selectedHobby != null && !selectedHobby.isEmpty()) {
+            listView.getItems().addAll(searchList(selectedHobby, hobbys));
+        }
+    }
+    @FXML
+    private void showCreateBlogDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Create New Blog");
+
+        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
+
+
+        TextField introField = new TextField();
+        introField.setPromptText("Enter Blog Introduction");
+
+        TextArea descriptionArea = new TextArea();
+        descriptionArea.setPromptText("Enter Detailed Description");
+
+        ComboBox<String> categoryComboBox = new ComboBox<>();
+        categoryComboBox.getItems().addAll("Woodworking", "PC Building", "Miniatures", "Music Production",
+                "Coding", "Cooking", "Gardening", "Digital Art", "Traditional Art");
+        categoryComboBox.setPromptText("Select Category");
+
+        Button uploadImageButton = new Button("Upload Image");
+        Label imagePathLabel = new Label("No image selected");
+
+        uploadImageButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+            File selectedFile = fileChooser.showOpenDialog(dialog.getOwner());
+            if (selectedFile != null) {
+                imagePathLabel.setText(selectedFile.getAbsolutePath());
+            }
+        });
+
+        VBox dialogContent = new VBox(10);
+        dialogContent.getChildren().addAll(
+                new Label("Blog Introduction:"), introField,
+                new Label("Detailed Description:"), descriptionArea,
+                new Label("Category:"), categoryComboBox,
+                uploadImageButton, imagePathLabel
+        );
+        dialog.getDialogPane().setContent(dialogContent);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == submitButtonType) {
+                String intro = introField.getText();
+                String description = descriptionArea.getText();
+                String category = categoryComboBox.getValue();
+                String imagePath = imagePathLabel.getText();
+
+                if (intro.isEmpty() || description.isEmpty() || category == null || imagePath.equals("No image selected")) {
+                    Alert errorAlert = new Alert(AlertType.ERROR, "Please fill all fields, select a category, and upload an image.");
+                    errorAlert.showAndWait();
+                } else {
+                    System.out.println("Blog Created:\nIntro: " + intro + "\nDescription: " + description +
+                            "\nCategory: " + category + "\nImage Path: " + imagePath);
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
 }
