@@ -39,5 +39,4 @@ jobs:
     - name: Build with Maven
       run: mvn clean install --file demoplswork/pom.xml
 
-    - name: Run specific test file
-      run: mvn test -Dtest=ContactManagerTest --file demoplswork/pom.xml
+
