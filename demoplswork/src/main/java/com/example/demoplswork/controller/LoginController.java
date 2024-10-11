@@ -30,6 +30,8 @@ public class LoginController {
     private Button createAccountButton;
     @FXML
     private Button createAccountSubmitButton;
+    @FXML
+    private Button createAccountCancelButton;
 
 
 
@@ -90,6 +92,16 @@ public class LoginController {
     private void onCreateAccount() {
         try {
             app.showCreateAccountView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Method for cancelling account creation
+    @FXML
+    private void onCancelCreateAccount() {
+        try {
+            app.showLoginView();
         } catch (Exception e) {
             e.printStackTrace();
         }
