@@ -27,7 +27,6 @@ jobs:
         java-version: '21'
         distribution: 'corretto'
         cache: maven
- development
 
     - name: Cache Maven packages
       uses: actions/cache@v2
