@@ -2,6 +2,7 @@ module com.example.demoplswork {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires java.desktop;
 
 
     opens com.example.demoplswork to javafx.fxml;
@@ -10,4 +11,6 @@ module com.example.demoplswork {
     opens com.example.demoplswork.controller to javafx.fxml;
     exports com.example.demoplswork.model;
     opens com.example.demoplswork.model to javafx.fxml;
+    exports com.example.demoplswork.events;
+    opens com.example.demoplswork.events to javafx.fxml;
 }

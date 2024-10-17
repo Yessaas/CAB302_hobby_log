@@ -4,6 +4,7 @@ import java.util.List;
 
 public interface IContactDAO {
 
+
     boolean createAccount(String firstName, String lastName, String email, String password);
 
     boolean authenticateUser(String email, String password);

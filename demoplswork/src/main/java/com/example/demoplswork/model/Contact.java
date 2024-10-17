@@ -1,7 +1,9 @@
 package com.example.demoplswork.model;
 
 import java.util.Objects;
-
+/**
+ * A simple model class representing a contact with a first name, last name, email, and phone number.
+ */
 public class Contact {
     private int id;
     private String firstName;
@@ -9,6 +11,13 @@ public class Contact {
     private String bio;
     private String photo;
 
+    /**
+     * Constructs a new Contact with the specified first name, last name, bio, and profile photo.
+     * @param firstName The first name of the contact
+     * @param lastName The last name of the contact
+     * @param bio The bio of the contact
+     * @param photo The profile photo of the contact
+     */
     public Contact(String firstName, String lastName, String bio, String photo) {
         this.firstName = firstName;
         this.lastName = lastName;

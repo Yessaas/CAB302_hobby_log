@@ -1,9 +1,10 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
-import com.example.demoplswork.model.Logs;
-import com.example.demoplswork.model.LogsDAO;
-import com.example.demoplswork.model.Material;
+import com.example.demoplswork.events.*;
+import com.example.demoplswork.model.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Side;
@@ -30,12 +31,16 @@ import java.io.IOException;
 public class LogsUpdateView {
 
     private HelloApplication app;
-
     private ContextMenu accountMenu;
-
     private int logId;  // The ID of the log being updated
-
     private LogsDAO logsDAO = new LogsDAO();
+    private LogEventDAO logEventDAO;
+    // VBox or ListView to display events
+    @FXML
+    private VBox logEventsBox;
+    @FXML
+    private ListView<LogEvent> logEventsListView;
+    private ContactDAO contactDAO;
 
     @FXML
     private Button accountButton;
@@ -75,6 +80,9 @@ public class LogsUpdateView {
     private Logs log;
 
     public LogsUpdateView() throws SQLException {
+        logEventDAO = new LogEventDAO();
+        logEventsBox = new VBox();
+        logEventsListView = new ListView<>();
     }
 
     @FXML
@@ -181,10 +189,35 @@ public class LogsUpdateView {
 
             // Event listener to update the log when a checkbox is checked/unchecked
             checkBox.setOnAction(event -> {
+                boolean wasChecked = checkBox.isSelected();  // Capture the new state of the checkbox
+
+                // Update the task's checked state in the log
                 log.updateToDoItemStatus(task, checkBox.isSelected());  // Custom method to update the task's checked state
                 double progress = logsDAO.updateToDoItemStatus(logId, task, checkBox.isSelected());
+
+                LogsView logsView;
+                try {
+                    logsView = new LogsView();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // Add a ToDoEvent only if the box goes from unchecked to checked
+                if (wasChecked) {
+                    LogEvent newEvent = new ToDoEvent(0,app.getLoggedInUserID(), logId, task, new ArrayList<>(), new ArrayList<>());
+                    logsView.addEventToProgressLog(newEvent);
+                }
+
+                // Update the progress bar
                 progressBar.setProgress(progress / 100);
+
+                // If the progress reaches 100%, log an EndEvent
+                if (progress / 100 == 1) {
+                    LogEvent endEvent = new EndEvent(0, app.getLoggedInUserID(), logId, log.getLogName(), new ArrayList<>(), new ArrayList<>());
+                    logsView.addEventToProgressLog(endEvent);
+                }
             });
+
         }
 
         // Populate the materials in the table
@@ -194,6 +227,8 @@ public class LogsUpdateView {
         loadImagesFromLog();
 
         getTotalCost(log.getMaterials());
+
+        displayLogEvents(logId);
 
     }
 
@@ -241,10 +276,35 @@ public class LogsUpdateView {
 
             // Event listener to update the log when a checkbox is checked/unchecked
             newTask.setOnAction(event -> {
+                boolean wasChecked = newTask.isSelected();  // Capture the new state of the checkbox
+
+                // Update the task's checked state in the log
                 log.updateToDoItemStatus(task, newTask.isSelected());  // Custom method to update the task's checked state
                 double progress = logsDAO.updateToDoItemStatus(logId, task, newTask.isSelected());
+
+                LogsView logsView;
+                try {
+                    logsView = new LogsView();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                // Add a ToDoEvent only if the box goes from unchecked to checked
+                if (wasChecked) {
+                    LogEvent newEvent = new ToDoEvent(0, app.getLoggedInUserID(), logId, task, new ArrayList<>(), new ArrayList<>());
+                    logsView.addEventToProgressLog(newEvent);
+                }
+
+                // Update the progress bar
                 progressBar.setProgress(progress / 100);
+
+                // If the progress reaches 100%, log an EndEvent
+                if (progress / 100 == 1) {
+                    LogEvent endEvent = new EndEvent(0, app.getLoggedInUserID(), logId, log.getLogName(), new ArrayList<>(), new ArrayList<>());
+                    logsView.addEventToProgressLog(endEvent);
+                }
             });
+
         });
     }
 
@@ -321,6 +381,10 @@ public class LogsUpdateView {
                 // Store the image path in the database
                 String imageName = selectedFile.getName(); // Get the name of the file only
                 logsDAO.addImage(logId, imageName);
+
+                LogsView logsView = new LogsView();
+                LogEvent event = new ImageEvent(0, app.getLoggedInUserID(), logId, imageName, new ArrayList<>(), new ArrayList<>());
+                logsView.addEventToProgressLog(event);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -444,6 +508,15 @@ public class LogsUpdateView {
             logsDAO.addMaterial(logId, material);
 
             getTotalCost(log.getMaterials());
+
+            LogsView logsView;
+            try {
+                logsView = new LogsView();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            LogEvent event = new MaterialEvent(0, app.getLoggedInUserID(), logId, materialName, new ArrayList<>(), new ArrayList<>());
+            logsView.addEventToProgressLog(event);
         });
     }
 
@@ -453,6 +526,64 @@ public class LogsUpdateView {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.showAndWait();
+    }
+
+    public void displayLogEvents(int logId) {
+        try {
+            // Fetch log events from the database
+            List<LogEvent> logEvents = logEventDAO.getLogEventsForLog(logId);
+
+            // Create an observable list to populate the ListView
+            ObservableList<LogEvent> eventItems = FXCollections.observableArrayList(logEvents);
+
+            // Set the items in the ListView
+            logEventsListView.setItems(eventItems);
+
+            // Set a custom cell factory for the ListView to display LogEventCell
+            logEventsListView.setCellFactory(param -> new ListCell<>() {
+                @Override
+                protected void updateItem(LogEvent event, boolean empty) {
+                    super.updateItem(event, empty);
+                    if (empty || event == null) {
+                        setGraphic(null);
+                    } else {
+                        // Fetch user details
+                        Contact contact = getContactForUserId(event.getUserId());
+
+                        // Create a custom LogEventCell
+                        LogEventCell eventCell = new LogEventCell(event, contact.getFirstName(), contact.getPhoto(), 0, 0);
+                        setGraphic(eventCell);  // Set the custom cell graphic
+                    }
+                }
+            });
+
+            // **Clear existing content before adding new content**
+            logEventsBox.getChildren().clear();
+
+            // Add the ListView to the VBox or the container where you want to display it
+            logEventsBox.getChildren().add(logEventsListView);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private Contact getContactForUserId(int userId) {
+        contactDAO = new ContactDAO();
+
+        // Fetch the contact information for the logged-in user
+        Contact contact = contactDAO.getContactById(userId);
+
+        // Now update the contact with profile details (bio, photo)
+        ProfileDAO profileDAO = new ProfileDAO();
+        try {
+            profileDAO.insertProfile(userId, " ", " ");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        profileDAO.getProfileByUserId(contact, userId);
+        return contact;
     }
 }
 

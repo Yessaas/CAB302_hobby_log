@@ -1,6 +1,10 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
+import com.example.demoplswork.events.LogEvent;
+import com.example.demoplswork.events.LogEventDAO;
+import com.example.demoplswork.events.ProgressLog;
+import com.example.demoplswork.events.StartEvent;
 import com.example.demoplswork.model.Logs;
 import com.example.demoplswork.model.LogsDAO;
 import javafx.event.ActionEvent;
@@ -50,9 +54,14 @@ public class LogsView {
 
     private LogsDAO logsDAO;
 
+    private ProgressLog progressLog;
+    private LogEventDAO logEventDAO;
+
     // Constructor
     public LogsView() throws SQLException {
+        this.progressLog = new ProgressLog();
         logsDAO = new LogsDAO();
+        logEventDAO = new LogEventDAO();
     }
 
     public void setApplication(HelloApplication app) {
@@ -377,6 +386,8 @@ public class LogsView {
 
             // Redirect the user to the logs update view
             try {
+                LogEvent startEvent = new StartEvent(0, userID, logID, projectName, new ArrayList<>(), new ArrayList<>());
+                addEventToProgressLog(startEvent);
                 goToUpdateLogs(logID, newLog);  // This will let the user input log information
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -384,6 +395,22 @@ public class LogsView {
         });
     }
 
+    // Public method to allow other classes to add events to the progress log
+    public void addEventToProgressLog(LogEvent event) {
+        progressLog.addEvent(event);
+        try {
+            logEventDAO.insertLogEvent(event);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        String log = progressLog.getLog();
+        System.out.println(log);
+    }
+
+    // Public method to retrieve the progress log
+    public String getProgressLog() {
+        return progressLog.getLog();
+    }
 
 
 

@@ -83,6 +83,23 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return sb.toString();
     }
 
+    public boolean doesLogExist(int logId) {
+        String query = "SELECT COUNT(1) FROM logs WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, logId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0; // If count is greater than 0, the log exists
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Log does not exist or an error occurred
+    }
+
+
 
     // Method to add a to-do item to a specific log
     @Override
@@ -189,6 +206,46 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
 
         return logsList;
     }
+
+    public List<String> getImagesForLog(int logId) {
+        String query = "SELECT images FROM logs WHERE id = ?";
+        List<String> imagesList = new ArrayList<>();
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, logId);
+            var rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                // Deserialize images from the string
+                imagesList = parseImages(rs.getString("images"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return imagesList;
+    }
+
+    public String getLogNameById(int logId) {
+        String query = "SELECT log_name FROM logs WHERE id = ?";
+        String logName = null;
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, logId);
+            var rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                logName = rs.getString("log_name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return logName;
+    }
+
 
 
     // Helper method to serialize materials into a string format (e.g., name:quantity:cost)

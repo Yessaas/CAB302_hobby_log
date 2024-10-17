@@ -4,9 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+/**
+ * The base abstract DAO class for creating and accessing the database connection. Creates database tables if not exist
+ */
 public abstract class BaseDAO {
     protected static Connection connection;
+
 
     public BaseDAO() {
         if (connection == null) {
@@ -31,6 +34,7 @@ public abstract class BaseDAO {
         createProfileTable();  // Create the user_profiles table
         createLogsTable();
         createContactsTable();
+        createLogEventsTable();
     }
 
 
@@ -64,6 +68,24 @@ public abstract class BaseDAO {
             Statement stmt = connection.createStatement();
             stmt.execute(query);
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Create the 'log_events' table if it doesn't exist
+    public void createLogEventsTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS log_events ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "timestamp TEXT NOT NULL, "
+                + "description TEXT NOT NULL, "
+                + "user_id INTEGER NOT NULL, "
+                + "log_id INTEGER NOT NULL, "
+                + "event_type TEXT NOT NULL"
+                + ");";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e){
             e.printStackTrace();
         }
     }

@@ -3,7 +3,9 @@ package com.example.demoplswork.model;
 import javafx.util.Pair;
 
 import java.util.List;
-
+/**
+ * A simple model class representing a Log with a log name, list of to do items, list of image paths, and list of materials.
+ */
 public class Logs {
     private int id;
     private String logName;
@@ -12,6 +14,13 @@ public class Logs {
     private List<String> images; // List of image file paths
     private List<Material> materials; // List of materials
 
+    /**
+     * Constructs a new Contact with the specified first name, last name, bio, and profile photo.
+     * @param logName The title or name of the log
+     * @param toDoItems A list of to-do items with a boolean value and to-do string
+     * @param images A list of image paths
+     * @param materials A list of materials
+     */
     // Constructor
     public Logs(String logName, List<Pair<String, Boolean>> toDoItems, List<String> images, List<Material> materials) {
         this.logName = logName;

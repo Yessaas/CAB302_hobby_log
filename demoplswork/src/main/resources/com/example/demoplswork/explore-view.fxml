@@ -14,215 +14,392 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.ComboBox?>
 
-<VBox alignment="TOP_CENTER" prefHeight="1080.0" prefWidth="1920.0" spacing="20.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.ExploreView">
+<?import javafx.scene.control.TextField?>
+<VBox alignment="TOP_CENTER" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.ExploreView">
 
-   <HBox alignment="CENTER" prefHeight="108" prefWidth="1440" spacing="10" style="-fx-background-color: #FFD643;">
-      <effect>
-         <DropShadow color="rgba(0, 0, 0, 0.5)" radius="10" />
-      </effect>
-      <ImageView fitHeight="108.0" preserveRatio="true">
-         <image>
-            <Image url="@../../../images/logo.jpg" />
-         </image>
-      </ImageView>
-      <Region HBox.hgrow="ALWAYS" />
-      <HBox alignment="CENTER" spacing="30">
-         <Button onAction="#goToHome" prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="Home" />
-         <Button onAction="#goToLogs" prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="My Logs" />
-         <Button prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="Explore" />
-         <Button fx:id="accountButton" style="-fx-background-color: transparent; -fx-border-color: transparent;" onAction="#showAccountMenu">
-            <graphic>
-               <ImageView fitHeight="50.0" fitWidth="50.0">
-                  <image>
-                     <Image url="@../../../images/account_circle.png" />
-                  </image>
-               </ImageView>
-            </graphic>
-         </Button>
-         <HBox.margin>
-            <Insets right="80" />
-         </HBox.margin>
-      </HBox>
-   </HBox>
+    <HBox alignment="CENTER" prefHeight="108" prefWidth="1440" spacing="10" style="-fx-background-color: #FFD643;">
+        <effect>
+            <DropShadow color="rgba(0, 0, 0, 0.5)" radius="10" />
+        </effect>
+        <ImageView fitHeight="108.0" preserveRatio="true">
+            <image>
+                <Image url="@../../../images/logo.jpg" />
+            </image>
+        </ImageView>
+        <Region HBox.hgrow="ALWAYS" />
+        <HBox alignment="CENTER" spacing="30">
+            <Button onAction="#goToHome" prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="Home" />
+            <Button onAction="#goToLogs" prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="My Logs" />
+            <Button prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="Explore" />
+            <Button fx:id="accountButton" style="-fx-background-color: transparent; -fx-border-color: transparent;" onAction="#showAccountMenu">
+                <graphic>
+                    <ImageView fitHeight="50.0" fitWidth="50.0">
+                        <image>
+                            <Image url="@../../../images/account_circle.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <HBox.margin>
+                <Insets right="80" />
+            </HBox.margin>
+        </HBox>
+    </HBox>
 
+    <!-- Content below the navigation bar with padding -->
+    <ScrollPane fitToWidth="true">
+        <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: #FFFFFF;">
+            <!-- Adding padding to the rest of the content -->
+            <padding>
+                <Insets top="20" right="200" bottom="20" left="200" />
+            </padding>
 
+            <Label text="Explore" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;"/>
 
-   <VBox alignment="CENTER" prefHeight="230.0" prefWidth="1820.0" translateY="10" spacing="20">
-      <children>
-         <Label text="Explore" style="-fx-font-size: 28px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
+            <!-- Search Bar -->
+            <HBox spacing="0" alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-padding: 5;" >
+                <!-- ComboBox on the left -->
+                <ComboBox fx:id="hobbyChoiceBox" onAction="#searchByHobby" prefHeight="30.0" promptText="☰"
+                          style="-fx-background-radius: 15 0 0 15; -fx-background-color: #FFF8DC; -fx-border-color: #FFD643; -fx-border-width: 2; -fx-border-radius: 15 0 0 15;" />
 
-         <ComboBox fx:id="hobbyChoiceBox" onAction="#searchByHobby" prefHeight="30.0" prefWidth="300.0" promptText="Search Hobby" />
-         <Button text="Create Blog" onAction="#showCreateBlogDialog" prefHeight="30.0" prefWidth="150.0" />
-      </children>
-      <padding>
-         <Insets top="20" bottom="20" />
-      </padding>
-   </VBox>
+                <!-- TextField in the center -->
+                <TextField promptText="Search users, blogs, projects and ideas" prefWidth="400.0" prefHeight="30.0"
+                           style="-fx-background-color: #FFF8DC; -fx-border-color: #FFD643; -fx-border-radius: 0; -fx-border-width: 2" />
 
-
-   <VBox prefHeight="48.0" prefWidth="1920.0">
-      <children>
-         <HBox prefHeight="91.0" prefWidth="1920.0">
-            <children>
-               <HBox prefHeight="100.0" prefWidth="229.0" />
-               <Label alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="169.0" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" text="My Feed:" />
-               <HBox prefHeight="32.0" prefWidth="643.0" />
-               <Label alignment="CENTER" prefHeight="32.0" prefWidth="206.0" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" text="Blogs:" />
-            </children>
-         </HBox>
-      </children>
-   </VBox>
-
-   <ScrollPane hbarPolicy="NEVER" fitToWidth="true" prefHeight="501.0" prefWidth="1920.0">
-      <content>
-         <VBox alignment="CENTER" prefHeight="758.0" prefWidth="1984.0" >
-            <HBox prefHeight="150.0" prefWidth="1440.0">
-               <children>
-                  <StackPane fx:id="post1" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="80">
-                     <children>
-                        <VBox prefHeight="150.0" prefWidth="300.0" spacing="10" style="-fx-padding: 10;">
-                           <children>
-                              <HBox prefHeight="23.0" prefWidth="373.0">
-                                 <children>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0">
-                                       <image>
-                                          <Image url="@../../../images/account_circle.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="Jesse: Hiked to the most beautiful sunset!" textAlignment="CENTER" translateY="15.0">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <ImageView fx:id="placeholderImage1" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" >
-                                 <image>
-                                    <Image url="@../../../images/post-ph.jpg" />
-                                 </image>
-                              </ImageView>
-                              <VBox fx:id="commentsContainer1" spacing="5" />
-                              <Button fx:id="addCommentButton1" text="Comment" onAction="#addCommentDialog" />
-                              <Label fx:id="likeCount1" text="0 Likes" />
-                              <Button fx:id="likeButton1" text="Like" onAction="#handleLike" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </StackPane>
-                  <VBox prefHeight="277.0" prefWidth="300.0" VBox.vgrow="ALWAYS" />
-                  <StackPane fx:id="post2" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="85">
-                     <children>
-                        <VBox prefHeight="150.0" prefWidth="100.0" spacing="10" style="-fx-padding: 10;">
-                           <children>
-                              <Label alignment="CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="561.0" text="BlogFeed1">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
-                              <HBox prefHeight="23.0" prefWidth="373.0">
-                                 <children>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0">
-                                       <image>
-                                          <Image url="@../../../images/account_circle.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="MyUsernameisUsername" textAlignment="CENTER" translateY="15.0">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <Label fx:id="introLine1" alignment="CENTER_LEFT" contentDisplay="CENTER" prefHeight="20.0" prefWidth="561.0" text="" />
-                              <ImageView fx:id="placeholderImage2" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" >
-                                 <image>
-                                    <Image url="@../../../images/post-ph.jpg" />
-                                 </image>
-                              </ImageView>
-                              <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="90.0" style="-fx-background-color: #FFD643;" text="View Blog" onAction="#viewBlog" />
-                              <Button fx:id="likeButton2" text="Like" onAction="#handleLike" />
-                              <Label fx:id="likeCount2" text="0 Likes" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </StackPane>
-               </children>
+                <!-- Button on the right -->
+                <Button text="Search" prefHeight="20.0" style="-fx-background-radius: 0 15 15 0; -fx-background-color: #FFF8DC; -fx-border-width: 2; -fx-border-color: #FFD643; -fx-border-radius: 0 15 15 0;" />
             </HBox>
 
-            <HBox prefHeight="150.0" prefWidth="1440.0">
-               <children>
-                  <StackPane fx:id="post3" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="80">
-                     <children>
-                        <VBox prefHeight="150.0" prefWidth="300.0" spacing="10" style="-fx-padding: 10;">
-                           <children>
-                              <HBox prefHeight="23.0" prefWidth="373.0">
-                                 <children>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0">
-                                       <image>
-                                          <Image url="@../../../images/account_circle.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="Jesse: Hiked to the most beautiful sunset!" textAlignment="CENTER" translateY="15.0">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <ImageView fx:id="placeholderImage3" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" >
-                                 <image>
-                                    <Image url="@../../../images/post-ph.jpg" />
-                                 </image>
-                              </ImageView>
-                              <VBox fx:id="commentsContainer3" spacing="5" />
-                              <Button fx:id="addCommentButton3" text="Comment" onAction="#addCommentDialog" />
-                              <Label fx:id="likeCount3" text="0 Likes" />
-                              <Button fx:id="likeButton3" text="Like" onAction="#handleLike" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </StackPane>
-                  <VBox prefHeight="277.0" prefWidth="300.0" />
-                  <StackPane fx:id="post4" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="85">
-                     <children>
-                        <VBox prefHeight="150.0" prefWidth="100.0" spacing="10" style="-fx-padding: 10;">
-                           <children>
-                              <Label alignment="CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="561.0" text="BlogFeed2">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
-                              <HBox prefHeight="23.0" prefWidth="373.0">
-                                 <children>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0">
-                                       <image>
-                                          <Image url="@../../../images/account_circle.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="MyUsernameisUsername" textAlignment="CENTER" translateY="15.0">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <Label fx:id="introLine2" alignment="CENTER_LEFT" contentDisplay="CENTER" prefHeight="20.0" prefWidth="561.0" text="" />
-                              <ImageView fx:id="placeholderImage4" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../images/post-ph.jpg" />
-                                 </image>
-                              </ImageView>
-                              <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="90.0" style="-fx-background-color: #FFD643;" text="View Blog" onAction="#viewBlog" />
-                              <Button fx:id="likeButton4" text="Like" onAction="#handleLike" />
-                              <Label fx:id="likeCount4" text="0 Likes" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </StackPane>
-               </children>
-            </HBox>
-         </VBox>
-      </content>
-   </ScrollPane>
 
+            <VBox >
+                <HBox alignment="CENTER" spacing="150">
+                    <VBox spacing="15">
+                    <Label alignment="CENTER" prefHeight="32.0"
+                           style="-fx-font-size: 14px; -fx-font-family: 'Roboto';"
+                           text="My Feed:"/>
+                    <VBox fx:id="commentsContainer1">
+
+                    </VBox>
+                    <!--<StackPane fx:id="post1" prefHeight="200.0" prefWidth="500.0"
+                               style="-fx-border-color: black; -fx-border-width: 1;" >
+                        <VBox prefHeight="150.0" prefWidth="300.0" spacing="10" style="-fx-padding: 30;">
+                            <HBox prefHeight="23.0">
+                                <ImageView fitHeight="50.0" fitWidth="50.0">
+                                    <Image url="@../../../images/account_circle.png"/>
+                                </ImageView>
+                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0"
+                                       text="h3nryswan: added new media: progress_picture.jpeg"
+                                       textAlignment="CENTER" translateY="15.0">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                            </HBox>
+                            <Label text="Project: wooden bench (outdoor)"
+                                   style="-fx-font-style: italic;"/>
+                            <StackPane alignment="CENTER">
+                                <ImageView fx:id="placeholderImage1" fitHeight="300.0" fitWidth="330.0"
+                                           pickOnBounds="true" preserveRatio="true">
+                                    <Image url="@../../../images/post-ph.jpg"/>
+                                </ImageView>
+                            </StackPane>
+                            <VBox fx:id="commentsContainer1" spacing="5"/>
+
+                            <Label fx:id="likeCount1" text="27 Likes"/>
+                            <HBox spacing="10">
+                                <Button fx:id="likeButton1" text="Like" onAction="#handleLike"/>
+                                <Button fx:id="addCommentButton1" text="Comment"
+                                        onAction="#addCommentDialog"/>
+
+                            </HBox>
+
+                            <Label text="Hitik_2: nice one mate that looks great!"/>
+                            <Label text="Alexander45: I would recommend varnishing the timber"/>
+                        </VBox>
+                    </StackPane>-->
+                    </VBox>
+                    <VBox spacing="15">
+                        <HBox>
+                            <Label alignment="CENTER" prefHeight="32.0"
+                                   style="-fx-font-size: 14px; -fx-font-family: 'Roboto';"
+                                   text="Blogs:"/>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button text="Create Blog" onAction="#showCreateBlogDialog" prefHeight="30.0" prefWidth="150.0"/>
+                        </HBox>
+                        <StackPane fx:id="post2" prefHeight="200.0" prefWidth="500.0"
+                                   style="-fx-border-color: black; -fx-border-width: 1;">
+                            <VBox prefHeight="150.0" prefWidth="100.0" spacing="10" style="-fx-padding: 30;">
+                                <Label alignment="CENTER" contentDisplay="TOP" prefHeight="20.0" style="-fx-font-size: 16px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;"
+                                       prefWidth="561.0" text="The best screws and where to buy them">
+                                    <font>
+                                        <Font size="14.0"/>
+                                    </font>
+                                </Label>
+                                <HBox prefHeight="23.0" prefWidth="373.0">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0">
+                                        <Image url="@../../../images/account_circle.png"/>
+                                    </ImageView>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0"
+                                           prefWidth="122.0" text="bob_the_builder"
+                                           textAlignment="CENTER" translateY="15.0">
+                                        <font>
+                                            <Font size="14.0"/>
+                                        </font>
+                                    </Label>
+                                </HBox>
+                                <StackPane alignment="CENTER">
+                                    <ImageView fx:id="placeholderImage2" fitHeight="300.0" fitWidth="330.0"
+                                               pickOnBounds="true" preserveRatio="true">
+                                        <Image url="@../../../images/post-ph.jpg"/>
+                                    </ImageView>
+                                </StackPane>
+                                <HBox alignment="CENTER">
+                                    <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="90.0"
+                                            style="-fx-background-color: #FFD643;" text="Open article"
+                                            onAction="#viewBlog"/>
+                                </HBox>
+                            </VBox>
+                        </StackPane>
+                    </VBox>
+
+                </HBox>
+            </VBox>
+
+
+
+
+
+        </VBox>
+    </ScrollPane>
 </VBox>
+
+        <!--
+        <?xml version="1.0" encoding="UTF-8"?>
+
+        <?import javafx.geometry.Insets?>
+        <?import javafx.scene.control.Button?>
+        <?import javafx.scene.control.Label?>
+        <?import javafx.scene.control.ScrollPane?>
+        <?import javafx.scene.effect.DropShadow?>
+        <?import javafx.scene.image.Image?>
+        <?import javafx.scene.image.ImageView?>
+        <?import javafx.scene.layout.HBox?>
+        <?import javafx.scene.layout.Region?>
+        <?import javafx.scene.layout.StackPane?>
+        <?import javafx.scene.layout.VBox?>
+        <?import javafx.scene.text.Font?>
+        <?import javafx.scene.control.ComboBox?>
+
+        <VBox alignment="TOP_CENTER" prefHeight="1080.0" prefWidth="1920.0" spacing="20.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demoplswork.controller.ExploreView">
+
+           <HBox alignment="CENTER" prefHeight="108" prefWidth="1440" spacing="10" style="-fx-background-color: #FFD643;">
+              <effect>
+                 <DropShadow color="rgba(0, 0, 0, 0.5)" radius="10" />
+              </effect>
+              <ImageView fitHeight="108.0" preserveRatio="true">
+                 <image>
+                    <Image url="@../../../images/logo.jpg" />
+                 </image>
+              </ImageView>
+              <Region HBox.hgrow="ALWAYS" />
+              <HBox alignment="CENTER" spacing="30">
+                 <Button onAction="#goToHome" prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="Home" />
+                 <Button onAction="#goToLogs" prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="My Logs" />
+                 <Button prefHeight="40" prefWidth="100" style="-fx-background-color: #ffffff;" text="Explore" />
+                 <Button fx:id="accountButton" style="-fx-background-color: transparent; -fx-border-color: transparent;" onAction="#showAccountMenu">
+                    <graphic>
+                       <ImageView fitHeight="50.0" fitWidth="50.0">
+                          <image>
+                             <Image url="@../../../images/account_circle.png" />
+                          </image>
+                       </ImageView>
+                    </graphic>
+                 </Button>
+                 <HBox.margin>
+                    <Insets right="80" />
+                 </HBox.margin>
+              </HBox>
+           </HBox>
+
+
+
+           <VBox alignment="CENTER" prefHeight="230.0" prefWidth="1820.0" translateY="10" spacing="20">
+              <children>
+                 <Label text="Explore" style="-fx-font-size: 28px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" />
+
+                 <ComboBox fx:id="hobbyChoiceBox" onAction="#searchByHobby" prefHeight="30.0" prefWidth="300.0" promptText="Search Hobby" />
+                 <Button text="Create Blog" onAction="#showCreateBlogDialog" prefHeight="30.0" prefWidth="150.0" />
+              </children>
+              <padding>
+                 <Insets top="20" bottom="20" />
+              </padding>
+           </VBox>
+
+
+           <VBox prefHeight="48.0" prefWidth="1920.0">
+              <children>
+                 <HBox prefHeight="91.0" prefWidth="1920.0">
+                    <children>
+                       <HBox prefHeight="100.0" prefWidth="229.0" />
+                       <Label alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="169.0" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" text="My Feed:" />
+                       <HBox prefHeight="32.0" prefWidth="643.0" />
+                       <Label alignment="CENTER" prefHeight="32.0" prefWidth="206.0" style="-fx-font-size: 22px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;" text="Blogs:" />
+                    </children>
+                 </HBox>
+              </children>
+           </VBox>
+
+           <ScrollPane hbarPolicy="NEVER" fitToWidth="true" prefHeight="501.0" prefWidth="1920.0">
+              <content>
+                 <VBox alignment="CENTER" prefHeight="758.0" prefWidth="1984.0" >
+                    <HBox prefHeight="150.0" prefWidth="1440.0">
+                       <children>
+                          <StackPane fx:id="post1" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="80">
+                             <children>
+                                <VBox prefHeight="150.0" prefWidth="300.0" spacing="10" style="-fx-padding: 10;">
+                                   <children>
+                                      <HBox prefHeight="23.0" prefWidth="373.0">
+                                         <children>
+                                            <ImageView fitHeight="50.0" fitWidth="50.0">
+                                               <image>
+                                                  <Image url="@../../../images/account_circle.png" />
+                                               </image>
+                                            </ImageView>
+                                            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="Jesse: Hiked to the most beautiful sunset!" textAlignment="CENTER" translateY="15.0">
+                                               <font>
+                                                  <Font size="14.0" />
+                                               </font>
+                                            </Label>
+                                         </children>
+                                      </HBox>
+                                      <ImageView fx:id="placeholderImage1" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" >
+                                         <image>
+                                            <Image url="@../../../images/post-ph.jpg" />
+                                         </image>
+                                      </ImageView>
+                                      <VBox fx:id="commentsContainer1" spacing="5" />
+                                      <Button fx:id="addCommentButton1" text="Comment" onAction="#addCommentDialog" />
+                                      <Label fx:id="likeCount1" text="0 Likes" />
+                                      <Button fx:id="likeButton1" text="Like" onAction="#handleLike" />
+                                   </children>
+                                </VBox>
+                             </children>
+                          </StackPane>
+                          <VBox prefHeight="277.0" prefWidth="300.0" VBox.vgrow="ALWAYS" />
+                          <StackPane fx:id="post2" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="85">
+                             <children>
+                                <VBox prefHeight="150.0" prefWidth="100.0" spacing="10" style="-fx-padding: 10;">
+                                   <children>
+                                      <Label alignment="CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="561.0" text="BlogFeed1">
+                                         <font>
+                                            <Font name="System Bold" size="14.0" />
+                                         </font>
+                                      </Label>
+                                      <HBox prefHeight="23.0" prefWidth="373.0">
+                                         <children>
+                                            <ImageView fitHeight="50.0" fitWidth="50.0">
+                                               <image>
+                                                  <Image url="@../../../images/account_circle.png" />
+                                               </image>
+                                            </ImageView>
+                                            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="MyUsernameisUsername" textAlignment="CENTER" translateY="15.0">
+                                               <font>
+                                                  <Font size="14.0" />
+                                               </font>
+                                            </Label>
+                                         </children>
+                                      </HBox>
+                                      <Label fx:id="introLine1" alignment="CENTER_LEFT" contentDisplay="CENTER" prefHeight="20.0" prefWidth="561.0" text="" />
+                                      <ImageView fx:id="placeholderImage2" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" >
+                                         <image>
+                                            <Image url="@../../../images/post-ph.jpg" />
+                                         </image>
+                                      </ImageView>
+                                      <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="90.0" style="-fx-background-color: #FFD643;" text="View Blog" onAction="#viewBlog" />
+                                      <Button fx:id="likeButton2" text="Like" onAction="#handleLike" />
+                                      <Label fx:id="likeCount2" text="0 Likes" />
+                                   </children>
+                                </VBox>
+                             </children>
+                          </StackPane>
+                       </children>
+                    </HBox>
+
+                    <HBox prefHeight="150.0" prefWidth="1440.0">
+                       <children>
+                          <StackPane fx:id="post3" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="80">
+                             <children>
+                                <VBox prefHeight="150.0" prefWidth="300.0" spacing="10" style="-fx-padding: 10;">
+                                   <children>
+                                      <HBox prefHeight="23.0" prefWidth="373.0">
+                                         <children>
+                                            <ImageView fitHeight="50.0" fitWidth="50.0">
+                                               <image>
+                                                  <Image url="@../../../images/account_circle.png" />
+                                               </image>
+                                            </ImageView>
+                                            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="Jesse: Hiked to the most beautiful sunset!" textAlignment="CENTER" translateY="15.0">
+                                               <font>
+                                                  <Font size="14.0" />
+                                               </font>
+                                            </Label>
+                                         </children>
+                                      </HBox>
+                                      <ImageView fx:id="placeholderImage3" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" >
+                                         <image>
+                                            <Image url="@../../../images/post-ph.jpg" />
+                                         </image>
+                                      </ImageView>
+                                      <VBox fx:id="commentsContainer3" spacing="5" />
+                                      <Button fx:id="addCommentButton3" text="Comment" onAction="#addCommentDialog" />
+                                      <Label fx:id="likeCount3" text="0 Likes" />
+                                      <Button fx:id="likeButton3" text="Like" onAction="#handleLike" />
+                                   </children>
+                                </VBox>
+                             </children>
+                          </StackPane>
+                          <VBox prefHeight="277.0" prefWidth="300.0" />
+                          <StackPane fx:id="post4" prefHeight="200.0" prefWidth="500.0" style="-fx-border-color: black; -fx-border-width: 5;" translateX="85">
+                             <children>
+                                <VBox prefHeight="150.0" prefWidth="100.0" spacing="10" style="-fx-padding: 10;">
+                                   <children>
+                                      <Label alignment="CENTER" contentDisplay="TOP" prefHeight="20.0" prefWidth="561.0" text="BlogFeed2">
+                                         <font>
+                                            <Font name="System Bold" size="14.0" />
+                                         </font>
+                                      </Label>
+                                      <HBox prefHeight="23.0" prefWidth="373.0">
+                                         <children>
+                                            <ImageView fitHeight="50.0" fitWidth="50.0">
+                                               <image>
+                                                  <Image url="@../../../images/account_circle.png" />
+                                               </image>
+                                            </ImageView>
+                                            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="122.0" text="MyUsernameisUsername" textAlignment="CENTER" translateY="15.0">
+                                               <font>
+                                                  <Font size="14.0" />
+                                               </font>
+                                            </Label>
+                                         </children>
+                                      </HBox>
+                                      <Label fx:id="introLine2" alignment="CENTER_LEFT" contentDisplay="CENTER" prefHeight="20.0" prefWidth="561.0" text="" />
+                                      <ImageView fx:id="placeholderImage4" fitHeight="300.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true">
+                                         <image>
+                                            <Image url="@../../../images/post-ph.jpg" />
+                                         </image>
+                                      </ImageView>
+                                      <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="90.0" style="-fx-background-color: #FFD643;" text="View Blog" onAction="#viewBlog" />
+                                      <Button fx:id="likeButton4" text="Like" onAction="#handleLike" />
+                                      <Label fx:id="likeCount4" text="0 Likes" />
+                                   </children>
+                                </VBox>
+                             </children>
+                          </StackPane>
+                       </children>
+                    </HBox>
+                 </VBox>
+              </content>
+           </ScrollPane>
+
+        </VBox>
+        -->

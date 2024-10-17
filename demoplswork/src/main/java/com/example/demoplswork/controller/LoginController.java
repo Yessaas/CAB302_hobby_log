@@ -3,11 +3,11 @@ package com.example.demoplswork.controller;
 import com.example.demoplswork.HelloApplication;
 import com.example.demoplswork.model.ContactDAO;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 

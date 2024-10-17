@@ -3,7 +3,9 @@ package com.example.demoplswork.model;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The DAO class responsible for managing contacts in the database for login/register pages.
+ */
 public class ContactDAO extends BaseDAO implements IContactDAO  {
 
 

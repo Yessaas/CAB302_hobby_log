@@ -16,6 +16,7 @@
 
 
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ListView?>
 <VBox alignment="TOP_CENTER" prefHeight="1024.0" prefWidth="1440.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.demoplswork.controller.LogsUpdateView">
 
     <!-- Navigation Bar -->
@@ -109,6 +110,16 @@
                 <HBox alignment="CENTER_RIGHT">
                     <Label fx:id="totalCostLabel" text="Total Cost: $0.00" />
                 </HBox>
+            </VBox>
+            <VBox fx:id="logEventsBox" >
+
+                <!-- Other UI elements (like buttons, labels, etc.) -->
+
+                <!-- This VBox will hold the ListView or custom log event entries -->
+                <ListView fx:id="logEventsListView" prefHeight="400" prefWidth="600">
+                    <!-- The LogEventCell objects will be dynamically added here -->
+                </ListView>
+
             </VBox>
         </VBox>
     </ScrollPane>
