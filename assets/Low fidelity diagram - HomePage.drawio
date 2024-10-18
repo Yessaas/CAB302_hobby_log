@@ -1,0 +1,54 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="24.7.8">
+  <diagram name="Page-1" id="sbVSTHeEc8Khvn0jCTg0">
+    <mxGraphModel dx="2333" dy="1176" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-1" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Home&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-2" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;My Account&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1720" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-3" value="&lt;font style=&quot;font-size: 50px;&quot;&gt;My Latest Project Photo&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="140" width="920" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-5" value="&lt;font style=&quot;font-size: 50px;&quot;&gt;Latest Project Caption&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="140" width="440" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-6" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Search for hobbyist, title or tags&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="1360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="GmCFZUTFq7YRnxrkvhaL-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1871.4285714285716" y="159.99999999999977" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-7" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;My Logs&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="120" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-8" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;My Spending&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1720" y="240" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-9" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;Guides&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="120" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-10" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;Liked Hobbyists&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="240" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-11" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;Discovery&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="600" width="1360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-12" value="&lt;span style=&quot;font-size: 50px;&quot;&gt;Liked Hobby Category (woodwork,music, gardening etc)&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="680" width="440" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-13" value="&lt;span style=&quot;font-size: 50px;&quot;&gt;Liked Creator latest project&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="680" width="440" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="GmCFZUTFq7YRnxrkvhaL-14" value="&lt;span style=&quot;font-size: 50px;&quot;&gt;Popular hobby&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="680" width="440" height="280" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
