@@ -40,6 +40,19 @@ public class HomeView {
     @FXML
     private Button featuredLogButton;
 
+    @FXML
+    private ListView<String> listView1;  // Total Spent
+    @FXML
+    private ListView<String> listView2;  // Tasks Completed
+    @FXML
+    private ListView<String> listView3;  // Projects Completed
+    @FXML
+    private ListView<String> listView4;  // Materials Used
+    @FXML
+    private ListView<String> listView5;  // Likes
+    @FXML
+    private ListView<String> listView6;  // Followers
+
 
 
     public void setApplication(HelloApplication app) {
@@ -69,6 +82,38 @@ public class HomeView {
         logout.setOnAction(event -> onLogout());
 
         accountMenu.getItems().addAll(viewProfile, logout);
+
+// Adding items to listView1
+        listView1.getItems().add("Camera: $1450.00");
+        listView1.getItems().add("Mic: $250.00");
+        listView1.getItems().add("Hard Disk: $150.00");
+        listView1.getItems().add("Tripod: $75.00");
+
+// Adding items to listView2
+        listView2.getItems().add("Tasks Completed: 5");
+        listView2.getItems().add("Tasks Pending: 2");
+        listView2.getItems().add("Tasks in Progress: 1");
+
+// Adding items to listView3
+        listView3.getItems().add("Projects Completed: 2");
+        listView3.getItems().add("Ongoing Projects: 3");
+        listView3.getItems().add("Upcoming Projects: 1");
+
+// Adding items to listView4
+        listView4.getItems().add("Materials Used: Camera, Laptop");
+        listView4.getItems().add("Materials Used: Mic, Tripod");
+        listView4.getItems().add("Materials Used: Hard Disk, Light");
+
+// Adding items to listView5
+        listView5.getItems().add("Likes: 290");
+        listView5.getItems().add("Comments: 45");
+        listView5.getItems().add("Shares: 30");
+
+// Adding items to listView6
+        listView6.getItems().add("Followers: 2940");
+        listView6.getItems().add("Following: 520");
+        listView6.getItems().add("New Followers Today: 12");
+        listView6.getItems().add("Unfollowers Today: 3");
 
 
     }
