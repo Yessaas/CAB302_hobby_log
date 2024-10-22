@@ -4,6 +4,7 @@ module com.example.demoplswork {
     requires java.sql;
     requires java.desktop;
     requires org.junit.jupiter.api;
+    requires javafx.media;
 
     opens com.example.demoplswork to javafx.fxml;
     exports com.example.demoplswork;
