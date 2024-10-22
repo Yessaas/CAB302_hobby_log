@@ -21,13 +21,22 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Controller class for managing the Profile View.
+ * This class handles the display and interaction with the user's profile in the application.
+ */
 public class ProfileView {
     private HelloApplication app;
     private ContextMenu accountMenu;
     private ContactDAO contactDAO;
     private LogsDAO logsDAO;
 
-    // Constructor
+    /**
+     * Constructor for ProfileView.
+     * Initializes the LogsDAO.
+     *
+     * @throws SQLException if a database access error occurs
+     */
     public ProfileView() throws SQLException {
         logsDAO = new LogsDAO();
     }
@@ -47,23 +56,25 @@ public class ProfileView {
     @FXML
     private ImageView profileImageView;
 
-
-
-
     private String userName;
     private String userBio;
 
-
+    /**
+     * Sets the application instance and loads the user data.
+     *
+     * @param app the HelloApplication instance
+     */
     public void setApplication(HelloApplication app) {
         this.app = app;
-
         loadUser();
     }
 
+    /**
+     * Initializes the ProfileView.
+     * Sets up the account menu with options to view profile and log out.
+     */
     @FXML
     public void initialize() {
-
-        // Create the dropdown menu
         accountMenu = new ContextMenu();
 
         MenuItem viewProfile = new MenuItem("View Profile");
@@ -79,20 +90,17 @@ public class ProfileView {
         logout.setOnAction(event -> onLogout());
 
         accountMenu.getItems().addAll(viewProfile, logout);
-
-
-
-
     }
 
+    /**
+     * Loads the user data and updates the profile view.
+     */
     private void loadUser() {
         int userID = app.getLoggedInUserID();
         contactDAO = new ContactDAO();
 
-        // Fetch the contact information for the logged-in user
         Contact contact = contactDAO.getContactById(userID);
 
-        // Now update the contact with profile details (bio, photo)
         ProfileDAO profileDAO = new ProfileDAO();
         try {
             profileDAO.insertProfile(userID, " ", " ");
@@ -102,64 +110,60 @@ public class ProfileView {
         profileDAO.getProfileByUserId(contact, userID);
 
         if (contact != null) {
-            // Display first and last name
             nameLabel.setText(contact.getFirstName() + " " + contact.getLastName());
             bioText.setText(contact.getBio());
             String imageName = contact.getPhoto();
             String relativePath = "/images/" + imageName;
 
-            // Load the image using the image name
             InputStream imageStream = getClass().getResourceAsStream(relativePath);
             if (imageStream != null) {
                 Image image = new Image(imageStream);
                 profileImageView.setImage(image);
             }
-
         }
         loadUserLogs();
-
     }
 
-    // Load and display user logs
+    /**
+     * Loads and displays the user's logs.
+     */
     private void loadUserLogs() {
-        // Retrieve the userID from the main application class
         int userID = app.getLoggedInUserID();
-
-        // Fetch logs from the database for the specific user
         List<Object[]> logsList = logsDAO.getLogsForUser(userID);
 
-        // Loop through the logs and add them to the VBox
         for (Object[] logData : logsList) {
-            int logID = (int) logData[0]; // Extract the log ID
-            Logs log = (Logs) logData[1]; // Extract the Logs object
+            int logID = (int) logData[0];
+            Logs log = (Logs) logData[1];
             HBox logEntry = createLogEntry(log, logID);
             logsContainer.getChildren().add(logEntry);
         }
     }
 
-    // Create a dynamic HBox for each log entry
+    /**
+     * Creates a dynamic HBox for each log entry.
+     *
+     * @param log the Logs object
+     * @param logID the log ID
+     * @return the HBox containing the log entry
+     */
     private HBox createLogEntry(Logs log, int logID) {
         HBox logEntry = new HBox();
         logEntry.setSpacing(30);
         logEntry.setStyle("-fx-border-color: lightgray; -fx-border-radius: 5; -fx-padding: 10;");
 
-        // Log name label
         Label logNameLabel = new Label(log.getLogName());
         logNameLabel.setStyle("-fx-font-size: 18px; -fx-font-family: 'Roboto';");
         logNameLabel.setPrefWidth(250);
 
-        // Progress bar
-        ProgressBar progressBar = new ProgressBar(log.getProgress()/ 100.0);
+        ProgressBar progressBar = new ProgressBar(log.getProgress() / 100.0);
         progressBar.setPrefWidth(400);
 
-        // Likes and comments section
         HBox likesComments = new HBox();
         likesComments.setSpacing(10);
 
         Label likesLabel = new Label(String.valueOf(0));
         InputStream imageStream = getClass().getResourceAsStream("/images/like-icon.png");
         ImageView likeIcon = new ImageView(new Image(imageStream));
-
         likeIcon.setFitHeight(20);
         likeIcon.setFitWidth(20);
 
@@ -171,7 +175,6 @@ public class ProfileView {
 
         likesComments.getChildren().addAll(likesLabel, likeIcon, commentsLabel, commentIcon);
 
-        // "View Log" button
         Button viewLogButton = new Button("View Log");
         viewLogButton.setPrefWidth(120);
         viewLogButton.setStyle("-fx-background-color: #d3d3d3;");
@@ -181,27 +184,41 @@ public class ProfileView {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        });  // Implement viewLog method to handle button click
+        });
 
-        // Add all elements to the HBox
         logEntry.getChildren().addAll(logNameLabel, progressBar, likesComments, viewLogButton);
 
         return logEntry;
     }
 
-
+    /**
+     * Navigates to the log update view.
+     *
+     * @param id the log ID
+     * @param log the Logs object
+     * @throws IOException if an I/O error occurs
+     */
     public void goToUpdateLogs(int id, Logs log) throws IOException {
         if (app != null) {
-            app.showLogsUpdateView(id, log);  // Navigate to Explore view
+            app.showLogsUpdateView(id, log);
         }
     }
 
-
+    /**
+     * Shows the account menu.
+     *
+     * @param event the ActionEvent
+     */
     @FXML
     private void showAccountMenu(ActionEvent event) {
         accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
     }
 
+    /**
+     * Navigates to the account view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
@@ -209,9 +226,9 @@ public class ProfileView {
         }
     }
 
-
-
-
+    /**
+     * Shows the edit profile dialog.
+     */
     @FXML
     private void showEditProfileDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -221,10 +238,9 @@ public class ProfileView {
         VBox vbox = new VBox(10);
         vbox.setPrefSize(300, 200);
 
-
         TextArea bioArea = new TextArea(userBio);
-        bioArea.setPrefHeight(100); // Set the preferred height to allow multiple lines
-        bioArea.setWrapText(true);  // Ensure text wraps within the TextArea
+        bioArea.setPrefHeight(100);
+        bioArea.setWrapText(true);
         bioArea.setText(bioText.getText());
 
         vbox.getChildren().addAll(new Label("Bio:"), bioArea);
@@ -232,23 +248,18 @@ public class ProfileView {
         dialog.getDialogPane().setContent(vbox);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
                 userBio = bioArea.getText();
-
-
-
                 bioText.setText(userBio);
-                // Update bio in the database
+
                 int userID = app.getLoggedInUserID();
                 ProfileDAO profileDAO = new ProfileDAO();
                 try {
-                    profileDAO.updateProfile(userID, userBio, null);  // update bio only
+                    profileDAO.updateProfile(userID, userBio, null);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
             }
             return null;
         });
@@ -256,6 +267,11 @@ public class ProfileView {
         dialog.showAndWait();
     }
 
+    /**
+     * Handles the change of profile photo.
+     *
+     * @param event the ActionEvent
+     */
     @FXML
     private void handleChangeProfilePhoto(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -268,42 +284,33 @@ public class ProfileView {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-
-        }
-
-        if (selectedFile != null) {
-            // Get the current working directory (project root)
             String projectDirectory = System.getProperty("user.dir");
-
-            // Define the target directory relative to the project directory
             String targetDirectory = projectDirectory + "/src/main/resources/images";
-
-            // Construct the target file path
             File targetFile = new File(targetDirectory, selectedFile.getName());
 
             try {
-                // Copy the selected image to the target directory
                 Files.copy(selectedFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 System.out.println("Image copied to " + targetFile.getAbsolutePath());
 
-                // display image
                 Image profileImage = new Image(selectedFile.toURI().toString());
                 profileImageView.setImage(profileImage);
 
                 int userID = app.getLoggedInUserID();
                 ProfileDAO profileDAO = new ProfileDAO();
                 String imageName = selectedFile.getName();
-                profileDAO.updateProfile(userID, null, imageName);  // update bio only
-
-            } catch (IOException e) {
+                profileDAO.updateProfile(userID, null, imageName);
+            } catch (IOException | SQLException e) {
                 e.printStackTrace();
                 System.out.println("Failed to add image");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             }
         }
     }
 
+    /**
+     * Navigates to the home view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToHome() throws IOException {
         if (app != null) {
@@ -311,6 +318,11 @@ public class ProfileView {
         }
     }
 
+    /**
+     * Navigates to the logs view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToLogs() throws IOException {
         if (app != null) {
@@ -318,6 +330,11 @@ public class ProfileView {
         }
     }
 
+    /**
+     * Navigates to the explore view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToExplore() throws IOException {
         if (app != null) {
@@ -325,6 +342,9 @@ public class ProfileView {
         }
     }
 
+    /**
+     * Logs out the user and navigates to the login view.
+     */
     @FXML
     private void onLogout() {
         try {

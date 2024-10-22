@@ -11,11 +11,13 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
+/**
+ * Controller class for handling user login and account creation.
+ */
 public class LoginController {
 
     private HelloApplication app;
 
-    // Fields for the login and account creation form
     @FXML
     private TextField emailField;
     @FXML
@@ -33,26 +35,40 @@ public class LoginController {
     @FXML
     private Button createAccountCancelButton;
 
-
-
     private ContactDAO contactDAO;
 
-    // Constructor
+    /**
+     * Constructor for LoginController.
+     */
     public LoginController() {
         contactDAO = new ContactDAO();
     }
 
+    /**
+     * Sets the application instance.
+     *
+     * @param app the application instance
+     */
     public void setApplication(HelloApplication app) {
         this.app = app;
     }
 
+    /**
+     * Navigates to the Home view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public void goToHome() throws IOException {
         if (app != null) {
             app.showHomeView();
         }
     }
 
-    // Method for handling user login
+    /**
+     * Handles user login.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     private void onLogin() throws IOException {
         String email = emailField.getText();
@@ -64,30 +80,22 @@ public class LoginController {
         }
 
         if (contactDAO.authenticateUser(email, password)) {
-            // Handle successful login
-            System.out.println("Login successful!");
-            // Retrieve the userID from the database for the logged-in user
             int userID = contactDAO.getUserIDByEmail(email);
 
             if (userID != -1) {
-                // Store the userID in the main application (HelloApplication)
                 app.setLoggedInUserID(userID);
-                System.out.println("UserID:"+userID);
-
-                // Redirect to the home view or main application screen
                 app.showHomeView();
             } else {
-                System.out.println("Failed to retrieve userID.");
                 showAlert("Error", "Unable to retrieve user information.");
             }
         } else {
-            // Handle failed login, show error message
-            System.out.println("Invalid credentials.");
             showAlert("Error", "Invalid email or password.");
         }
     }
 
-    // Method to switch to account creation view
+    /**
+     * Switches to the account creation view.
+     */
     @FXML
     private void onCreateAccount() {
         try {
@@ -97,7 +105,9 @@ public class LoginController {
         }
     }
 
-    // Method for cancelling account creation
+    /**
+     * Cancels account creation and navigates back to the login view.
+     */
     @FXML
     private void onCancelCreateAccount() {
         try {
@@ -107,7 +117,9 @@ public class LoginController {
         }
     }
 
-    // Method for handling account creation
+    /**
+     * Handles account creation.
+     */
     @FXML
     private void onCreateAccountSubmit() {
         String firstName = firstNameField.getText();
@@ -126,16 +138,18 @@ public class LoginController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println("Account created successfully!");
             showAlert("Success", "Account created successfully. You can now log in.");
         } else {
-            // Handle failure in account creation
-            System.out.println("Account creation failed.");
             showAlert("Error", "Account creation failed. Email may already be in use.");
         }
     }
 
-    // Helper method to show alerts
+    /**
+     * Shows an alert with the specified title and message.
+     *
+     * @param title   the title of the alert
+     * @param message the message of the alert
+     */
     private void showAlert(String title, String message) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle(title);

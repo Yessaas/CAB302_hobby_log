@@ -19,11 +19,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Controller class for the Home view.
+ */
 public class HomeView {
     private HelloApplication app;
-
     private ContextMenu accountMenu;
-
     private LogsDAO logsDAO;
 
     @FXML
@@ -53,17 +54,28 @@ public class HomeView {
     @FXML
     private ListView<String> listView6;  // Followers
 
-
-
+    /**
+     * Sets the application instance.
+     *
+     * @param app the application instance
+     */
     public void setApplication(HelloApplication app) {
         this.app = app;
         loadLogsForUser();
     }
 
+    /**
+     * Constructor for HomeView.
+     *
+     * @throws SQLException if a database access error occurs
+     */
     public HomeView() throws SQLException {
         logsDAO = new LogsDAO();
     }
 
+    /**
+     * Initializes the Home view.
+     */
     @FXML
     public void initialize() {
         // Create the dropdown menu
@@ -83,60 +95,55 @@ public class HomeView {
 
         accountMenu.getItems().addAll(viewProfile, logout);
 
-// Adding items to listView1
+        // Adding items to listView1
         listView1.getItems().add("Camera: $1450.00");
         listView1.getItems().add("Mic: $250.00");
         listView1.getItems().add("Hard Disk: $150.00");
         listView1.getItems().add("Tripod: $75.00");
 
-// Adding items to listView2
+        // Adding items to listView2
         listView2.getItems().add("Tasks Completed: 5");
         listView2.getItems().add("Tasks Pending: 2");
         listView2.getItems().add("Tasks in Progress: 1");
 
-// Adding items to listView3
+        // Adding items to listView3
         listView3.getItems().add("Projects Completed: 2");
         listView3.getItems().add("Ongoing Projects: 3");
         listView3.getItems().add("Upcoming Projects: 1");
 
-// Adding items to listView4
+        // Adding items to listView4
         listView4.getItems().add("Materials Used: Camera, Laptop");
         listView4.getItems().add("Materials Used: Mic, Tripod");
         listView4.getItems().add("Materials Used: Hard Disk, Light");
 
-// Adding items to listView5
+        // Adding items to listView5
         listView5.getItems().add("Likes: 290");
         listView5.getItems().add("Comments: 45");
         listView5.getItems().add("Shares: 30");
 
-// Adding items to listView6
+        // Adding items to listView6
         listView6.getItems().add("Followers: 2940");
         listView6.getItems().add("Following: 520");
         listView6.getItems().add("New Followers Today: 12");
         listView6.getItems().add("Unfollowers Today: 3");
-
-
     }
 
-    private void loadLogsForUser(){
-
+    /**
+     * Loads logs for the logged-in user.
+     */
+    private void loadLogsForUser() {
         int userID = app.getLoggedInUserID();
 
         // Fetch logs from the database for the specific user
         List<Object[]> logs = logsDAO.getLogsForUser(userID);
 
-
-
         if (!logs.isEmpty()) {
             // Pick a random log
             Object[] randomLog = getRandomLog(logs);
 
-
-
             // Display the selected log in the featured log section
             displayFeaturedLog(randomLog);
-        }
-        else {
+        } else {
             // If there are no logs, show a message indicating no logs exist
             featuredLogTitle.setText("You don't have any logs.");
             featuredLogProgress.setProgress(0.0); // Set progress to 0
@@ -154,17 +161,27 @@ public class HomeView {
                 }
             });
             return;
-
         }
     }
 
-    // Method to get a random log
+    /**
+     * Gets a random log from the list of logs.
+     *
+     * @param logs the list of logs
+     * @return a random log
+     */
     private Object[] getRandomLog(List<Object[]> logs) {
         Random rand = new Random();
         int randomIndex = rand.nextInt(logs.size());
         return logs.get(randomIndex);
     }
 
+    /**
+     * Gets the first incomplete to-do item from the log.
+     *
+     * @param log the log
+     * @return the first incomplete to-do item, or null if all items are completed
+     */
     private String getFirstIncompleteToDoItem(Logs log) {
         List<Pair<String, Boolean>> toDoItems = log.getToDoItems(); // Assuming you have this method
         for (Pair<String, Boolean> item : toDoItems) {
@@ -175,7 +192,11 @@ public class HomeView {
         return null; // or handle the case where all items are completed
     }
 
-    // Method to display the log in the featured log section
+    /**
+     * Displays the log in the featured log section.
+     *
+     * @param logData the log data
+     */
     private void displayFeaturedLog(Object[] logData) {
         int logID = (int) logData[0]; // Extract the log ID
         Logs log = (Logs) logData[1]; // Extract the Logs object
@@ -193,15 +214,13 @@ public class HomeView {
         if (imageStream != null) {
             Image image = new Image(imageStream);
             featuredLogImageView.setImage(image);
-        }
-        else{
+        } else {
             featuredLogImageView.setImage(null);
         }
         // Find the first incomplete to-do item
         String incompleteToDo = getFirstIncompleteToDoItem(log);
         if (incompleteToDo != null) {
             featuredLogToDo.setText(incompleteToDo);
-
         }
 
         // Set up the "View Log" button
@@ -214,7 +233,11 @@ public class HomeView {
         });
     }
 
-
+    /**
+     * Navigates to the Explore view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToExplore() throws IOException {
         if (app != null) {
@@ -222,6 +245,11 @@ public class HomeView {
         }
     }
 
+    /**
+     * Navigates to the Logs view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToLogs() throws IOException {
         if (app != null) {
@@ -229,17 +257,31 @@ public class HomeView {
         }
     }
 
+    /**
+     * Shows the account menu.
+     *
+     * @param event the action event
+     */
     @FXML
     private void showAccountMenu(ActionEvent event) {
         accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
     }
 
+    /**
+     * Navigates to the Account view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
             app.showAccountView();
         }
     }
+
+    /**
+     * Logs out the user and navigates to the Login view.
+     */
     @FXML
     private void onLogout() {
         try {
@@ -249,11 +291,17 @@ public class HomeView {
         }
     }
 
+    /**
+     * Navigates to the Update Logs view.
+     *
+     * @param id  the log ID
+     * @param log the log
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToUpdateLogs(int id, Logs log) throws IOException {
         if (app != null) {
             app.showLogsUpdateView(id, log);  // Navigate to Explore view
         }
     }
-
 }

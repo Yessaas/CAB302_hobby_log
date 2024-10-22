@@ -30,7 +30,11 @@ import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class ExploreView {
+/**
+ * Controller class for the Explore view.
+ */
+public class ExploreView
+{
 
     private HelloApplication app;
     private ContextMenu accountMenu;
@@ -44,7 +48,12 @@ public class ExploreView {
             Arrays.asList("Woodworking", "PC Building", "Miniatures", "Music Production", "Coding", "Cooking", "Gardening", "Digital Art", "Traditional Art")
     );
 
-    public ExploreView () throws SQLException {
+    /**
+     * Constructor for ExploreView.
+     *
+     * @throws SQLException if a database access error occurs
+     */
+    public ExploreView() throws SQLException {
         this.logEventDAO = new LogEventDAO();
     }
 
@@ -54,12 +63,20 @@ public class ExploreView {
     @FXML
     private Button accountButton;
 
+    /**
+     * Sets the application instance.
+     *
+     * @param app the application instance
+     */
     public void setApplication(HelloApplication app) {
         this.app = app;
         int loggedInUserId = app.getLoggedInUserID(); // Assuming you have a way to get this ID
         loadMyFeed(loggedInUserId);
     }
 
+    /**
+     * Initializes the controller.
+     */
     @FXML
     public void initialize() {
         accountMenu = new ContextMenu();
@@ -74,18 +91,19 @@ public class ExploreView {
             }
         });
 
-
-
-
         MenuItem logout = new MenuItem("Log Out");
         logout.setOnAction(event -> onLogout());
 
         accountMenu.getItems().addAll(viewProfile, logout);
-
-
-
     }
 
+    /**
+     * Searches the list of hobbies.
+     *
+     * @param searchHobby   the hobby to search for
+     * @param listOfStrings the list of strings to search in
+     * @return the list of matching hobbies
+     */
     private List<String> searchList(String searchHobby, List<String> listOfStrings) {
         List<String> searchHobbyArray = Arrays.asList(searchHobby.trim().split(" "));
         return listOfStrings.stream().filter(input -> {
@@ -94,6 +112,11 @@ public class ExploreView {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Shows the home view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToHome() throws IOException {
         if (app != null) {
@@ -101,6 +124,11 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Shows the logs view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToLogs() throws IOException {
         if (app != null) {
@@ -112,7 +140,11 @@ public class ExploreView {
     private void showAccountMenu(ActionEvent event) {
         accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
     }
-
+    /**
+     * Shows the account view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
@@ -120,6 +152,11 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Shows the explore view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     private void onLogout() {
         try {
@@ -135,6 +172,11 @@ public class ExploreView {
     @FXML
     private Label introLine2;
 
+    /**
+     * Shows the blog view.
+     *
+     * @param event the action event
+     */
     @FXML
     public void viewBlog(ActionEvent event) {
         String blogIntro = "This is a detailed view of the blog.";
@@ -164,6 +206,10 @@ public class ExploreView {
             listView.getItems().addAll(searchList(selectedHobby, hobbys));
         }*/
     }
+
+    /**
+     * Shows the create blog dialog.
+     */
     @FXML
     private void showCreateBlogDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
@@ -171,7 +217,6 @@ public class ExploreView {
 
         ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
-
 
         TextField introField = new TextField();
         introField.setPromptText("Enter Blog Introduction");
@@ -226,8 +271,11 @@ public class ExploreView {
         dialog.showAndWait();
     }
 
-
-
+    /**
+     * Loads the feed for the logged-in user.
+     *
+     * @param loggedInUserId the ID of the logged-in user
+     */
     public void loadMyFeed(int loggedInUserId) {
         try {
             LogEventDAO logEventDAO = new LogEventDAO();
@@ -248,7 +296,6 @@ public class ExploreView {
 
                 // Reverse the list to show the most recent events first
                 Collections.reverse(eventsForDate);
-
 
                 // Create a date header label
                 Label dateHeader = new Label(date.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")));
@@ -271,7 +318,12 @@ public class ExploreView {
         }
     }
 
-
+    /**
+     * Adds an event to the feed.
+     *
+     * @param event    the event to add
+     * @param hasImage whether the event has an image
+     */
     private void addEventToFeed(LogEvent event, boolean hasImage) {
         LogsDAO logsDAO = new LogsDAO();
 
@@ -323,7 +375,6 @@ public class ExploreView {
         HBox userDescription = new HBox(boldUser, new Label(event.getDescription()));
         userDescription.setSpacing(5);
 
-
         Label logNameLabel = new Label("Project: " + event.getLogName(event.getLogId())); // Use method to get log name
         logNameLabel.setStyle("-fx-font-style: italic;");
 
@@ -365,7 +416,7 @@ public class ExploreView {
             toggleLike(event, likeButton, likeCountLabel);
         });
 
-        HBox countLabels = new HBox(likeCountLabel,commentCountLabel);
+        HBox countLabels = new HBox(likeCountLabel, commentCountLabel);
         countLabels.setSpacing(10);
 
         Button commentButton = new Button("Comment");
@@ -383,9 +434,12 @@ public class ExploreView {
         commentsContainer1.getChildren().add(postContainer);
     }
 
-
-
-
+    /**
+     * Gets the contact for a user ID.
+     *
+     * @param userId the user ID
+     * @return the contact for the user ID
+     */
     private Contact getContactForUserId(int userId) {
         contactDAO = new ContactDAO();
 
@@ -408,6 +462,12 @@ public class ExploreView {
         return contact;
     }
 
+    /**
+     * Shows the comments popup for an event.
+     *
+     * @param event             the event
+     * @param commentCountLabel the label to update the comment count
+     */
     private void showCommentsPopup(LogEvent event, Label commentCountLabel) {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Comments");
@@ -472,18 +532,33 @@ public class ExploreView {
         dialog.showAndWait();
     }
 
-
-
+    /**
+     * Gets the current username.
+     *
+     * @return the current username
+     */
     private String getCurrentUsername() {
         Contact loggedIn = getContactForUserId(app.getLoggedInUserID());
-
         return loggedIn.getFirstName();
     }
 
+    /**
+     * Saves a comment for a specific log event.
+     *
+     * @param eventId the ID of the event
+     * @param comment the comment to save
+     */
     private void saveCommentForLog(int eventId, String comment) {
-        logEventDAO.saveCommentForLog(eventId,comment );
+        logEventDAO.saveCommentForLog(eventId, comment);
     }
 
+    /**
+     * Toggles the like status for a log event.
+     *
+     * @param event          the log event
+     * @param likeButton     the button to toggle like status
+     * @param likeCountLabel the label to update like count
+     */
     private void toggleLike(LogEvent event, Button likeButton, Label likeCountLabel) {
         int userId = app.getLoggedInUserID();
         List<Integer> likes = event.getLikes();
@@ -504,9 +579,4 @@ public class ExploreView {
         // Save updated likes to the database
         logEventDAO.updateLikesForLogEvent(event.getId(), likes);
     }
-
-
-
-
-
 }

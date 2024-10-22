@@ -13,21 +13,38 @@ import javafx.geometry.Rectangle2D;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Main application class for the HobbyLog application.
+ */
 public class HelloApplication extends Application {
     public static final String TITLE = "Address Book";
     private Stage primaryStage;
     private int loggedInUserID;  // Store the logged-in user's ID
 
-    // Getter for userID
+    /**
+     * Gets the logged-in user's ID.
+     *
+     * @return the logged-in user's ID
+     */
     public int getLoggedInUserID() {
         return loggedInUserID;
     }
 
-    // Setter for userID
+    /**
+     * Sets the logged-in user's ID.
+     *
+     * @param userID the ID of the logged-in user
+     */
     public void setLoggedInUserID(int userID) {
         this.loggedInUserID = userID;
     }
 
+    /**
+     * Starts the JavaFX application.
+     *
+     * @param stage the primary stage for this application
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     public void start(Stage stage) throws IOException {
         this.primaryStage = stage;
@@ -35,7 +52,7 @@ public class HelloApplication extends Application {
         // Get screen size
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
-        // Set the initial view to explore-view.fxml
+        // Set the initial view to login-view.fxml
         showLoginView();
 
         // Set the stage to the full size of the screen, but not in fullscreen mode
@@ -47,7 +64,11 @@ public class HelloApplication extends Application {
         primaryStage.show();
     }
 
-    // Method to show the Explore view
+    /**
+     * Shows the Explore view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public void showExploreView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("explore-view.fxml"));
         Parent root = fxmlLoader.load();
@@ -59,18 +80,26 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
     }
 
-    // Method to show the Home view
+    /**
+     * Shows the Home view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public void showHomeView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("home-view.fxml"));
         Parent root = fxmlLoader.load();
         HomeView controller = fxmlLoader.getController();
         controller.setApplication(this);
 
-
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
     }
 
+    /**
+     * Shows the Logs view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public void showLogsView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs.fxml"));
         Parent root = fxmlLoader.load();
@@ -81,6 +110,13 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
     }
 
+    /**
+     * Shows the Logs Update view.
+     *
+     * @param id the ID of the log to update
+     * @param log the log object to update
+     * @throws IOException if an I/O error occurs
+     */
     public void showLogsUpdateView(int id, Logs log) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("my-logs-view.fxml"));
         Parent root = fxmlLoader.load();
@@ -93,6 +129,11 @@ public class HelloApplication extends Application {
         controller.setLog(log);
     }
 
+    /**
+     * Shows the Login view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public void showLoginView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
         Parent root = fxmlLoader.load();
@@ -103,6 +144,11 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
     }
 
+    /**
+     * Shows the Create Account view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public void showCreateAccountView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("create-account-view.fxml"));
         Parent root = fxmlLoader.load();
@@ -112,6 +158,12 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
     }
+
+    /**
+     * Shows the Account view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     public void showAccountView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("profile-view.fxml"));
         Parent root = fxmlLoader.load();
@@ -122,9 +174,12 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
     }
 
-
+    /**
+     * Main method to launch the application.
+     *
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         launch();
     }
 }
-

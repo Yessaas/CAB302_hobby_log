@@ -27,7 +27,9 @@ import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
-
+/**
+ * Controller class for the Logs Update view.
+ */
 public class LogsUpdateView {
 
     private HelloApplication app;
@@ -79,21 +81,37 @@ public class LogsUpdateView {
     private TableColumn<Material, Double> priceCol;  // Cost column
     private Logs log;
 
+    /**
+     * Constructor for the LogsUpdateView class.
+     * @throws SQLException
+     */
     public LogsUpdateView() throws SQLException {
         logEventDAO = new LogEventDAO();
         logEventsBox = new VBox();
         logEventsListView = new ListView<>();
     }
 
+    /**
+     * Method to set the application instance.
+     * @param app The HelloApplication instance
+     */
     @FXML
     public void setApplication(HelloApplication app) {
         this.app = app;
     }
 
+    /**
+     * Method to set the log ID.
+     * @param logId The ID of the log being updated
+     */
     public void setLogId(int logId) {
         this.logId = logId;
     }
 
+    /**
+     * Method to set the log object.
+     * @param log The log object
+     */
     public void setLog(Logs log) {
         this.log = log;  // Set the log object
 
@@ -101,6 +119,9 @@ public class LogsUpdateView {
         populateLogDetails();
     }
 
+    /**
+     * Initialize the LogsUpdateView controller.
+     */
     @FXML
     public void initialize() {
         // init columns for materials table
@@ -128,6 +149,10 @@ public class LogsUpdateView {
 
     }
 
+    /**
+     * Method to navigate to the Home view.
+     * @throws IOException
+     */
     @FXML
     public void goToHome() throws IOException {
         if (app != null) {
@@ -135,6 +160,10 @@ public class LogsUpdateView {
         }
     }
 
+    /**
+     * Method to navigate to the Explore view.
+     * @throws IOException
+     */
     @FXML
     public void goToExplore() throws IOException {
         if (app != null) {
@@ -142,23 +171,38 @@ public class LogsUpdateView {
         }
     }
 
+    /**
+     * Method to navigate to the Logs view.
+     * @throws IOException
+     */
     @FXML
     public void goToLogs() throws IOException {
         if (app != null) {
             app.showLogsView();  // Navigate to Explore view
         }
     }
+    /*Method to show the account menu.
+     *
+     */
     @FXML
     private void showAccountMenu(ActionEvent event) {
         accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
     }
 
+    /**
+     * Method to navigate to the Account view.
+     * @throws IOException
+     */
     @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
             app.showAccountView();
         }
     }
+    /**
+     * Method to log out of the account.
+     *
+     */
     @FXML
     private void onLogout() {
         try {
@@ -168,6 +212,10 @@ public class LogsUpdateView {
         }
     }
 
+    /**
+     * Method to populate the log details.
+     * @throws IOException
+     */
     // Populate the log details on the page
     private void populateLogDetails() {
         // Set the log title in the label
@@ -232,6 +280,11 @@ public class LogsUpdateView {
 
     }
 
+    /**
+     * Method to calculate the total cost of materials and update the label.
+     *
+     * @param materials the list of materials
+     */
     // Method to calculate total cost and update the label
     public void getTotalCost(List<Material> materials) {
         double totalCost = materials.stream()
@@ -244,7 +297,11 @@ public class LogsUpdateView {
 
 
 
-
+    /**
+     * Handles the addition of a new to-do item.
+     * This method creates a dialog to capture user input for a new task,
+     * adds the task to the to-do list, and updates the database and progress bar.
+     */
     public void handleAddToDo() {
         // Create a TextInputDialog
         TextInputDialog dialog = new TextInputDialog();
@@ -272,7 +329,6 @@ public class LogsUpdateView {
             }
             double newProgress = logsDAO.updateToDoItemStatus(logId, task, newTask.isSelected());
             progressBar.setProgress(newProgress / 100);
-
 
             // Event listener to update the log when a checkbox is checked/unchecked
             newTask.setOnAction(event -> {
@@ -341,7 +397,12 @@ public class LogsUpdateView {
         }
     }
 
-
+    /**
+     * Handles the addition of images to the log.
+     * This method opens a file chooser dialog to select an image file,
+     * copies the selected image to the project directory, updates the image list,
+     * and stores the image path in the database.
+     */
     @FXML
     public void handleAddImages() {
         FileChooser fileChooser = new FileChooser();
@@ -395,6 +456,9 @@ public class LogsUpdateView {
         }
     }
 
+    /*
+    * Method to handle the next image
+    * */
     // Method to handle clicking the Next button
     @FXML
     public void handleNext() {
@@ -405,6 +469,9 @@ public class LogsUpdateView {
         }
     }
 
+    /*
+     * Method to handle the previous image
+     * */
     // Method to handle clicking the Back button
     @FXML
     public void handleBack() {
@@ -414,7 +481,9 @@ public class LogsUpdateView {
             updateButtonState();
         }
     }
-
+/*
+* Used to update the state of the Next/Back buttons based on the current index
+* */
     // Update the state of Next/Back buttons based on the current index
     private void updateButtonState() {
         backButton.setDisable(currentIndex == 0);
@@ -422,7 +491,9 @@ public class LogsUpdateView {
     }
 
 
-
+    /**
+     * Method to handle the addition of a new material.
+     */
     // Method to handle adding a new material
     @FXML
     public void handleAddMaterial() {
@@ -520,6 +591,9 @@ public class LogsUpdateView {
         });
     }
 
+    /**
+     * Method to show alert dialogs.
+     */
     // Helper method to show alert dialogs
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
@@ -528,6 +602,9 @@ public class LogsUpdateView {
         alert.showAndWait();
     }
 
+    /**
+     * Method to display log events.
+     */
     public void displayLogEvents(int logId) {
         try {
             // Fetch log events from the database
@@ -568,7 +645,9 @@ public class LogsUpdateView {
         }
     }
 
-
+/*
+* Method to get the contact for the user
+* */
     private Contact getContactForUserId(int userId) {
         contactDAO = new ContactDAO();
 

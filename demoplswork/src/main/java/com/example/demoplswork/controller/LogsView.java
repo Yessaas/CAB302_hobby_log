@@ -31,6 +31,10 @@ import java.util.Optional;
 
 
 
+/**
+ * Controller class for managing the Logs View.
+ * This class handles the display and interaction with logs in the application.
+ */
 public class LogsView {
     private HelloApplication app;
 
@@ -40,14 +44,12 @@ public class LogsView {
     @FXML
     private Label logNameText;
 
-
     private int currentRow = 0;  // Track the current row in the grid
     private int currentColumn = 0;  // Track the current column in the grid
 
     private static final int LOGS_PER_ROW = 3;  // Number of logs per row
 
     private ContextMenu accountMenu;
-
 
     @FXML
     private Button accountButton;
@@ -57,23 +59,34 @@ public class LogsView {
     private ProgressLog progressLog;
     private LogEventDAO logEventDAO;
 
-    // Constructor
+    /**
+     * Constructor for LogsView.
+     * Initializes the ProgressLog, LogsDAO, and LogEventDAO.
+     *
+     * @throws SQLException if a database access error occurs
+     */
     public LogsView() throws SQLException {
         this.progressLog = new ProgressLog();
         logsDAO = new LogsDAO();
         logEventDAO = new LogEventDAO();
     }
 
+    /**
+     * Sets the application instance and loads logs for the current user.
+     *
+     * @param app the HelloApplication instance
+     */
     public void setApplication(HelloApplication app) {
         this.app = app;
-
-        // Load logs from the database for the current user
         loadLogsForUser();
     }
 
+    /**
+     * Initializes the LogsView.
+     * Sets up the account menu with profile and logout options.
+     */
     @FXML
     public void initialize() {
-        // Create the dropdown menu
         accountMenu = new ContextMenu();
 
         MenuItem viewProfile = new MenuItem("View Profile");
@@ -89,18 +102,25 @@ public class LogsView {
         logout.setOnAction(event -> onLogout());
 
         accountMenu.getItems().addAll(viewProfile, logout);
-
-
-
     }
 
+    /**
+     * Navigates to the Home view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToHome() throws IOException {
         if (app != null) {
-            app.showHomeView();  // Navigate to Home view
+            app.showHomeView();
         }
     }
 
+    /**
+     * Navigates to the Explore view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToExplore() throws IOException {
         if (app != null) {
@@ -108,23 +128,45 @@ public class LogsView {
         }
     }
 
+    /**
+     * Navigates to the Logs Update view.
+     *
+     * @param id the log ID
+     * @param log the Logs object
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToUpdateLogs(int id, Logs log) throws IOException {
         if (app != null) {
-            app.showLogsUpdateView(id, log);  // Navigate to Explore view
+            app.showLogsUpdateView(id, log);
         }
     }
+
+    /**
+     * Shows the account menu.
+     *
+     * @param event the ActionEvent
+     */
     @FXML
     private void showAccountMenu(ActionEvent event) {
         accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
     }
 
+    /**
+     * Navigates to the Account view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
             app.showAccountView();
         }
     }
+
+    /**
+     * Logs out the user and navigates to the Login view.
+     */
     @FXML
     private void onLogout() {
         try {
@@ -134,30 +176,27 @@ public class LogsView {
         }
     }
 
-    // Method to handle creating a new log
+    /**
+     * Handles the creation of a new log.
+     */
     @FXML
     public void handleAddNewProject() {
         createNewLog();
     }
 
+    /**
+     * Loads logs for the current user from the database and displays them in the GridPane.
+     */
     private void loadLogsForUser() {
-        // Retrieve the userID from the main application class
         int userID = app.getLoggedInUserID();
-
-        // Fetch logs from the database for the specific user
         List<Object[]> logsList = logsDAO.getLogsForUser(userID);
 
         for (Object[] logData : logsList) {
-            int logID = (int) logData[0]; // Extract the log ID
-            Logs log = (Logs) logData[1]; // Extract the Logs object
-
-            // Create a log module for each log
+            int logID = (int) logData[0];
+            Logs log = (Logs) logData[1];
             VBox logModule = createLogModuleFromDatabase(log, logID);
-
-            // Add the log to the GridPane
             projectsGrid.add(logModule, currentColumn, currentRow);
 
-            // Update the column and row for the next log
             currentColumn++;
             if (currentColumn >= LOGS_PER_ROW) {
                 currentColumn = 0;
@@ -166,12 +205,17 @@ public class LogsView {
         }
     }
 
-
+    /**
+     * Creates a log module from the database and returns it as a VBox.
+     *
+     * @param log the Logs object
+     * @param logID the log ID
+     * @return the VBox containing the log module
+     */
     private VBox createLogModuleFromDatabase(Logs log, int logID) {
         VBox logModule = new VBox();
-        logModule.setSpacing(0); // Adds spacing between elements
+        logModule.setSpacing(0);
 
-        // Image container with a white background and black border
         StackPane imageContainer = new StackPane();
         Rectangle imageBackground = new Rectangle(250, 200);
         imageBackground.setFill(javafx.scene.paint.Color.WHITE);
@@ -185,17 +229,14 @@ public class LogsView {
         imageView.setFitWidth(250);
         imageView.setPreserveRatio(false);
 
-        // Load the image using the image name
         InputStream imageStream = getClass().getResourceAsStream(relativePath);
         if (imageStream != null) {
             Image image = new Image(imageStream);
             imageView.setImage(image);
         }
 
-
         imageContainer.getChildren().addAll(imageBackground, imageView);
 
-        // Title container with a yellow background
         StackPane titleContainer = new StackPane();
         Rectangle titleBackground = new Rectangle(250, 40);
         titleBackground.setFill(javafx.scene.paint.Color.web("#ffee00"));
@@ -205,35 +246,30 @@ public class LogsView {
         logNameText.setStyle("-fx-font-size: 14px; -fx-font-family: 'Roboto'; -fx-text-fill: black;");
         titleContainer.getChildren().addAll(titleBackground, logNameText);
 
-        // Progress bar
-        System.out.println("Creating log module: " + ". Progress: " + log.getProgress());
         ProgressBar progressBar = new ProgressBar(log.getProgress() / 100.0);
         progressBar.setPrefWidth(250);
         progressBar.setPrefHeight(40);
         progressBar.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 
-        // Button container with a black rectangle background
         StackPane buttonContainer = new StackPane();
         Rectangle buttonBackground = new Rectangle(250, 100);
-        buttonBackground.setFill(javafx.scene.paint.Color.BLACK); // Set to transparent if no fill needed
+        buttonBackground.setFill(javafx.scene.paint.Color.BLACK);
         buttonBackground.setStroke(javafx.scene.paint.Color.BLACK);
 
-        // Buttons within a VBox
         VBox buttonsVBox = new VBox(10);
-        buttonsVBox.setAlignment(Pos.CENTER); // Center-align the buttons
+        buttonsVBox.setAlignment(Pos.CENTER);
         Button viewButton = new Button("View Log");
         viewButton.setPrefWidth(190);
         viewButton.setPrefHeight(35);
         viewButton.setStyle("-fx-background-color: #d3d3d3;");
         viewButton.setOnAction(actionEvent -> {
             try {
-                goToUpdateLogs(logID, log);  // Use logID here to open the correct log
+                goToUpdateLogs(logID, log);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
 
-        // Horizontal box for Edit and Delete buttons
         HBox buttonsHBox = new HBox(10);
         buttonsHBox.setAlignment(Pos.CENTER);
 
@@ -248,23 +284,22 @@ public class LogsView {
         deleteButton.setPrefHeight(35);
         deleteButton.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white;");
 
-        // Add edit and delete buttons to the HBox
         buttonsHBox.getChildren().addAll(editButton, deleteButton);
-
-        // Add view button and buttonsHBox to the VBox
         buttonsVBox.getChildren().addAll(viewButton, buttonsHBox);
-
-        // Add the buttonVBox and buttonBackground to the buttonContainer StackPane
         buttonContainer.getChildren().addAll(buttonBackground, buttonsVBox);
-
-        // Add all elements to the main log module VBox
         logModule.getChildren().addAll(imageContainer, titleContainer, progressBar, buttonContainer);
 
         deleteButton.setOnAction(event -> handleDeleteLog(logID, log, logModule));
 
-        return logModule; // Return the complete log module
+        return logModule;
     }
 
+    /**
+     * Renames the specified log.
+     *
+     * @param currentLogId the current log ID
+     * @param log the Logs object
+     */
     private void renameLog(int currentLogId, Logs log) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Rename Log");
@@ -305,9 +340,14 @@ public class LogsView {
         }
     }
 
-    // Method to handle deleting a log
+    /**
+     * Handles the deletion of a log.
+     *
+     * @param logID the log ID
+     * @param selectedLog the selected Logs object
+     * @param logModule the VBox containing the log module
+     */
     private void handleDeleteLog(int logID, Logs selectedLog, VBox logModule) {
-
         if (selectedLog != null) {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Delete Log");
@@ -329,28 +369,27 @@ public class LogsView {
         }
     }
 
-    // Method to delete the log from the database
+    /**
+     * Deletes the specified log from the database.
+     *
+     * @param logId the log ID
+     */
     private void deleteLogFromDatabase(int logId) {
-        // Assuming you have a LogsDAO class to interact with the database
         LogsDAO logsDAO = new LogsDAO();
         logsDAO.deleteLog(logId);
     }
 
+    /**
+     * Rearranges the GridPane after a log is deleted.
+     */
     private void rearrangeGrid() {
         List<Node> remainingLogs = new ArrayList<>(projectsGrid.getChildren());
-
-        // Clear the GridPane
         projectsGrid.getChildren().clear();
-
-        // Reset row and column
         currentRow = 0;
         currentColumn = 0;
 
-        // Re-add the logs in order
         for (Node logNode : remainingLogs) {
             projectsGrid.add(logNode, currentColumn, currentRow);
-
-            // Update column and row
             currentColumn++;
             if (currentColumn >= LOGS_PER_ROW) {
                 currentColumn = 0;
@@ -359,24 +398,21 @@ public class LogsView {
         }
     }
 
-    // Method to create a log module
+    /**
+     * Creates a new log.
+     * Opens a dialog to get the project name and inserts the new log into the database.
+     */
     private void createNewLog() {
-        // Create a dialog to get the project name
         TextInputDialog dialog = new TextInputDialog("New Project");
         dialog.setTitle("Create New Project");
         dialog.setHeaderText("Enter the name of your new project:");
         dialog.setContentText("Project Name:");
 
-        // Show the dialog and capture the result
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(projectName -> {
-            // Retrieve the userID from the main application class
             int userID = app.getLoggedInUserID();
-
-            // Create a new Logs object with the captured name (no content for now)
             Logs newLog = new Logs(projectName, List.of(), List.of(), List.of());
 
-            // Insert the new log into the database with the correct userID
             int logID;
             try {
                 logID = logsDAO.insertLog(userID, newLog);
@@ -384,18 +420,21 @@ public class LogsView {
                 throw new RuntimeException(e);
             }
 
-            // Redirect the user to the logs update view
             try {
                 LogEvent startEvent = new StartEvent(0, userID, logID, projectName, new ArrayList<>(), new ArrayList<>());
                 addEventToProgressLog(startEvent);
-                goToUpdateLogs(logID, newLog);  // This will let the user input log information
+                goToUpdateLogs(logID, newLog);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    // Public method to allow other classes to add events to the progress log
+    /**
+     * Adds an event to the progress log.
+     *
+     * @param event the LogEvent to add
+     */
     public void addEventToProgressLog(LogEvent event) {
         progressLog.addEvent(event);
         try {
@@ -407,11 +446,12 @@ public class LogsView {
         System.out.println(log);
     }
 
-    // Public method to retrieve the progress log
+    /**
+     * Retrieves the progress log.
+     *
+     * @return the progress log as a String
+     */
     public String getProgressLog() {
         return progressLog.getLog();
     }
-
-
-
 }
