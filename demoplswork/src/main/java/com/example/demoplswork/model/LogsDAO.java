@@ -6,9 +6,29 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogsDAO extends BaseDAO implements ILogsDAO{
+public class LogsDAO extends BaseDAO implements ILogsDAO {
 
-    // Insert a new log into the database
+    public LogsDAO() {
+        try {
+            createMediaTable();
+        } catch (SQLException e) {
+            System.err.println("Failed to create media table: " + e.getMessage());
+        }
+    }
+
+    private void createMediaTable() throws SQLException {
+        String createMediaTableSQL = "CREATE TABLE IF NOT EXISTS media_table (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "log_id INTEGER, " +
+                "media_name TEXT, " +
+                "FOREIGN KEY (log_id) REFERENCES logs(id) ON DELETE CASCADE" +
+                ");";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(createMediaTableSQL);
+        }
+    }
+
     @Override
     public int insertLog(int userId, Logs log) throws SQLException {
         if (log == null) {
@@ -27,26 +47,21 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
             pstmt.setInt(1, userId);
             pstmt.setString(2, log.getLogName());
 
-            // Serialize the to-do items (task:checked format)
             String serializedToDoItems = serializeToDoItems(log.getToDoItems());
             pstmt.setString(3, serializedToDoItems);
-
-            // Serialize images into a comma-separated string
             pstmt.setString(4, String.join(",", log.getImages()));
-
-            // Set progress value
             pstmt.setDouble(5, log.getProgress());
-
-            // Serialize materials
             pstmt.setString(6, serializeMaterials(log.getMaterials()));
 
-            // Execute the update
-            pstmt.executeUpdate();
+            int rowsInserted = pstmt.executeUpdate();
+            System.out.println("Rows inserted: " + rowsInserted);
 
-            // Retrieve the generated log ID
             rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
-                logId = rs.getInt(1);  // This will be the generated ID
+                logId = rs.getInt(1);
+                System.out.println("Generated Log ID: " + logId);
+            } else {
+                System.out.println("Log ID not generated.");
             }
 
         } catch (SQLException e) {
@@ -64,18 +79,16 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return logId;
     }
 
-    // Serialize to-do items as task:isChecked format
     private String serializeToDoItems(List<Pair<String, Boolean>> toDoItems) {
         StringBuilder sb = new StringBuilder();
 
         for (Pair<String, Boolean> toDoItem : toDoItems) {
-            sb.append(toDoItem.getKey())  // Task description
+            sb.append(toDoItem.getKey())
                     .append(":")
-                    .append(toDoItem.getValue())  // Checked state
+                    .append(toDoItem.getValue())
                     .append(",");
         }
 
-        // Remove the trailing comma if any
         if (sb.length() > 0) {
             sb.setLength(sb.length() - 1);
         }
@@ -91,17 +104,14 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
 
             if (rs.next()) {
                 int count = rs.getInt(1);
-                return count > 0; // If count is greater than 0, the log exists
+                return count > 0;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; // Log does not exist or an error occurred
+        return false;
     }
 
-
-
-    // Method to add a to-do item to a specific log
     @Override
     public void addToDoItem(int logId, String toDoItem, boolean isChecked) throws SQLException {
         if (logId <= 0) {
@@ -112,13 +122,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
                 "ELSE to_do_items || ',' || ? " +
                 "END WHERE id = ?";
 
-        // Prepare the to-do item with its state
         String toDoWithState = toDoItem + ":" + (isChecked ? "true" : "false");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, toDoWithState);  // If empty, just add the to-do item
-            pstmt.setString(2, toDoWithState);  // Append the new to-do item with its state
-            pstmt.setInt(3, logId);  // Specify which log to update
+            pstmt.setString(1, toDoWithState);
+            pstmt.setString(2, toDoWithState);
+            pstmt.setInt(3, logId);
             pstmt.executeUpdate();
             System.out.println("To-do item added to log " + logId + " with state: " + isChecked);
         } catch (SQLException e) {
@@ -126,7 +135,6 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         }
     }
 
-    // Method to add an image path to a specific log
     @Override
     public void addImage(int logId, String imagePath) throws SQLException {
         if (logId <= 0) {
@@ -138,9 +146,9 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
                 "END WHERE id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, imagePath);  // If empty, just add the image path
-            pstmt.setString(2, imagePath);  // Append the new image path
-            pstmt.setInt(3, logId);  // Specify which log to update
+            pstmt.setString(1, imagePath);
+            pstmt.setString(2, imagePath);
+            pstmt.setInt(3, logId);
             pstmt.executeUpdate();
             System.out.println("Image added to log " + logId + ": " + imagePath);
 
@@ -149,7 +157,6 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         }
     }
 
-    // Method to add a material to a specific log
     @Override
     public void addMaterial(int logId, Material material) {
         String query = "UPDATE logs SET materials = CASE " +
@@ -160,9 +167,9 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         String serializedMaterial = material.getName() + ":" + material.getQuantity() + ":" + material.getPrice();
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, serializedMaterial);  // If empty, just add the material
-            pstmt.setString(2, serializedMaterial);  // Append the new material
-            pstmt.setInt(3, logId);  // Specify which log to update
+            pstmt.setString(1, serializedMaterial);
+            pstmt.setString(2, serializedMaterial);
+            pstmt.setInt(3, logId);
             pstmt.executeUpdate();
             System.out.println("Material added to log " + logId + ": " + serializedMaterial);
 
@@ -170,7 +177,6 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
             e.printStackTrace();
         }
     }
-
 
     @Override
     public List<Object[]> getLogsForUser(int userId) {
@@ -183,22 +189,19 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
             var rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                // Extract the log details, including the log ID
                 int logID = rs.getInt("id");
                 String logName = rs.getString("log_name");
                 List<Pair<String, Boolean>> toDoItems = parseToDoItems(rs.getString("to_do_items"));
-                List<String> images = parseImages(rs.getString("images")); // Deserialize images
-                List<Material> materials = parseMaterials(rs.getString("materials")); // Deserialize materials
+                List<String> images = parseImages(rs.getString("images"));
+                List<Material> materials = parseMaterials(rs.getString("materials"));
                 double progress = rs.getDouble("progress");
 
-                // Create a Logs object without the ID
                 Logs log = new Logs(logName, toDoItems, images, materials);
                 log.setProgress(progress);
 
                 System.out.println("Log retrieved: " + logName + ". Progress: " + progress);
 
-                // Add the log and its ID to the list
-                logsList.add(new Object[] { logID, log });
+                logsList.add(new Object[]{logID, log});
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -217,7 +220,6 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
             var rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // Deserialize images from the string
                 imagesList = parseImages(rs.getString("images"));
             }
         } catch (SQLException e) {
@@ -246,9 +248,6 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return logName;
     }
 
-
-
-    // Helper method to serialize materials into a string format (e.g., name:quantity:cost)
     private String serializeMaterials(List<Material> materials) {
         StringBuilder sb = new StringBuilder();
         for (Material material : materials) {
@@ -259,37 +258,28 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return sb.toString();
     }
 
-    // Helper method to deserialize materials from a string format
     private List<Material> parseMaterials(String materialsStr) {
         List<Material> materials = new ArrayList<>();
 
-        // Check if materialsStr is null or empty
         if (materialsStr == null || materialsStr.isEmpty()) {
-            return materials;  // Return an empty list if there's no material data
+            return materials;
         }
 
-        // Split the string by commas to get each material
         String[] materialArr = materialsStr.split(",");
 
         for (String mat : materialArr) {
-            // Split each material string by colon to get details (name, quantity, price)
             String[] details = mat.split(":");
 
-            // Check if the details array has the correct number of parts (3 parts: name, quantity, price)
             if (details.length == 3) {
                 try {
                     String name = details[0];
-                    int quantity = Integer.parseInt(details[1]);  // Parse the quantity as an integer
-                    double price = Double.parseDouble(details[2]);  // Parse the price as a double
-
-                    // Add the material to the list
+                    int quantity = Integer.parseInt(details[1]);
+                    double price = Double.parseDouble(details[2]);
                     materials.add(new Material(name, quantity, price));
                 } catch (NumberFormatException e) {
-                    // Handle any parsing errors gracefully (e.g., log the error)
                     System.err.println("Error parsing material: " + mat);
                 }
             } else {
-                // Handle the case where details do not have exactly 3 parts
                 System.err.println("Invalid material format: " + mat);
             }
         }
@@ -297,14 +287,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return materials;
     }
 
-    // Update a specific to-do item's status in the database and recalculate progress
     @Override
     public double updateToDoItemStatus(int logId, String task, boolean isChecked) {
         String querySelect = "SELECT to_do_items, progress FROM logs WHERE id = ?";
         String queryUpdate = "UPDATE logs SET to_do_items = ?, progress = ? WHERE id = ?";
 
         try {
-            // Step 1: Retrieve the current to-do items and progress
             PreparedStatement pstmtSelect = connection.prepareStatement(querySelect);
             pstmtSelect.setInt(1, logId);
             ResultSet rs = pstmtSelect.executeQuery();
@@ -313,7 +301,6 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
                 String toDoItemsStr = rs.getString("to_do_items");
                 List<Pair<String, Boolean>> toDoItems = parseToDoItems(toDoItemsStr);
 
-                // Step 2: Update the status of the specific task
                 for (int i = 0; i < toDoItems.size(); i++) {
                     if (toDoItems.get(i).getKey().equals(task)) {
                         toDoItems.set(i, new Pair<>(task, isChecked));
@@ -321,16 +308,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
                     }
                 }
 
-                // Step 3: Calculate the new progress
                 double progress = calculateProgress(toDoItems);
-
-                // Step 4: Serialize the updated to-do items back into the string format
                 String updatedToDoItemsStr = serializeToDoItems(toDoItems);
 
-                // Step 5: Update the database with the new to-do list and progress
                 PreparedStatement pstmtUpdate = connection.prepareStatement(queryUpdate);
                 pstmtUpdate.setString(1, updatedToDoItemsStr);
-                pstmtUpdate.setDouble(2, progress);  // Update progress
+                pstmtUpdate.setDouble(2, progress);
                 pstmtUpdate.setInt(3, logId);
                 pstmtUpdate.executeUpdate();
 
@@ -364,7 +347,6 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         }
     }
 
-    // Method to calculate progress as a percentage of completed tasks
     private double calculateProgress(List<Pair<String, Boolean>> toDoItems) {
         int completedCount = 0;
         for (Pair<String, Boolean> item : toDoItems) {
@@ -378,15 +360,22 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return (double) completedCount / toDoItems.size() * 100;
     }
 
-    // Helper method to deserialize to-do items from a comma-separated string
+    public void addMedia(int logId, String mediaName) throws SQLException {
+        String sql = "INSERT INTO media_table (log_id, media_name) VALUES (?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, logId);
+            statement.setString(2, mediaName);
+            statement.executeUpdate();
+        }
+    }
+
     private List<Pair<String, Boolean>> parseToDoItems(String toDoItemsStr) {
         List<Pair<String, Boolean>> toDoItems = new ArrayList<>();
 
         if (toDoItemsStr == null || toDoItemsStr.isEmpty()) {
-            return toDoItems;  // Return an empty list if there's no data
+            return toDoItems;
         }
 
-        // Split the string into individual tasks
         String[] itemsArray = toDoItemsStr.split(",");
 
         for (String item : itemsArray) {
@@ -394,20 +383,14 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
             if (taskDetails.length == 2) {
                 String taskDescription = taskDetails[0].trim();
                 boolean isChecked = Boolean.parseBoolean(taskDetails[1].trim());
-                toDoItems.add(new Pair<>(taskDescription, isChecked));  // Store task and its checked state
+                toDoItems.add(new Pair<>(taskDescription, isChecked));
             }
         }
 
         return toDoItems;
     }
 
-
-    // Helper method to deserialize images from a comma-separated string
     private List<String> parseImages(String imagesStr) {
         return List.of(imagesStr.split(","));
     }
-
-
 }
-
-
