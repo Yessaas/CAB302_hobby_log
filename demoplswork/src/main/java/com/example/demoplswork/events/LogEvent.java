@@ -60,6 +60,7 @@ public abstract class LogEvent {
 
     public abstract String setDescription();
 
+
     public String getLogName(int logID) {
         return logsDAO.getLogNameById(logID);
     }
@@ -87,8 +88,7 @@ public abstract class LogEvent {
     public void setId (int id){
         this.id = id;
     }
-
-    // Method to fetch comments from the database
+    
     public List<String> getCommentsFromDatabase() {
         return new ArrayList<>(logEventDAO.getCommentsForEvent(this.id));
     }
