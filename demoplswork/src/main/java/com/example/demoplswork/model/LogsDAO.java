@@ -207,25 +207,56 @@ public class LogsDAO extends BaseDAO implements ILogsDAO{
         return logsList;
     }
 
-    public List<String> getImagesForLog(int logId) {
-        String query = "SELECT images FROM logs WHERE id = ?";
-        List<String> imagesList = new ArrayList<>();
+    public Logs getLogById(int logID) {
+        String query = "SELECT log_name, to_do_items, images, materials, progress FROM logs WHERE id = ?";
+        Logs log = null;
 
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setInt(1, logId);
+            pstmt.setInt(1, logID);
             var rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // Deserialize images from the string
-                imagesList = parseImages(rs.getString("images"));
+                // Extract log details from the result set
+                String logName = rs.getString("log_name");
+                List<Pair<String, Boolean>> toDoItems = parseToDoItems(rs.getString("to_do_items")); // Deserialize to-do items
+                List<String> images = parseImages(rs.getString("images")); // Deserialize images
+                List<Material> materials = parseMaterials(rs.getString("materials")); // Deserialize materials
+                double progress = rs.getDouble("progress");
+
+                // Create the Logs object
+                log = new Logs(logName, toDoItems, images, materials);
+                log.setProgress(progress);
+
+                System.out.println("Log retrieved by ID: " + logName + ". Progress: " + progress);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return imagesList;
+        return log;
     }
+
+    public int getUserIdForLog(int logID) {
+        String query = "SELECT user_id FROM logs WHERE id = ?";
+        int userID = -1; // Default value if no user is found
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, logID);
+            var rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                userID = rs.getInt("user_id"); // Get the user ID from the result set
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return userID;
+    }
+
+
 
     public String getLogNameById(int logId) {
         String query = "SELECT log_name FROM logs WHERE id = ?";

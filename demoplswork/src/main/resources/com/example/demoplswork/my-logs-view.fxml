@@ -80,7 +80,7 @@
                     <VBox fx:id="toDoListVBox" spacing="15">
 
                     </VBox>
-                    <Button text="Add To-Do Item" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddToDo" />
+                    <Button fx:id="addToDoButton" text="Add To-Do Item" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddToDo" />
                 </VBox>
 
                 <!-- Right Column: Media Slideshow -->
@@ -92,7 +92,7 @@
                         <Button fx:id="backButton" text="Previous" onAction="#handleBack" disable="true" />
                         <Button fx:id="nextButton" text="Next" onAction="#handleNext" disable="true" />
                     </HBox>
-                    <Button text="Add Media" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddImages"/>
+                    <Button fx:id="addMediaButton" text="Add Media" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddImages"/>
                 </VBox>
             </HBox>
 
@@ -106,7 +106,7 @@
                         <TableColumn fx:id="priceCol" text="Price (each)" prefWidth="100" />
                     </columns>
                 </TableView>
-                <Button text="Add Material" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddMaterial"/>
+                <Button fx:id="addMaterialButton" text="Add Material" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddMaterial"/>
                 <HBox alignment="CENTER_RIGHT">
                     <Label fx:id="totalCostLabel" text="Total Cost: $0.00" />
                 </HBox>

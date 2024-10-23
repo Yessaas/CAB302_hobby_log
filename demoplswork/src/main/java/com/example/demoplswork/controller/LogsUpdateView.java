@@ -52,6 +52,15 @@ public class LogsUpdateView {
     private Button accountButton;
 
     @FXML
+    private Button addMaterialButton;
+
+    @FXML
+    private Button addMediaButton;
+
+    @FXML
+    private Button addToDoButton;
+
+    @FXML
     private VBox toDoListVBox;
 
     @FXML
@@ -230,6 +239,12 @@ public class LogsUpdateView {
         toDoListVBox.getChildren().clear();
         materialsTable.getItems().clear();
 
+        if(logsDAO.getUserIdForLog(logId)!= app.getLoggedInUserID()){
+            addMediaButton.setVisible(false);
+            addMaterialButton.setVisible(false);
+            addToDoButton.setVisible(false);
+        }
+
         // Populate To-Do items in the VBox
         for (Pair<String, Boolean> toDoItem : log.getToDoItems()) {
             String task = toDoItem.getKey();      // The task description
@@ -238,6 +253,10 @@ public class LogsUpdateView {
             CheckBox checkBox = new CheckBox(task);
             checkBox.setSelected(isChecked);      // Set checkbox to the stored checked state
             toDoListVBox.getChildren().add(checkBox);
+
+            if(logsDAO.getUserIdForLog(logId)!= app.getLoggedInUserID()){
+                checkBox.setDisable(true);
+            }
 
             // Event listener to update the log when a checkbox is checked/unchecked
             checkBox.setOnAction(event -> {

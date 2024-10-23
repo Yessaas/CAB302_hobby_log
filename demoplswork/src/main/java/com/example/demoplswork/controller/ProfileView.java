@@ -47,6 +47,12 @@ public class ProfileView {
     private Button accountButton;
 
     @FXML
+    private Button photoButton;
+
+    @FXML
+    private Button bioButton;
+
+    @FXML
     private Label nameLabel;
 
     @FXML
@@ -73,8 +79,9 @@ public class ProfileView {
      */
     public void setApplication(HelloApplication app) {
         this.app = app;
-        loadUser();
-        loadLikesComments();
+        int userID = app.getLoggedInUserID();
+        loadUser(userID);
+        loadLikesComments(userID);
     }
 
     /**
@@ -103,8 +110,8 @@ public class ProfileView {
     /**
      * Loads the user data and updates the profile view.
      */
-    private void loadUser() {
-        int userID = app.getLoggedInUserID();
+    public void loadUser(int userID) {
+
         contactDAO = new ContactDAO();
 
         Contact contact = contactDAO.getContactById(userID);
@@ -116,6 +123,15 @@ public class ProfileView {
             throw new RuntimeException(e);
         }
         profileDAO.getProfileByUserId(contact, userID);
+
+        if(userID != app.getLoggedInUserID()){
+            bioButton.setVisible(false);
+            photoButton.setVisible(false);
+        }
+        else {
+            bioButton.setVisible(true);
+            photoButton.setVisible(true);
+        }
 
         if (contact != null) {
             nameLabel.setText(contact.getFirstName() + " " + contact.getLastName());
@@ -129,14 +145,14 @@ public class ProfileView {
                 profileImageView.setImage(image);
             }
         }
-        loadUserLogs();
+        loadUserLogs(userID);
     }
 
     /**
      * Loads and displays the user's logs.
      */
-    private void loadUserLogs() {
-        int userID = app.getLoggedInUserID();
+    public void loadUserLogs(int userID) {
+        logsContainer.getChildren().clear();
         List<Object[]> logsList = logsDAO.getLogsForUser(userID);
 
         for (Object[] logData : logsList) {
@@ -147,8 +163,7 @@ public class ProfileView {
         }
     }
 
-    private void loadLikesComments() {
-        int userID = app.getLoggedInUserID();  // Get the logged-in user ID
+    public void loadLikesComments(int userID) {
 
         // Calculate and display Total Likes
         int totalLikes = analytics.calculateTotalLikes(userID);

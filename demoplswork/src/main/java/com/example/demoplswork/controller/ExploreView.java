@@ -8,8 +8,11 @@ import com.example.demoplswork.events.LogEventDAO;
 import com.example.demoplswork.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
@@ -21,6 +24,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -380,6 +384,8 @@ public class ExploreView
         usernameLabel.setTranslateY(15.0);
 
 
+
+
         header.getChildren().addAll(profileImage, usernameLabel);
         header.setSpacing(10);
 
@@ -531,8 +537,18 @@ public class ExploreView
         HBox userDescription = new HBox(boldUser, new Label(event.getDescription()));
         userDescription.setSpacing(5);
 
+        userDescription.setOnMouseClicked(event1 -> loadOtherUserProfile(event.getUserId()));
+
         Label logNameLabel = new Label("Project: " + event.getLogName(event.getLogId())); // Use method to get log name
         logNameLabel.setStyle("-fx-font-style: italic;");
+        logNameLabel.setOnMouseClicked(e -> {
+            try {
+                goToUpdateLogs(event.getLogId(), logsDAO.getLogById(event.getLogId()));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
 
         // Adjust Header Layout
         VBox headerText = new VBox(5); // Vertical arrangement for username + description and project name
@@ -622,6 +638,28 @@ public class ExploreView
 
         // Add the post container to the main feed
         commentsContainer1.getChildren().add(postContainer);
+    }
+
+    public void loadOtherUserProfile(int userId) {
+        try {
+            // Load the FXML for ProfileView
+            FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource("profile-view.fxml"));
+            Parent profileView = loader.load();
+
+            // Pass the userId to the ProfileView controller
+            ProfileView controller = loader.getController();
+            controller.setApplication(app);
+            controller.loadUser(userId);
+            controller.loadLikesComments(userId);
+
+
+            // Switch to the ProfileView scene
+            Stage stage = (Stage) commentsContainer1.getScene().getWindow();  // Replace 'someNodeInCurrentView' with a reference to a node in the current view
+            Scene scene = new Scene(profileView);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -768,5 +806,11 @@ public class ExploreView
 
         // Save updated likes to the database
         logEventDAO.updateLikesForLogEvent(event.getId(), likes);
+    }
+
+    public void goToUpdateLogs(int id, Logs log) throws IOException {
+        if (app != null) {
+            app.showLogsUpdateView(id, log);
+        }
     }
 }
