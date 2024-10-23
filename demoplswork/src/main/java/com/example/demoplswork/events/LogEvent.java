@@ -27,6 +27,15 @@ public abstract class LogEvent {
     private String description;
 
 
+    /**
+     * Constructor for LogEvent class.
+     * @param id The ID of the log event.
+     * @param logId The ID of the log.
+     * @param userId The ID of the user.
+     * @param description The description of the event.
+     * @param comments The comments for the event.
+     * @param likes The likes for the event.
+     */
     public LogEvent(int id, int logId, int userId, String description, List<String> comments, List<Integer> likes) {
         this.id = id;
         this.logId = logId;
@@ -43,61 +52,101 @@ public abstract class LogEvent {
         }
     }
 
+    /**
+     * Getter method for the timestamp.
+     */
     public String getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * Setter method for the timestamp.
+     */
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Getter method for the user ID.
+     */
     public int getUserId() {
         return userId;
     }
-
+    /**
+     * Setter method for the user ID.
+     */
     public int getLogId() {
         return logId;
     }
 
+    /*
+    * Getter method for the description
+    * */
     // Abstract method for event description, to be implemented by subclasses
     public abstract String getDescription();
 
+    /**
+     * toString method to return a string representation of the log event.
+     */
     @Override
     public String toString() {
         return timestamp + " - User" + userId + " " + setDescription() + " (Log ID: " + logId + ")";
     }
 
+    /**
+     * set description method to set the description of the event
+     */
     public abstract String setDescription();
 
-
+    /**
+     * getLogName method to get the log name by log ID.
+     */
     public String getLogName(int logID) {
         return logsDAO.getLogNameById(logID);
     }
 
+    /**
+     * Getter method for the comments.
+     */
     public List<String> getComments() {
         return comments;
     }
 
+    /**
+     * Setter method for the comments.
+     */
     public void setComments(List<String> comments) {
         this.comments = comments;
     }
 
+    /**
+     * Getter method for the likes.
+     */
     public List<Integer> getLikes() {
         return likes;
     }
 
+    /**
+     * Setter method for the likes.
+     */
     public void setLikes(List<Integer> likes) {
         this.likes = likes;
     }
-
+    /**
+     * Getter method for the ID.
+     */
     public int getId (){
         return id;
     }
-
+    /**
+     * Setter method for the ID.
+     */
     public void setId (int id){
         this.id = id;
     }
-    
+    /**
+     * getCommentsFromDatabase method to retrieve comments for the event from the database.
+     */
     public List<String> getCommentsFromDatabase() {
         return new ArrayList<>(logEventDAO.getCommentsForEvent(this.id));
     }

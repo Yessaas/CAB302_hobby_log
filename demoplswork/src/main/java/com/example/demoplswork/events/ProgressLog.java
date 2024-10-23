@@ -12,15 +12,26 @@ import java.util.List;
 public class ProgressLog {
     private List<LogEvent> events;
 
+    /**
+     * Constructor to initialize the list of events
+     */
     public ProgressLog() {
         this.events = new ArrayList<>();
     }
 
+    /**
+     * Method to add a new event to the log
+     * @param event
+     */
     // Method to add a new event to the log
     public void addEvent(LogEvent event) {
         events.add(event);
     }
 
+    /**
+     * Method to retrieve the entire log as a formatted string
+     * @return
+     */
     // Method to retrieve the entire log as a formatted string
     public String getLog() {
         StringBuilder log = new StringBuilder();

@@ -15,6 +15,15 @@ public class StartEvent extends LogEvent {
     private List<String> comments;
     private List<Integer> likes;
 
+    /**
+     * Constructor to initialize the fields of the StartEvent object.
+     * @param id The unique identifier of the event.
+     * @param userId The unique identifier of the user who created the event.
+     * @param logId The unique identifier of the log that the event belongs to.
+     * @param description The name of the project that is being started.
+     * @param comments The list of comments on the event.
+     * @param likes The list of user IDs who liked the event.
+     */
     public StartEvent(int id, int userId, int logId, String description, List<String> comments, List<Integer> likes) {
         super(id, logId, userId, description, comments, likes);
         this.projectName = description;
@@ -22,15 +31,27 @@ public class StartEvent extends LogEvent {
         this.likes = likes;
     }
 
+    /**
+     * Returns the project name.
+     * @return The project name.
+     */
     @Override
     public List<String> getComments(){
         return comments;
     }
 
+    /**
+     * Returns the list of comments on the event.
+     * @return The list of comments on the event.
+     */
     @Override
     public String getDescription() {
         return projectName;
     }
+    /**
+     * Returns a formatted description of the event.
+     * @return A formatted description of the event.
+     */
     @Override
     public String setDescription() {
         return "started logging \"" + projectName + "\"";

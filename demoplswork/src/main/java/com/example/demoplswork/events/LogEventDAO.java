@@ -19,11 +19,20 @@ import java.util.List;
  */
 public class LogEventDAO extends BaseDAO implements ILogEventDAO {
 
+    /**
+     * Constructor to initialize the database connection.
+     * @throws SQLException
+     */
     // Constructor
     public LogEventDAO() throws SQLException {
         super(); // Call the BaseDAO constructor
     }
 
+    /**
+     * Method to insert a LogEvent into the database.
+     * @param event The LogEvent object to be inserted.
+     * @throws SQLException
+     */
     // Method to insert a LogEvent into the database
     @Override
     public void insertLogEvent(LogEvent event) throws SQLException {
@@ -39,6 +48,12 @@ public class LogEventDAO extends BaseDAO implements ILogEventDAO {
         }
     }
 
+    /**
+     * Method to retrieve all LogEvents for a specific log ID.
+     * @param logId The ID of the log for which to retrieve LogEvents.
+     * @return A list of LogEvent objects.
+     * @throws SQLException
+     */
     // Method to retrieve all LogEvents for a specific logId
     @Override
     public List<LogEvent> getLogEventsForLog(int logId) throws SQLException {
@@ -73,6 +88,12 @@ public class LogEventDAO extends BaseDAO implements ILogEventDAO {
         return events;
     }
 
+    /**
+     * Method to retrieve LogEvents for other users excluding the logged-in user.
+     * @param loggedInUserId The ID of the logged-in user.
+     * @return A list of LogEvent objects.
+     * @throws SQLException
+     */
     public List<LogEvent> getLogEventsForOtherUsers(int loggedInUserId) throws SQLException {
         List<LogEvent> events = new ArrayList<>();
 
@@ -109,6 +130,11 @@ public class LogEventDAO extends BaseDAO implements ILogEventDAO {
         return events;
     }
 
+    /**
+     * Method to update likes for a specific log event.
+     * @param eventId The ID of the log event to update.
+     * @param likes A list of user IDs who liked the event.
+     */
     public void updateLikesForLogEvent(int eventId, List<Integer> likes) {
         String query = "UPDATE log_events SET likes = ? WHERE id = ?";
 
@@ -122,7 +148,11 @@ public class LogEventDAO extends BaseDAO implements ILogEventDAO {
         }
     }
 
-
+    /**
+     * Method to get comments for a specific event.
+     * @param eventId The ID of the event to retrieve comments for.
+     * @return A list of comments.
+     */
     public List<String> getCommentsForEvent(int eventId) {
         List<String> commentsList = new ArrayList<>();
         String query = "SELECT comments FROM log_events WHERE id = ?";
@@ -144,7 +174,11 @@ public class LogEventDAO extends BaseDAO implements ILogEventDAO {
 
 
 
-
+    /**
+     * Method to save a comment for a specific log event.
+     * @param eventId The ID of the event to save the comment for.
+     * @param comment The comment to save.
+     */
     public void saveCommentForLog(int eventId, String comment) {
         String query = "UPDATE log_events SET comments = CASE " +
                 "WHEN comments IS NULL OR comments = '' THEN ? " +
@@ -166,7 +200,10 @@ public class LogEventDAO extends BaseDAO implements ILogEventDAO {
 
 
 
-
+    /**
+     * Method to create a LogEvent object based on the event type.
+     * @param eventId The ID of the log event to delete.
+     */
     // Helper method to create a LogEvent based on the event type
     private LogEvent createLogEventFromType(String eventType, int userId, int logId, String description, List<String> comments, List<Integer> likes) {
         switch (eventType) {

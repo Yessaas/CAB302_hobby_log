@@ -21,6 +21,14 @@ import java.io.InputStream;
  */
 public class LogEventCell extends HBox {
 
+    /**
+     * Constructor for LogEventCell class.
+     * @param event LogEvent object containing event details.
+     * @param username Username of the user who triggered the event.
+     * @param profileImage Profile image of the user.
+     * @param likes Number of likes for the event.
+     * @param comments Number of comments for the event.
+     */
     public LogEventCell(LogEvent event, String username, String profileImage, int likes, int comments) {
         super(10);  // Add spacing between elements
         setPadding(new Insets(10));
