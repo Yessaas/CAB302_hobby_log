@@ -1,59 +1,53 @@
 package com.example.demoplswork.model;
-/**
- * Blog class represents a blog post with an introduction, description, category, and image path.
- * It has fields for the intro, description, category, and image path.
- * It has a constructor to initialize these fields.
- * It has getter methods to retrieve the values of these fields.
- */
+
 public class Blog {
-    private String intro;
+    private int id;
+    private int userId;
+    private String title;
     private String description;
-    private String category;
     private String imagePath;
+    private String tag;  // New field for the tag
 
-    /**
-     * Constructor to initialize the fields of the Blog object.
-     * @param intro the introduction of the blog post
-     * @param description the description of the blog post
-     * @param category the category of the blog post
-     * @param imagePath the image path of the blog post
-     */
-    public Blog(String intro, String description, String category, String imagePath) {
-        this.intro = intro;
+    public Blog(int userId, String title, String description, String imagePath, String tag) {
+        this.userId = userId;
+        this.title = title;
         this.description = description;
-        this.category = category;
         this.imagePath = imagePath;
+        this.tag = tag;
     }
 
-    /**
-     * Getter method to retrieve the introduction of the blog post.
-     * @return the introduction of the blog post
-     */
-    public String getIntro() {
-        return intro;
+    public Blog(int id, int userId, String title, String description, String imagePath, String tag) {
+        this.id = id;
+        this.userId = userId;
+        this.title = title;
+        this.description = description;
+        this.imagePath = imagePath;
+        this.tag = tag;
     }
 
-    /**
-     * Getter method to retrieve the description of the blog post.
-     * @return the description of the blog post
-     */
+    // Getter for tag
+    public String getTag() {
+        return tag;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Getter method to retrieve the category of the blog post.
-     * @return the category of the blog post
-     */
-    public String getCategory() {
-        return category;
-    }
-
-    /**
-     * Getter method to retrieve the image path of the blog post.
-     * @return the image path of the blog post
-     */
     public String getImagePath() {
         return imagePath;
     }
 }
+

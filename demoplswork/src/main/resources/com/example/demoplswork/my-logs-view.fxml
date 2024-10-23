@@ -13,7 +13,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.media.MediaView?>
 
 
 <?import javafx.scene.control.ScrollPane?>
@@ -71,7 +70,8 @@
             <HBox alignment="CENTER">
                 <ProgressBar fx:id="progressBar" prefWidth="900.0" prefHeight="20.0" />
             </HBox>
-            
+
+            <!-- Two Columns-->
             <HBox spacing="150" alignment="TOP_CENTER">
 
                 <!-- Left Column: To-Do List -->
@@ -83,29 +83,20 @@
                     <Button text="Add To-Do Item" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddToDo" />
                 </VBox>
 
-
-                <VBox spacing="15" alignment="CENTER">
+                <!-- Right Column: Media Slideshow -->
+                <VBox fx:id="mediaContainer" spacing="15" alignment="CENTER">
                     <Label text="Media Slideshow" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+                    <!-- Placeholder for Media -->
+                    <ImageView fx:id="mediaImageView" fitWidth="300" fitHeight="200" preserveRatio="true" />
+                    <HBox spacing="20" alignment="CENTER">
+                        <Button fx:id="backButton" text="Previous" onAction="#handleBack" disable="true" />
+                        <Button fx:id="nextButton" text="Next" onAction="#handleNext" disable="true" />
+                    </HBox>
+                    <Button text="Add Media" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddImages"/>
+                </VBox>
+            </HBox>
 
-                    <!-- Placeholder for Image/Video
-                     <ImageView fx:id="mediaImageView" fitWidth="300" fitHeight="200" preserveRatio="true" />
-                     <MediaView fx:id="mediaView" fitWidth="300" fitHeight="200" preserveRatio="true" visible="false" />
-                    -->
-                    <VBox fx:id="mediaviewholder">
-
-                    </VBox>
-
-
-                     <HBox spacing="20" alignment="CENTER">
-                         <Button fx:id="backButton" text="Previous" onAction="#handleBack" disable="false" />
-                         <Button fx:id="nextButton" text="Next" onAction="#handleNext" disable="false" />
-                     </HBox>
-
-                     <Button text="Add Media" style="-fx-background-color: #FFD643;" prefWidth="200" onAction="#handleAddMedia"/>
-                 </VBox>
-
-             </HBox>
-            
+            <!-- Materials List Section -->
             <VBox spacing="15" alignment="CENTER">
                 <Label text="Materials List" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
                 <TableView fx:id="materialsTable" prefHeight="200" prefWidth="600">
@@ -121,8 +112,14 @@
                 </HBox>
             </VBox>
             <VBox fx:id="logEventsBox" >
+
+                <!-- Other UI elements (like buttons, labels, etc.) -->
+
+                <!-- This VBox will hold the ListView or custom log event entries -->
                 <ListView fx:id="logEventsListView" prefHeight="400" prefWidth="600">
+                    <!-- The LogEventCell objects will be dynamically added here -->
                 </ListView>
+
             </VBox>
         </VBox>
     </ScrollPane>

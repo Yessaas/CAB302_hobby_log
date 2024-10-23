@@ -3,20 +3,10 @@ package com.example.demoplswork.model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-/**
- * ProfileDAO class is responsible for managing profiles in the database.
- * It extends the BaseDAO class and implements the IProfileDAO interface.
- * It has a method to insert a profile for a user.
- * It has a method to check if a profile exists.
- * It has a method to retrieve a profile by user ID.
- * It has a method to update a profile.
- */
+
 public class ProfileDAO extends BaseDAO implements IProfileDAO {
 
 
-    /**
-     * Method to insert a profile for a user.
-     */
     @Override
     public void insertProfile(int userId, String bio, String photo) throws SQLException {
         if (userId <= 0) {
@@ -37,9 +27,6 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
             System.out.println("Profile found for user ID: " + userId);
         }
     }
-    /**
-     * Method to check if a profile exists for the given user ID.
-     */
     // Method to check if a profile exists for the given user ID
     private boolean profileExists(int userId) {
         String query = "SELECT COUNT(*) FROM user_profiles WHERE user_id = ?";
@@ -56,9 +43,6 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
     }
 
 
-    /**
-     * Method to retrieve a profile by user ID.
-     */
     @Override
     public void getProfileByUserId(Contact contact, int userId) {
         if (userId <= 0) {
@@ -84,9 +68,6 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
         }
     }
 
-    /**
-     * Method to update a profile.
-     */
     @Override
     public void updateProfile(int userId, String bio, String photo) throws SQLException {
         // Build the query dynamically based on which fields are non-null

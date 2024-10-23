@@ -14,16 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * HelloApplication class is the main entry point for the HobbyLog application.
- * It extends the JavaFX Application class to create a graphical user interface.
- * It has a field to store the primary stage of the application.
- * It has a field to store the logged-in user's ID.
- * It has methods to get and set the logged-in user's ID.
- * It overrides the start method to set up the initial view and stage properties.
- * It has methods to show different views of the application, such as login, home, explore, logs, logs update, create account, and account views.
- * It has a main method to launch the application.
+ * Main application class for the HobbyLog application.
  */
-public class HelloApplication extends Application {
+public class    HelloApplication extends Application {
     public static final String TITLE = "Address Book";
     private Stage primaryStage;
     private int loggedInUserID;  // Store the logged-in user's ID

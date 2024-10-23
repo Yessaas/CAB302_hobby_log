@@ -5,82 +5,56 @@ import com.example.demoplswork.events.EndEvent;
 import com.example.demoplswork.events.ImageEvent;
 import com.example.demoplswork.events.LogEvent;
 import com.example.demoplswork.events.LogEventDAO;
-import com.example.demoplswork.model.Contact;
-import com.example.demoplswork.model.ContactDAO;
-import com.example.demoplswork.model.LogsDAO;
-import com.example.demoplswork.model.ProfileDAO;
+import com.example.demoplswork.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
-import com.example.demoplswork.model.Blog;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.io.IOException;
-import java.io.File;
-import java.io.InputStream;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 /**
- * ExploreView class is the controller for the ExploreView.fxml file.
- * It handles the logic for the Explore page of the application.
- * It has methods to initialize the view, load blogs from the database, and handle user interactions.
- * It has a setApplication method to set the application instance.
- * It has a goToHome method to navigate to the home page.
- * It has a goToLogs method to navigate to the logs page.
- * It has a showAccountMenu method to display the account menu.
- * It has a goToAccount method to navigate to the account page.
- * It has an onLogout method to log out the user.
- * It has a viewBlog method to display a blog's content.
- * It has a searchByHobby method to search for blogs by hobby.
- * It has a searchBlogs method to search for blogs based on user input.
- * It has a showCreateBlogDialog method to create a new blog.
- * It has a displayBlog method to display a blog in the UI.
- * It has a loadBlogsFromDatabase method to load blogs from the database.
- * It has a getCurrentUsername method to get the current user's username.
- * It has a saveBlogToDatabase method to save a blog to the database.
- * It has a viewBlogContent method to view the content of a blog.
- * It has a loadMyFeed method to load the user's feed.
- * It has an addEventToFeed method to add an event to the feed.
- * It has a getContactForUserId method to get the contact for a user ID.
- * It has a showCommentsPopup method to show a comments popup.
- * It has a saveCommentForLog method to save a comment for a log.
- * It has a toggleLike method to toggle a like on an event.
+ * Controller class for the Explore view.
  */
-public class ExploreView {
+public class ExploreView
+{
 
     private HelloApplication app;
     private ContextMenu accountMenu;
     private ContactDAO contactDAO;
     private LogEventDAO logEventDAO;
-    private List<Blog> blogs = new ArrayList<>();
 
     @FXML
-    private VBox commentsContainer;
+    private VBox post2;
 
     ArrayList<String> hobbys = new ArrayList<>(
             Arrays.asList("Woodworking", "PC Building", "Miniatures", "Music Production", "Coding", "Cooking", "Gardening", "Digital Art", "Traditional Art")
     );
 
     /**
-     * Constructor for the ExploreView class.
-     * @throws SQLException
+     * Constructor for ExploreView.
+     *
+     * @throws SQLException if a database access error occurs
      */
     public ExploreView() throws SQLException {
         this.logEventDAO = new LogEventDAO();
@@ -93,25 +67,23 @@ public class ExploreView {
     private Button accountButton;
 
     /**
-     * Setter for the application.
-     * @param app
+     * Sets the application instance.
+     *
+     * @param app the application instance
      */
     public void setApplication(HelloApplication app) {
         this.app = app;
-        int loggedInUserId = app.getLoggedInUserID();
+        int loggedInUserId = app.getLoggedInUserID(); // Assuming you have a way to get this ID
         loadMyFeed(loggedInUserId);
     }
 
     /**
-     * Initializes the ExploreView.
+     * Initializes the controller.
      */
     @FXML
     public void initialize() {
-        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> searchBlogs());
-        blogContainer.getChildren().clear();
-        loadBlogsFromDatabase();
         accountMenu = new ContextMenu();
-        hobbyChoiceBox.getItems().addAll(hobbys);
+        // hobbyChoiceBox.getItems().addAll(hobbys);
 
         MenuItem viewProfile = new MenuItem("View Profile");
         viewProfile.setOnAction(event -> {
@@ -126,16 +98,30 @@ public class ExploreView {
         logout.setOnAction(event -> onLogout());
 
         accountMenu.getItems().addAll(viewProfile, logout);
-    }
 
-    private List<String> searchList(String searchHobby, List<String> listOfStrings) {
-        List<String> searchHobbyArray = Arrays.asList(searchHobby.trim().split(" "));
-        return listOfStrings.stream().filter(input -> searchHobbyArray.stream().allMatch(hobby -> input.toLowerCase().contains(hobby.toLowerCase()))).collect(Collectors.toList());
+        // Load existing blogs when the page is initialized
+        loadExistingBlogs();
     }
 
     /**
-     * Method to direct the user to the homepage.
-     * @throws IOException
+     * Searches the list of hobbies.
+     *
+     * @param searchHobby   the hobby to search for
+     * @param listOfStrings the list of strings to search in
+     * @return the list of matching hobbies
+     */
+    private List<String> searchList(String searchHobby, List<String> listOfStrings) {
+        List<String> searchHobbyArray = Arrays.asList(searchHobby.trim().split(" "));
+        return listOfStrings.stream().filter(input -> {
+            return searchHobbyArray.stream().allMatch(hobby ->
+                    input.toLowerCase().contains(hobby.toLowerCase()));
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * Shows the home view.
+     *
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     public void goToHome() throws IOException {
@@ -145,8 +131,9 @@ public class ExploreView {
     }
 
     /**
-     * Method to direct the user to the logs page.
-     * @throws IOException
+     * Shows the logs view.
+     *
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     public void goToLogs() throws IOException {
@@ -155,18 +142,14 @@ public class ExploreView {
         }
     }
 
-    /**
-     * Method to direct the user to the account menu.
-     * @throws IOException
-     */
     @FXML
     private void showAccountMenu(ActionEvent event) {
         accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
     }
-
     /**
-     * Method to direct the user to the account page.
-     * @throws IOException
+     * Shows the account view.
+     *
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     public void goToAccount() throws IOException {
@@ -176,8 +159,9 @@ public class ExploreView {
     }
 
     /**
-     * Method to log out of the account.
-     * @throws IOException
+     * Shows the explore view.
+     *
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     private void onLogout() {
@@ -195,312 +179,293 @@ public class ExploreView {
     private Label introLine2;
 
     /**
-     * Method to display a blog with demo text.
-     * @throws IOException
+     * Shows the blog view.
+     *
+     * @param title the title of the blog
+     * @param description the blog content
      */
     @FXML
-    public void viewBlog(ActionEvent event) {
-        String blogIntro = "This is a detailed view of the blog.";
+    public void viewBlog(String title, String description, String tag) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Blog Content");
 
-        String blogContent = blogIntro + "\n\n" +
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n" +
-                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \n" +
-                "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \n" +
-                "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+        // Create a ScrollPane to handle large content
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true); // Fit the content width to the ScrollPane
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Blog Content");
-        alert.setHeaderText(null);
-        alert.setContentText(blogContent);
-        alert.showAndWait();
+        // Create a VBox to hold the title and description
+        VBox contentBox = new VBox(10); // 10 is the spacing between title and description
+        contentBox.setPadding(new Insets(10)); // Add padding for some space around the content
+
+        // Create a Label for the title
+        Label titleLabel = new Label(title);
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        titleLabel.setWrapText(true); // Ensure the title wraps if too long
+
+        Label tagLabel = new Label("Tag: " + tag);  // Add the tag below the title
+        tagLabel.setStyle("-fx-font-size: 14px; -fx-font-family: 'Roboto'; -fx-font-style: italic;");
+
+        // Create a TextArea for the description (optional: TextArea allows for selectable and scrollable text)
+        TextArea descriptionArea = new TextArea(description);
+        descriptionArea.setWrapText(true); // Ensure text wraps
+        descriptionArea.setEditable(false); // Make the TextArea read-only
+        descriptionArea.setPrefRowCount(10); // Set preferred rows to limit initial height
+
+        // Add the title and description to the VBox
+        contentBox.getChildren().addAll(titleLabel, tagLabel, descriptionArea);
+
+        // Set the VBox into the ScrollPane
+        scrollPane.setContent(contentBox);
+
+        // Add the ScrollPane to the dialog
+        dialog.getDialogPane().setContent(scrollPane);
+
+        // Add a close button
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        dialog.showAndWait();
     }
+
 
     @FXML
     private ComboBox<String> hobbyChoiceBox;
 
-    /**
-     * Method to search for blogs by hobby.
-     * @param event
-     */
     @FXML
     void searchByHobby(ActionEvent event) {
-        searchBlogs();
-    }
+        /*listView.getItems().clear();
 
-    private String saveImageToDirectory(File selectedFile) throws IOException {
-        File imageDir = new File("images/uploads");
-        if (!imageDir.exists()) {
-            imageDir.mkdirs();
-        }
-        String newFileName = UUID.randomUUID().toString() + "_" + selectedFile.getName();
-        File destinationFile = new File(imageDir, newFileName);
-        Files.copy(selectedFile.toPath(), destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        return destinationFile.getAbsolutePath();
+        String selectedHobby = hobbyChoiceBox.getValue();
+        if (selectedHobby != null && !selectedHobby.isEmpty()) {
+            listView.getItems().addAll(searchList(selectedHobby, hobbys));
+        }*/
     }
-
-    @FXML
-    private TextField searchTextField;
 
     /**
-     * Method to search for blogs.
+     * Shows the create blog dialog.
      */
     @FXML
-    private void searchBlogs() {
-        String keyword = (searchTextField.getText() != null) ? searchTextField.getText().trim().toLowerCase() : "";
-        String selectedCategory = hobbyChoiceBox.getValue();
+    private void showCreateBlogDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Create New Blog");
 
-        if (keyword.isEmpty() && (selectedCategory == null || selectedCategory.isEmpty())) {
-            blogContainer.getChildren().clear();
-            blogs.forEach(this::displayBlog);
-            return;
-        }
+        ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
 
-        List<Blog> filteredBlogs = blogs.stream()
-                .filter(blog -> {
-                    boolean matchesKeyword = (keyword.isEmpty() ||
-                            blog.getIntro().toLowerCase().contains(keyword) ||
-                            blog.getDescription().toLowerCase().contains(keyword));
-                    boolean matchesCategory = (selectedCategory == null || selectedCategory.isEmpty() ||
-                            selectedCategory.equals(blog.getCategory()));
-                    return matchesKeyword && matchesCategory;
-                })
-                .collect(Collectors.toList());
+        TextField introField = new TextField();
+        introField.setPromptText("Enter Blog Title");
 
-        blogContainer.getChildren().clear();
-        filteredBlogs.forEach(this::displayBlog);
-    }
+        TextArea descriptionArea = new TextArea();
+        descriptionArea.setPromptText("Enter Blog Description");
 
-    /**
-     * Method to get the current username.
-     */
-    private String getCurrentUsername() {
-        int userID = app.getLoggedInUserID();
-        contactDAO = new ContactDAO();
-        Contact contact = contactDAO.getContactById(userID);
+        ComboBox<String> categoryComboBox = new ComboBox<>();
+        categoryComboBox.getItems().addAll("Woodworking", "PC Building", "Miniatures", "Music Production", "Coding", "Cooking", "Gardening", "Digital Art", "Traditional Art");
+        categoryComboBox.setPromptText("Select Category");
 
-        if (contact != null) {
-            return contact.getFirstName() + " " + contact.getLastName();
-        }
-        return "Unknown User";
-    }
+        TextField tagField = new TextField();  // New input for tag
+        tagField.setPromptText("Enter Blog Tag");
 
-    public VBox blogContainer;
+        Button uploadImageButton = new Button("Upload Cover Image");
+        Label imagePathLabel = new Label("No image selected");
 
-    /**
-     * Method to create a new blog.
-     */
-    public void showCreateBlogDialog() {
-        try {
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Create New Blog");
+        uploadImageButton.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
+            File selectedFile = fileChooser.showOpenDialog(dialog.getOwner());
 
-            ButtonType submitButtonType = new ButtonType("Submit", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(submitButtonType, ButtonType.CANCEL);
-
-            TextField introField = new TextField();
-            introField.setPromptText("Enter Blog Introduction");
-
-            TextArea descriptionArea = new TextArea();
-            descriptionArea.setPromptText("Enter Detailed Description");
-
-            ComboBox<String> categoryComboBox = new ComboBox<>();
-            categoryComboBox.getItems().addAll("Woodworking", "PC Building", "Miniatures", "Music Production",
-                    "Coding", "Cooking", "Gardening", "Digital Art", "Traditional Art");
-            categoryComboBox.setPromptText("Select Category");
-
-            VBox dialogContent = new VBox(10);
-            dialogContent.getChildren().addAll(
-                    new Label("Blog Introduction:"), introField,
-                    new Label("Detailed Description:"), descriptionArea,
-                    new Label("Category:"), categoryComboBox
-            );
-            dialog.getDialogPane().setContent(dialogContent);
-
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == submitButtonType) {
-                    try {
-                        String intro = introField.getText();
-                        String description = descriptionArea.getText();
-                        String category = categoryComboBox.getValue();
-
-                        if (intro.isEmpty() || description.isEmpty() || category == null) {
-                            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Please fill all fields and select a category.");
-                            errorAlert.showAndWait();
-                            return null;
-                        } else {
-                            String fullName = getCurrentUserFullName();
-                            Blog blog = new Blog(intro, description, category, fullName);
-                            saveBlogToDatabase(blog);
-                            displayBlog(blog);
-                            Alert confirmationAlert = new Alert(Alert.AlertType.INFORMATION, "Blog Created Successfully!");
-                            confirmationAlert.showAndWait();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An error occurred while creating the blog. Check the console for details.");
-                        errorAlert.showAndWait();
-                    }
+            if (selectedFile != null) {
+                try {
+                    // Copy the image to the resources folder
+                    String projectDirectory = System.getProperty("user.dir");
+                    String targetDirectory = projectDirectory + "/src/main/resources/images";
+                    File targetFile = new File(targetDirectory, selectedFile.getName());
+                    Files.copy(selectedFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    imagePathLabel.setText(targetFile.getName()); // Set the image file name to store in the database
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                return null;
-            });
+            }
+        });
 
-            dialog.showAndWait();
-        } catch (Exception e) {
+        VBox dialogContent = new VBox(10);
+        dialogContent.getChildren().addAll(
+                new Label("Blog Title:"), introField,
+                new Label("Description:"), descriptionArea,
+                new Label("Category:"), categoryComboBox,
+                // new Label("Tag:"), tagField,  // Add the tag input
+                uploadImageButton, imagePathLabel
+        );
+        dialog.getDialogPane().setContent(dialogContent);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == submitButtonType) {
+                String intro = introField.getText();
+                String description = descriptionArea.getText();
+                String category = categoryComboBox.getValue();
+                //String tag = tagField.getText();  // Capture the tag
+                String imagePath = imagePathLabel.getText();
+
+                if (intro.isEmpty() || description.isEmpty() || category == null || imagePath.equals("No image selected")) {
+                    Alert errorAlert = new Alert(AlertType.ERROR, "Please fill all fields, select a category, and upload an image.");
+                    errorAlert.showAndWait();
+                } else {
+                    // Create the new blog and add it to the database
+                    Blog newBlog = new Blog(app.getLoggedInUserID(), intro, description, imagePath, category);
+                    try {
+                        BlogDAO blogDAO = new BlogDAO();
+                        blogDAO.insertBlog(newBlog);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Create and add the new blog post dynamically in the UI
+                    addNewBlogPost(intro, description, imagePath, category, app.getLoggedInUserID());
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
+
+    private void loadExistingBlogs() {
+        try {
+            BlogDAO blogDAO = new BlogDAO();
+            List<Blog> blogs = blogDAO.getAllBlogs();
+
+            // Loop through the list of blogs and add them to the UI
+            for (Blog blog : blogs) {
+                addNewBlogPost(blog.getTitle(), blog.getDescription(), blog.getImagePath(), blog.getTag(), blog.getUserId()); // Pass userId
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An unexpected error occurred while creating the dialog.");
-            errorAlert.showAndWait();
         }
     }
 
-    /**
-     * Method to display a blog.
-     * @param blog
-     */
-    private void displayBlog(Blog blog) {
-        StackPane blogEntry = new StackPane();
-        blogEntry.setPrefHeight(200.0);
-        blogEntry.setPrefWidth(500.0);
-        blogEntry.setStyle("-fx-border-color: black; -fx-border-width: 1;");
+    private void addNewBlogPost(String title, String description, String imagePath, String tag, int userId) {
+        // Fetch user details
+        Contact contact = getContactForUserId(userId); // Assuming you have this method available
+        String username = contact != null ? contact.getFirstName() : "Unknown User";
+        String profilePhotoPath = contact != null ? contact.getPhoto() : "/images/account_circle.png";
 
-        VBox blogContent = new VBox();
-        blogContent.setPrefHeight(150.0);
-        blogContent.setPrefWidth(300.0);
-        blogContent.setSpacing(15);
-        blogContent.setStyle("-fx-padding: 30;");
+        StackPane blogPost = new StackPane();
+        blogPost.setPrefHeight(200.0);
+        blogPost.setPrefWidth(500.0);
+        blogPost.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 
-        Label titleLabel = new Label(blog.getIntro());
+        VBox postContent = new VBox();
+        postContent.setPrefHeight(150.0);
+        postContent.setPrefWidth(400.0);
+        postContent.setSpacing(10);
+        postContent.setStyle("-fx-padding: 30;");
+
+        Label titleLabel = new Label(title);
         titleLabel.setStyle("-fx-font-size: 16px; -fx-font-family: 'Roboto'; -fx-font-weight: bold;");
         titleLabel.setWrapText(true);
+        titleLabel.setPrefWidth(450.0);
 
-        HBox blogHeader = new HBox(15);
-        Label usernameLabel = new Label(getCurrentUsername());
-        usernameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        HBox header = new HBox();
+        header.setPrefHeight(23.0);
+        header.setPrefWidth(373.0);
 
-        VBox headerBox = new VBox(5);
-        headerBox.getChildren().addAll(usernameLabel, titleLabel);
+        ImageView profileImage = new ImageView();
+        profileImage.setFitHeight(50.0);
+        profileImage.setFitWidth(50.0);
+        profileImage.setImage(new Image(getClass().getResourceAsStream("/images/" + profilePhotoPath))); // Dynamic profile image
 
-        blogContent.getChildren().add(headerBox);
+        Label usernameLabel = new Label(username); // Dynamic username
+        usernameLabel.setPrefHeight(20.0);
+        usernameLabel.setPrefWidth(122.0);
+        usernameLabel.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        usernameLabel.setTranslateY(15.0);
 
-        Button openArticleButton = new Button("Open Article");
-        openArticleButton.setOnAction(e -> viewBlogContent(blog));
 
-        blogContent.getChildren().addAll(openArticleButton);
+        header.getChildren().addAll(profileImage, usernameLabel);
+        header.setSpacing(10);
 
-        blogEntry.getChildren().add(blogContent);
+        StackPane coverImageContainer = new StackPane();
+        coverImageContainer.setAlignment(javafx.geometry.Pos.CENTER);
 
-        if (blogContainer == null) {
-            System.err.println("Error: blogContainer is null!");
-            return;
+        ImageView coverImageView = new ImageView();
+        coverImageView.setFitHeight(300.0);
+        coverImageView.setFitWidth(330.0);
+        coverImageView.setPreserveRatio(true);
+        // Construct the absolute file path and log it
+        String absoluteImagePath = System.getProperty("user.dir") + "/src/main/resources/images/" + imagePath;
+        System.out.println("Attempting to load image from: " + absoluteImagePath); // Log the path
+
+        File imageFile = new File(absoluteImagePath);
+        if (imageFile.exists()) {
+            coverImageView.setImage(new Image(imageFile.toURI().toString())); // Load image from the file system
+        } else {
+            System.out.println("Image not found at: " + absoluteImagePath); // Log the missing image
+            coverImageView.setImage(new Image(getClass().getResourceAsStream("/images/post-ph.jpg"))); // Fallback
         }
 
-        blogContainer.getChildren().add(blogEntry);
+        coverImageContainer.getChildren().add(coverImageView);
+
+
+        HBox buttonContainer = new HBox();
+        buttonContainer.setAlignment(javafx.geometry.Pos.CENTER);
+
+        Button openArticleButton = new Button("Open article");
+        openArticleButton.setPrefHeight(27.0);
+        openArticleButton.setPrefWidth(90.0);
+        openArticleButton.setStyle("-fx-background-color: #FFD643;");
+        openArticleButton.setOnAction(e -> viewBlog(title, description, tag)); // Pass title and description to the viewBlog method
+
+        buttonContainer.getChildren().add(openArticleButton);
+
+        postContent.getChildren().addAll(titleLabel, header, coverImageContainer, buttonContainer);
+        blogPost.getChildren().add(postContent);
+
+        // Add the new blog post to the VBox (post2)
+        post2.getChildren().addFirst(blogPost);
     }
 
-    /**
-     * Method to load blogs from the database.
-     */
-    private void loadBlogsFromDatabase() {
-        blogs.clear();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:contacts.db")) {
-            String sql = "SELECT * FROM Blogs";
-            try (PreparedStatement statement = connection.prepareStatement(sql);
-                 ResultSet resultSet = statement.executeQuery()) {
 
-                while (resultSet.next()) {
-                    String intro = resultSet.getString("intro");
-                    String description = resultSet.getString("description");
-                    String category = resultSet.getString("category");
 
-                    Blog blog = new Blog(intro, description, category, getCurrentUserFullName());
-                    blogs.add(blog);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        blogContainer.getChildren().clear();
-        blogs.forEach(this::displayBlog);
-    }
 
     /**
-     * Method to get the current user's full name.
-     * @return
-     */
-    private String getCurrentUserFullName() {
-        int userID = app.getLoggedInUserID();
-        contactDAO = new ContactDAO();
-        Contact contact = contactDAO.getContactById(userID);
-
-        if (contact != null) {
-            return contact.getFirstName() + " " + contact.getLastName();
-        }
-        return "Unknown User";
-    }
-
-    /**
-     * Method to save a blog to the database.
-     * @param blog
-     */
-    private void saveBlogToDatabase(Blog blog) {
-        String dbUrl = "jdbc:sqlite:contacts.db";
-
-        try (Connection connection = DriverManager.getConnection(dbUrl)) {
-            String sql = "INSERT INTO Blogs (intro, description, category, username) VALUES (?, ?, ?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, blog.getIntro());
-                statement.setString(2, blog.getDescription());
-                statement.setString(3, blog.getCategory());
-                statement.setString(4, getCurrentUsername());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Method to view the content of a blog.
-     * @param blog
-     */
-    private void viewBlogContent(Blog blog) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Blog Content");
-        alert.setHeaderText(blog.getIntro());
-        alert.setContentText(blog.getDescription());
-        alert.showAndWait();
-    }
-
-    /**
-     * Method to load the user's feed.
-     * @param loggedInUserId
+     * Loads the feed for the logged-in user.
+     *
+     * @param loggedInUserId the ID of the logged-in user
      */
     public void loadMyFeed(int loggedInUserId) {
         try {
             LogEventDAO logEventDAO = new LogEventDAO();
             List<LogEvent> events = logEventDAO.getLogEventsForOtherUsers(loggedInUserId);
 
+            // Group the events by date (yyyy-MM-dd format)
             Map<LocalDate, List<LogEvent>> eventsByDate = events.stream()
                     .collect(Collectors.groupingBy(event -> LocalDate.parse(event.getTimestamp().substring(0, 10), DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
 
+            // Sort the dates in descending order
             List<LocalDate> sortedDates = eventsByDate.keySet().stream()
-                    .sorted(Comparator.reverseOrder())
+                    .sorted(Comparator.reverseOrder()) // Sort in descending order
                     .collect(Collectors.toList());
 
+            // Iterate over each sorted date group and add them to the feed
             for (LocalDate date : sortedDates) {
                 List<LogEvent> eventsForDate = eventsByDate.get(date);
+
+                // Reverse the list to show the most recent events first
                 Collections.reverse(eventsForDate);
 
+                // Create a date header label
                 Label dateHeader = new Label(date.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")));
                 dateHeader.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-padding: 10 0 10 0;");
+
+                // Add the date header to the feed
                 commentsContainer1.getChildren().add(dateHeader);
 
+                // Add all events for that date
                 for (LogEvent event : eventsForDate) {
                     if (event instanceof EndEvent || event instanceof ImageEvent) {
-                        addEventToFeed(event, true);
+                        addEventToFeed(event, true); // true indicates these can have images
                     } else {
-                        addEventToFeed(event, false);
+                        addEventToFeed(event, false); // Other events without images
                     }
                 }
             }
@@ -510,15 +475,18 @@ public class ExploreView {
     }
 
     /**
-     * Method to add an event to the feed.
-     * @param event
-     * @param hasImage
+     * Adds an event to the feed.
+     *
+     * @param event    the event to add
+     * @param hasImage whether the event has an image
      */
     private void addEventToFeed(LogEvent event, boolean hasImage) {
         LogsDAO logsDAO = new LogsDAO();
 
+        // Check if the associated log exists
         if (!logsDAO.doesLogExist(event.getLogId())) {
-            return;
+            System.out.println("Log ID " + event.getLogId() + " does not exist. Skipping event.");
+            return; // Skip this event if the log does not exist
         }
 
         StackPane postContainer = new StackPane();
@@ -532,90 +500,148 @@ public class ExploreView {
         postContent.setSpacing(10);
         postContent.setStyle("-fx-padding: 30;");
 
+        // Fetch user details
         Contact contact = getContactForUserId(event.getUserId());
         String username = contact != null ? contact.getFirstName() : "Unknown User";
         String profilePhotoPath = contact != null ? contact.getPhoto() : "/images/account_circle.png";
 
-        HBox header = new HBox(15);
+        // Profile Image and Username
+        HBox header = new HBox(15); // Added spacing
         ImageView profileImage = new ImageView();
         profileImage.setFitHeight(50.0);
         profileImage.setFitWidth(50.0);
 
+        // Load profile image
         try {
             InputStream profileImageStream = getClass().getResourceAsStream("/images/" + profilePhotoPath);
             if (profileImageStream != null) {
                 profileImage.setImage(new Image(profileImageStream));
+            } else {
+                System.out.println("Profile image not found: " + profilePhotoPath);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        // Create bold label for the username
         Label boldUser = new Label(username + ": ");
         boldUser.setStyle("-fx-font-weight: bold;");
 
+        // Create an HBox to join bold username and description
         HBox userDescription = new HBox(boldUser, new Label(event.getDescription()));
         userDescription.setSpacing(5);
 
-        Label logNameLabel = new Label("Project: " + event.getLogName(event.getLogId()));
+        Label logNameLabel = new Label("Project: " + event.getLogName(event.getLogId())); // Use method to get log name
         logNameLabel.setStyle("-fx-font-style: italic;");
 
-        VBox headerText = new VBox(5);
+        // Adjust Header Layout
+        VBox headerText = new VBox(5); // Vertical arrangement for username + description and project name
         headerText.getChildren().addAll(userDescription, logNameLabel);
 
+        // Add components to the header HBox
         header.getChildren().addAll(profileImage, headerText);
 
-        StackPane imageContainer = new StackPane();
+        // Optional Image for specific event types
+        // Media container (image or video)
+        StackPane mediaContainer = new StackPane();
         if (hasImage && event instanceof ImageEvent) {
             ImageEvent imageEvent = (ImageEvent) event;
-            ImageView eventImage = new ImageView();
-            eventImage.setFitHeight(150);
-            eventImage.setFitWidth(200);
-            eventImage.setPreserveRatio(true);
-            String imageName = imageEvent.getImagePath();
-            String relativePath = "/images/" + imageName;
+            String mediaPath = imageEvent.getImagePath(event.getDescription());
+            String absoluteMediaPath = System.getProperty("user.dir") + "/src/main/resources/images/" + mediaPath;
 
-            InputStream imageStream = getClass().getResourceAsStream(relativePath);
-            if (imageStream != null) {
-                Image image = new Image(imageStream);
-                eventImage.setImage(image);
+            if (mediaPath.endsWith(".mp4")) {
+                // Video handling
+                System.out.println("Loading video: " + absoluteMediaPath);
+                File videoFile = new File(absoluteMediaPath);
+                if (videoFile.exists()) {
+                    Media media = new Media(videoFile.toURI().toString());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    MediaView mediaView = new MediaView(mediaPlayer);
+                    mediaView.setFitHeight(150);
+                    mediaView.setFitWidth(200);
+                    mediaView.setPreserveRatio(true);
+
+                    // Add play/pause functionality on click
+                    mediaView.setOnMouseClicked(e -> {
+                        if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                            mediaPlayer.pause();
+                        } else {
+                            mediaPlayer.play();
+                        }
+                    });
+
+                    mediaContainer.getChildren().add(mediaView);
+                } else {
+                    System.out.println("Video not found at: " + absoluteMediaPath);
+                }
+            } else {
+                // Image handling
+                System.out.println("Loading image: " + absoluteMediaPath);
+                File imageFile = new File(absoluteMediaPath);
+                ImageView eventImage = new ImageView();
+                eventImage.setFitHeight(150);
+                eventImage.setFitWidth(200);
+                eventImage.setPreserveRatio(true);
+
+                if (imageFile.exists()) {
+                    eventImage.setImage(new Image(imageFile.toURI().toString())); // Load image from the file system
+                } else {
+                    System.out.println("Image not found at: " + absoluteMediaPath);
+                    eventImage.setImage(new Image(getClass().getResourceAsStream("/images/post-ph.jpg"))); // Fallback
+                }
+
+                mediaContainer.getChildren().add(eventImage);
             }
-            imageContainer.getChildren().add(eventImage);
         }
 
+
+        // Likes and Comments Controls
         Label likeCountLabel = new Label(event.getLikes().size() + " Likes");
         Label commentCountLabel = new Label(event.getComments().size() + " Comments");
         HBox likeCommentControls = new HBox();
         likeCommentControls.setSpacing(10);
 
         Button likeButton = new Button(event.getLikes().contains(app.getLoggedInUserID()) ? "Unlike" : "Like");
-        likeButton.setOnAction(e -> toggleLike(event, likeButton, likeCountLabel));
+        likeButton.setOnAction(e -> {
+            toggleLike(event, likeButton, likeCountLabel);
+        });
 
         HBox countLabels = new HBox(likeCountLabel, commentCountLabel);
         countLabels.setSpacing(10);
 
         Button commentButton = new Button("Comment");
-        commentButton.setOnAction(e -> showCommentsPopup(event, commentCountLabel));
+        commentButton.setOnAction(e -> showCommentsPopup(event, commentCountLabel)); // Open comments popup
 
         likeCommentControls.getChildren().addAll(likeButton, commentButton);
 
-        postContent.getChildren().addAll(header, imageContainer, countLabels, likeCommentControls);
+        // Add elements to the postContent VBox
+        postContent.getChildren().addAll(header, mediaContainer, countLabels, likeCommentControls);
+
+        // Add the post content to the main post container
         postContainer.getChildren().add(postContent);
+
+        // Add the post container to the main feed
         commentsContainer1.getChildren().add(postContainer);
     }
 
     /**
-     * Method to get the contact for a user ID.
-     * @param userId
-     * @return
+     * Gets the contact for a user ID.
+     *
+     * @param userId the user ID
+     * @return the contact for the user ID
      */
     private Contact getContactForUserId(int userId) {
         contactDAO = new ContactDAO();
+
+        // Fetch the contact information for the logged-in user
         Contact contact = contactDAO.getContactById(userId);
 
         if (contact == null) {
-            return null;
+            System.out.println("No contact found for user ID: " + userId);
+            return null; // Safely return if no contact found
         }
 
+        // Now update the contact with profile details (bio, photo)
         ProfileDAO profileDAO = new ProfileDAO();
         try {
             profileDAO.insertProfile(userId, " ", " ");
@@ -627,22 +653,27 @@ public class ExploreView {
     }
 
     /**
-     * Method to show a comments popup.
-     * @param event
-     * @param commentCountLabel
+     * Shows the comments popup for an event.
+     *
+     * @param event             the event
+     * @param commentCountLabel the label to update the comment count
      */
     private void showCommentsPopup(LogEvent event, Label commentCountLabel) {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Comments");
 
+        // Set dialog buttons
         ButtonType closeButtonType = new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(closeButtonType);
 
+        // Main content VBox
         VBox contentBox = new VBox(10);
         contentBox.setPrefWidth(400);
         contentBox.setStyle("-fx-padding: 20;");
 
+        // Fetch and display existing comments
         List<String> comments = new ArrayList<>(event.getCommentsFromDatabase());
+        System.out.println(comments);
         VBox commentsBox = new VBox(5);
         if (comments != null) {
             for (String comment : comments) {
@@ -651,11 +682,13 @@ public class ExploreView {
             }
         }
 
+        // Add commentsBox to a ScrollPane
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(commentsBox);
         scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(200);
+        scrollPane.setPrefHeight(200); // Adjust height as needed
 
+        // Text field for adding a new comment
         TextField newCommentField = new TextField();
         newCommentField.setPromptText("Write a comment...");
 
@@ -663,50 +696,77 @@ public class ExploreView {
         addCommentButton.setOnAction(e -> {
             String newComment = newCommentField.getText().trim();
             if (!newComment.isEmpty()) {
-                String currentUsername = getCurrentUsername();
+                // Fetch the current user's username
+                String currentUsername = getCurrentUsername(); // Implement this method to get the logged-in user's name
+
+                // Format the new comment as "Username: Comment Text"
                 String formattedComment = currentUsername + ": " + newComment;
                 commentsBox.getChildren().add(new Label(formattedComment));
                 newCommentField.clear();
+
+                // Save the new comment to the database (implement save logic)
                 saveCommentForLog(event.getId(), formattedComment);
+
+                // Update the comment list and label
                 comments.add(formattedComment);
-                event.setComments(comments);
+                event.setComments(comments); // Ensure the event's comments list is updated
                 commentCountLabel.setText(comments.size() + " Comments");
             }
         });
 
+        // Layout: Add scrollPane and new comment input
         contentBox.getChildren().addAll(scrollPane, newCommentField, addCommentButton);
         dialog.getDialogPane().setContent(contentBox);
+
+        // Show the dialog
         dialog.showAndWait();
     }
 
     /**
-     * Method to save a comment for a log.
-     * @param eventId
-     * @param comment
+     * Gets the current username.
+     *
+     * @return the current username
+     */
+    private String getCurrentUsername() {
+        Contact loggedIn = getContactForUserId(app.getLoggedInUserID());
+        return loggedIn.getFirstName();
+    }
+
+    /**
+     * Saves a comment for a specific log event.
+     *
+     * @param eventId the ID of the event
+     * @param comment the comment to save
      */
     private void saveCommentForLog(int eventId, String comment) {
         logEventDAO.saveCommentForLog(eventId, comment);
     }
 
     /**
-     * Method to toggle a like.
-     * @param event
-     * @param likeButton
-     * @param likeCountLabel
+     * Toggles the like status for a log event.
+     *
+     * @param event          the log event
+     * @param likeButton     the button to toggle like status
+     * @param likeCountLabel the label to update like count
      */
     private void toggleLike(LogEvent event, Button likeButton, Label likeCountLabel) {
         int userId = app.getLoggedInUserID();
         List<Integer> likes = event.getLikes();
 
         if (likes.contains(userId)) {
+            // User already liked the event, so unlike it
             likes.remove(Integer.valueOf(userId));
             likeButton.setText("Like");
         } else {
+            // User has not liked the event, so like it
             likes.add(userId);
             likeButton.setText("Unlike");
         }
 
+        // Update like count
         likeCountLabel.setText(likes.size() + " Likes");
+
+        // Save updated likes to the database
         logEventDAO.updateLikesForLogEvent(event.getId(), likes);
     }
 }

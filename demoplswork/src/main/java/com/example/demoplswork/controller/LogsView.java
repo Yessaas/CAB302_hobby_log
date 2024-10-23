@@ -29,33 +29,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+
 /**
- * The LogsView class is the controller for the logs.fxml file. It is responsible for viewing the logs created by the user.
+ * Controller class for managing the Logs View.
+ * This class handles the display and interaction with logs in the application.
  */
 public class LogsView {
     private HelloApplication app;
 
     @FXML
-    private GridPane projectsGrid;
+    private GridPane projectsGrid;  // The GridPane where logs will be added
 
     @FXML
     private Label logNameText;
 
-    private int currentRow = 0;
-    private int currentColumn = 0;
-    private static final int LOGS_PER_ROW = 3;
+    private int currentRow = 0;  // Track the current row in the grid
+    private int currentColumn = 0;  // Track the current column in the grid
+
+    private static final int LOGS_PER_ROW = 3;  // Number of logs per row
+
     private ContextMenu accountMenu;
 
     @FXML
     private Button accountButton;
 
     private LogsDAO logsDAO;
+
     private ProgressLog progressLog;
     private LogEventDAO logEventDAO;
 
     /**
-     * Constructor for the LogsView class.
-     * @throws SQLException
+     * Constructor for LogsView.
+     * Initializes the ProgressLog, LogsDAO, and LogEventDAO.
+     *
+     * @throws SQLException if a database access error occurs
      */
     public LogsView() throws SQLException {
         this.progressLog = new ProgressLog();
@@ -64,8 +72,9 @@ public class LogsView {
     }
 
     /**
-     * Sets the application for the LogsView.
-     * @param app The HelloApplication object.
+     * Sets the application instance and loads logs for the current user.
+     *
+     * @param app the HelloApplication instance
      */
     public void setApplication(HelloApplication app) {
         this.app = app;
@@ -74,6 +83,7 @@ public class LogsView {
 
     /**
      * Initializes the LogsView.
+     * Sets up the account menu with profile and logout options.
      */
     @FXML
     public void initialize() {
@@ -95,8 +105,9 @@ public class LogsView {
     }
 
     /**
-     * Shows the home view.
-     * @throws IOException
+     * Navigates to the Home view.
+     *
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     public void goToHome() throws IOException {
@@ -106,8 +117,9 @@ public class LogsView {
     }
 
     /**
-     * Shows the explore view.
-     * @throws IOException
+     * Navigates to the Explore view.
+     *
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     public void goToExplore() throws IOException {
@@ -117,8 +129,11 @@ public class LogsView {
     }
 
     /**
-     * Shows the update logs view.
-     * @throws IOException
+     * Navigates to the Logs Update view.
+     *
+     * @param id the log ID
+     * @param log the Logs object
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     public void goToUpdateLogs(int id, Logs log) throws IOException {
@@ -129,7 +144,8 @@ public class LogsView {
 
     /**
      * Shows the account menu.
-     * @throws IOException
+     *
+     * @param event the ActionEvent
      */
     @FXML
     private void showAccountMenu(ActionEvent event) {
@@ -137,8 +153,9 @@ public class LogsView {
     }
 
     /**
-     * Shows the account view.
-     * @throws IOException
+     * Navigates to the Account view.
+     *
+     * @throws IOException if an I/O error occurs
      */
     @FXML
     public void goToAccount() throws IOException {
@@ -148,7 +165,7 @@ public class LogsView {
     }
 
     /**
-     * Logs out the user.
+     * Logs out the user and navigates to the Login view.
      */
     @FXML
     private void onLogout() {
@@ -160,7 +177,7 @@ public class LogsView {
     }
 
     /**
-     * Handles the add new project button.
+     * Handles the creation of a new log.
      */
     @FXML
     public void handleAddNewProject() {
@@ -168,7 +185,7 @@ public class LogsView {
     }
 
     /**
-     * Loads the logs for the user.
+     * Loads logs for the current user from the database and displays them in the GridPane.
      */
     private void loadLogsForUser() {
         int userID = app.getLoggedInUserID();
@@ -179,6 +196,7 @@ public class LogsView {
             Logs log = (Logs) logData[1];
             VBox logModule = createLogModuleFromDatabase(log, logID);
             projectsGrid.add(logModule, currentColumn, currentRow);
+
             currentColumn++;
             if (currentColumn >= LOGS_PER_ROW) {
                 currentColumn = 0;
@@ -188,14 +206,16 @@ public class LogsView {
     }
 
     /**
-     * Creates a log module from the database.
-     * @param log The log object.
-     * @param logID The log ID.
-     * @return The VBox object.
+     * Creates a log module from the database and returns it as a VBox.
+     *
+     * @param log the Logs object
+     * @param logID the log ID
+     * @return the VBox containing the log module
      */
     private VBox createLogModuleFromDatabase(Logs log, int logID) {
         VBox logModule = new VBox();
         logModule.setSpacing(0);
+
         StackPane imageContainer = new StackPane();
         Rectangle imageBackground = new Rectangle(250, 200);
         imageBackground.setFill(javafx.scene.paint.Color.WHITE);
@@ -275,9 +295,10 @@ public class LogsView {
     }
 
     /**
-     * Renames the log.
-     * @param currentLogId The current log ID.
-     * @param log The log object.
+     * Renames the specified log.
+     *
+     * @param currentLogId the current log ID
+     * @param log the Logs object
      */
     private void renameLog(int currentLogId, Logs log) {
         TextInputDialog dialog = new TextInputDialog();
@@ -320,10 +341,11 @@ public class LogsView {
     }
 
     /**
-     * Handles the delete log.
-     * @param logID The log ID.
-     * @param selectedLog The selected log object.
-     * @param logModule The log module object.
+     * Handles the deletion of a log.
+     *
+     * @param logID the log ID
+     * @param selectedLog the selected Logs object
+     * @param logModule the VBox containing the log module
      */
     private void handleDeleteLog(int logID, Logs selectedLog, VBox logModule) {
         if (selectedLog != null) {
@@ -347,11 +369,19 @@ public class LogsView {
         }
     }
 
+    /**
+     * Deletes the specified log from the database.
+     *
+     * @param logId the log ID
+     */
     private void deleteLogFromDatabase(int logId) {
         LogsDAO logsDAO = new LogsDAO();
         logsDAO.deleteLog(logId);
     }
 
+    /**
+     * Rearranges the GridPane after a log is deleted.
+     */
     private void rearrangeGrid() {
         List<Node> remainingLogs = new ArrayList<>(projectsGrid.getChildren());
         projectsGrid.getChildren().clear();
@@ -370,6 +400,7 @@ public class LogsView {
 
     /**
      * Creates a new log.
+     * Opens a dialog to get the project name and inserts the new log into the database.
      */
     private void createNewLog() {
         TextInputDialog dialog = new TextInputDialog("New Project");
@@ -381,28 +412,28 @@ public class LogsView {
         result.ifPresent(projectName -> {
             int userID = app.getLoggedInUserID();
             Logs newLog = new Logs(projectName, List.of(), List.of(), List.of());
-            int logID = -1;
+
+            int logID;
             try {
                 logID = logsDAO.insertLog(userID, newLog);
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
-            if (logID > 0) {
-                try {
-                    LogEvent startEvent = new StartEvent(0, userID, logID, projectName, new ArrayList<>(), new ArrayList<>());
-                    addEventToProgressLog(startEvent);
-                    goToUpdateLogs(logID, newLog);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                LogEvent startEvent = new StartEvent(0, userID, logID, projectName, new ArrayList<>(), new ArrayList<>());
+                addEventToProgressLog(startEvent);
+                goToUpdateLogs(logID, newLog);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
 
     /**
      * Adds an event to the progress log.
-     * @param event The log event object.
+     *
+     * @param event the LogEvent to add
      */
     public void addEventToProgressLog(LogEvent event) {
         progressLog.addEvent(event);
@@ -416,8 +447,9 @@ public class LogsView {
     }
 
     /**
-     * Gets the progress log.
-     * @return The progress log.
+     * Retrieves the progress log.
+     *
+     * @return the progress log as a String
      */
     public String getProgressLog() {
         return progressLog.getLog();

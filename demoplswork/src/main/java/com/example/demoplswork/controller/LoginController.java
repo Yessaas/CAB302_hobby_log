@@ -12,16 +12,7 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 
 /**
- * LoginController class is the controller for handling user login and account creation.
- * It has fields for the user's email, password, first name, and last name.
- * It has methods to handle user login, account creation, and navigation between views.
- * It has a setApplication method to set the application instance.
- * It has a goToHome method to navigate to the Home view.
- * It has an onLogin method to handle user login.
- * It has an onCreateAccount method to switch to the account creation view.
- * It has an onCancelCreateAccount method to cancel account creation and navigate back to the login view.
- * It has an onCreateAccountSubmit method to handle account creation.
- * It has a showAlert method to show an alert with a specified title and message.
+ * Controller class for handling user login and account creation.
  */
 public class LoginController {
 
