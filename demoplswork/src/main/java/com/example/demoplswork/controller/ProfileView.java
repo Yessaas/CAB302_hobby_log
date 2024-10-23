@@ -30,6 +30,7 @@ public class ProfileView {
     private ContextMenu accountMenu;
     private ContactDAO contactDAO;
     private LogsDAO logsDAO;
+    private Analytics analytics;
 
     /**
      * Constructor for ProfileView.
@@ -39,6 +40,7 @@ public class ProfileView {
      */
     public ProfileView() throws SQLException {
         logsDAO = new LogsDAO();
+        analytics = new Analytics();
     }
 
     @FXML
@@ -59,6 +61,11 @@ public class ProfileView {
     private String userName;
     private String userBio;
 
+    @FXML
+    private Label profileLikes;  // Label for Total Likes
+    @FXML
+    private Label profileComments;  // Label for Total Comments
+
     /**
      * Sets the application instance and loads the user data.
      *
@@ -67,6 +74,7 @@ public class ProfileView {
     public void setApplication(HelloApplication app) {
         this.app = app;
         loadUser();
+        loadLikesComments();
     }
 
     /**
@@ -137,6 +145,18 @@ public class ProfileView {
             HBox logEntry = createLogEntry(log, logID);
             logsContainer.getChildren().add(logEntry);
         }
+    }
+
+    private void loadLikesComments() {
+        int userID = app.getLoggedInUserID();  // Get the logged-in user ID
+
+        // Calculate and display Total Likes
+        int totalLikes = analytics.calculateTotalLikes(userID);
+        profileLikes.setText(STR."\{String.valueOf(totalLikes)} likes");
+
+        // Calculate and display Total Comments
+        int totalComments = analytics.calculateTotalComments(userID);
+        profileComments.setText(STR."\{String.valueOf(totalComments)} comments");
     }
 
     /**
