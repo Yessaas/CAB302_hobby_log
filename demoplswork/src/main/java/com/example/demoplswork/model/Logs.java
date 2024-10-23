@@ -4,7 +4,12 @@ import javafx.util.Pair;
 
 import java.util.List;
 /**
- * A simple model class representing a Log with a log name, list of to do items, list of image paths, and list of materials.
+ * Logs class represents a log with a log name, list of to-do items, list of image paths, and list of materials.
+ * It has fields for the ID, log name, to-do items, progress, images, and materials.
+ * It has a constructor to initialize these fields.
+ * It has getter and setter methods to retrieve and update the values of these fields.
+ * It has a method to update the status of a to-do item.
+ * It has a method to add a material to the materials list.
  */
 public class Logs {
     private int id;

@@ -5,7 +5,12 @@ import com.example.demoplswork.model.Blog;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * BlogDAO class is responsible for performing CRUD operations on the Blog objects in the database.
+ * It has a method to get a database connection.
+ * It has a method to save a blog to the database.
+ * It has a method to retrieve all blogs from the database.
+ */
 public class BlogDAO {
 
     private Connection getConnection() throws SQLException {

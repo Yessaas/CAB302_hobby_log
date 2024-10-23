@@ -5,7 +5,22 @@ import javafx.util.Pair;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * LogsDAO class is responsible for managing logs in the database.
+ * It extends the BaseDAO class and implements the ILogsDAO interface.
+ * It has a method to insert a log for a user.
+ * It has a method to check if a log exists.
+ * It has a method to add a to-do item to a log.
+ * It has a method to add an image to a log.
+ * It has a method to add material to a log.
+ * It has a method to retrieve logs for a user.
+ * It has a method to retrieve images for a log.
+ * It has a method to get the log name by ID.
+ * It has a method to update the status of a to-do item in a log.
+ * It has a method to update the name of a log.
+ * It has a method to delete a log.
+ * It has a method to add media to a log.
+ */
 public class LogsDAO extends BaseDAO implements ILogsDAO {
 
     public LogsDAO() {

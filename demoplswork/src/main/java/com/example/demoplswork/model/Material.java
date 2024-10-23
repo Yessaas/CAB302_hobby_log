@@ -2,7 +2,12 @@ package com.example.demoplswork.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-
+/**
+ * Material class stores material information.
+ * It has fields for the name, quantity, and price of the material.
+ * It has a constructor to initialize these fields.
+ * It has getter methods to retrieve the values of these fields.
+ */
 // Material class to store material information
 public class Material {
     private final SimpleStringProperty name;

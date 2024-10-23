@@ -10,7 +10,15 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 import java.io.InputStream;
-
+/**
+ * LogEventCell class is a custom JavaFX HBox component for displaying log events.
+ * It displays the user's profile image, username, event description, and timestamp.
+ * It has a constructor that takes a LogEvent object, username, profile image, likes, and comments.
+ * It sets up the layout and styling for the log event cell.
+ * It loads the user's profile image from a specified path.
+ * It creates labels for the username, event description, and timestamp.
+ * It aligns the timestamp to the right and sets the alignment for the HBox.
+ */
 public class LogEventCell extends HBox {
 
     public LogEventCell(LogEvent event, String username, String profileImage, int likes, int comments) {

@@ -4,7 +4,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * The DAO class responsible for managing contacts in the database for login/register pages.
+ * ContactDAO class is responsible for managing contacts in the database for login and register pages.
+ * It extends the BaseDAO class and implements the IContactDAO interface.
+ * It has a method to create a new user account.
+ * It has a method to authenticate a user.
+ * It has a method to update user information.
+ * It has a method to delete a user.
+ * It has a method to retrieve all contacts.
+ * It has a method to get a user ID by email.
+ * It has a method to get a contact by user ID.
  */
 public class ContactDAO extends BaseDAO implements IContactDAO  {
 

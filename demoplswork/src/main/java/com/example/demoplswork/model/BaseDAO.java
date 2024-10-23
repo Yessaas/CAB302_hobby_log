@@ -5,7 +5,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 /**
- * The base abstract DAO class for creating and accessing the database connection. Creates database tables if not exist
+ * BaseDAO class is the base abstract DAO class for creating and accessing the database connection.
+ * It has a static field to store the database connection.
+ * It has a constructor to initialize the database connection and create tables if they do not exist.
+ * It has a static method to set the database connection.
+ * It has a private method to initialize the database and create tables.
+ * It has methods to create the user_profiles, logs, log_events, and users tables.
+ * It has a protected method to close the database connection.
  */
 public abstract class BaseDAO {
     protected static Connection connection;

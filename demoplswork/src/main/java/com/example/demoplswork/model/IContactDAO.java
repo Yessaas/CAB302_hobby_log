@@ -1,7 +1,14 @@
 package com.example.demoplswork.model;
 
 import java.util.List;
-
+/**
+ * IContactDAO interface defines the contract for managing contacts in the database.
+ * It has a method to create a new user account.
+ * It has a method to authenticate a user.
+ * It has a method to update user information.
+ * It has a method to delete a user.
+ * It has a method to retrieve all contacts.
+ */
 public interface IContactDAO {
 
 

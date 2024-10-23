@@ -3,7 +3,14 @@ package com.example.demoplswork.model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+/**
+ * ProfileDAO class is responsible for managing profiles in the database.
+ * It extends the BaseDAO class and implements the IProfileDAO interface.
+ * It has a method to insert a profile for a user.
+ * It has a method to check if a profile exists.
+ * It has a method to retrieve a profile by user ID.
+ * It has a method to update a profile.
+ */
 public class ProfileDAO extends BaseDAO implements IProfileDAO {
 
 

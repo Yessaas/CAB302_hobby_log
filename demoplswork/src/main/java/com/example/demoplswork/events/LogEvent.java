@@ -5,7 +5,16 @@ import com.example.demoplswork.model.LogsDAO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * LogEvent class is an abstract class representing a log event.
+ * It has fields for the timestamp, user ID, log ID, comments, likes, and description.
+ * It has a constructor to initialize these fields.
+ * It has getter and setter methods for the timestamp, user ID, log ID, comments, likes, and ID.
+ * It has an abstract method getDescription to be implemented by subclasses.
+ * It has a toString method to return a string representation of the log event.
+ * It has a getLogName method to get the log name by log ID.
+ * It has a getCommentsFromDatabase method to retrieve comments for the event from the database.
+ */
 public abstract class LogEvent {
     protected String timestamp;
     protected int userId;

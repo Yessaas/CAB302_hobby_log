@@ -1,5 +1,10 @@
 package com.example.demoplswork.model;
-
+/**
+ * Blog class represents a blog post with an introduction, description, category, and image path.
+ * It has fields for the intro, description, category, and image path.
+ * It has a constructor to initialize these fields.
+ * It has getter methods to retrieve the values of these fields.
+ */
 public class Blog {
     private String intro;
     private String description;

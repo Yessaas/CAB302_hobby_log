@@ -5,7 +5,18 @@ import com.example.demoplswork.model.BaseDAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * LogEventDAO class is responsible for interacting with the database to perform CRUD operations on log events.
+ * It extends the BaseDAO class to inherit database connection handling.
+ * It has a constructor to initialize the database connection.
+ * It has a method to insert a LogEvent into the database.
+ * It has a method to retrieve all LogEvents for a specific log ID.
+ * It has a method to retrieve LogEvents for other users excluding the logged-in user.
+ * It has a method to update likes for a specific log event.
+ * It has a method to get comments for a specific event.
+ * It has a method to save a comment for a specific log event.
+ * It has a helper method to create a LogEvent object based on the event type.
+ */
 public class LogEventDAO extends BaseDAO implements ILogEventDAO {
 
     // Constructor

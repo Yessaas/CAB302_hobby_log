@@ -37,7 +37,32 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
+/**
+ * ExploreView class is the controller for the ExploreView.fxml file.
+ * It handles the logic for the Explore page of the application.
+ * It has methods to initialize the view, load blogs from the database, and handle user interactions.
+ * It has a setApplication method to set the application instance.
+ * It has a goToHome method to navigate to the home page.
+ * It has a goToLogs method to navigate to the logs page.
+ * It has a showAccountMenu method to display the account menu.
+ * It has a goToAccount method to navigate to the account page.
+ * It has an onLogout method to log out the user.
+ * It has a viewBlog method to display a blog's content.
+ * It has a searchByHobby method to search for blogs by hobby.
+ * It has a searchBlogs method to search for blogs based on user input.
+ * It has a showCreateBlogDialog method to create a new blog.
+ * It has a displayBlog method to display a blog in the UI.
+ * It has a loadBlogsFromDatabase method to load blogs from the database.
+ * It has a getCurrentUsername method to get the current user's username.
+ * It has a saveBlogToDatabase method to save a blog to the database.
+ * It has a viewBlogContent method to view the content of a blog.
+ * It has a loadMyFeed method to load the user's feed.
+ * It has an addEventToFeed method to add an event to the feed.
+ * It has a getContactForUserId method to get the contact for a user ID.
+ * It has a showCommentsPopup method to show a comments popup.
+ * It has a saveCommentForLog method to save a comment for a log.
+ * It has a toggleLike method to toggle a like on an event.
+ */
 public class ExploreView {
 
     private HelloApplication app;
@@ -53,6 +78,10 @@ public class ExploreView {
             Arrays.asList("Woodworking", "PC Building", "Miniatures", "Music Production", "Coding", "Cooking", "Gardening", "Digital Art", "Traditional Art")
     );
 
+    /**
+     * Constructor for the ExploreView class.
+     * @throws SQLException
+     */
     public ExploreView() throws SQLException {
         this.logEventDAO = new LogEventDAO();
     }
@@ -63,12 +92,19 @@ public class ExploreView {
     @FXML
     private Button accountButton;
 
+    /**
+     * Setter for the application.
+     * @param app
+     */
     public void setApplication(HelloApplication app) {
         this.app = app;
         int loggedInUserId = app.getLoggedInUserID();
         loadMyFeed(loggedInUserId);
     }
 
+    /**
+     * Initializes the ExploreView.
+     */
     @FXML
     public void initialize() {
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> searchBlogs());
@@ -97,6 +133,10 @@ public class ExploreView {
         return listOfStrings.stream().filter(input -> searchHobbyArray.stream().allMatch(hobby -> input.toLowerCase().contains(hobby.toLowerCase()))).collect(Collectors.toList());
     }
 
+    /**
+     * Method to direct the user to the homepage.
+     * @throws IOException
+     */
     @FXML
     public void goToHome() throws IOException {
         if (app != null) {
@@ -104,6 +144,10 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Method to direct the user to the logs page.
+     * @throws IOException
+     */
     @FXML
     public void goToLogs() throws IOException {
         if (app != null) {
@@ -111,11 +155,19 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Method to direct the user to the account menu.
+     * @throws IOException
+     */
     @FXML
     private void showAccountMenu(ActionEvent event) {
         accountMenu.show(accountButton, Side.BOTTOM, 0, 0);
     }
 
+    /**
+     * Method to direct the user to the account page.
+     * @throws IOException
+     */
     @FXML
     public void goToAccount() throws IOException {
         if (app != null) {
@@ -123,6 +175,10 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Method to log out of the account.
+     * @throws IOException
+     */
     @FXML
     private void onLogout() {
         try {
@@ -138,6 +194,10 @@ public class ExploreView {
     @FXML
     private Label introLine2;
 
+    /**
+     * Method to display a blog with demo text.
+     * @throws IOException
+     */
     @FXML
     public void viewBlog(ActionEvent event) {
         String blogIntro = "This is a detailed view of the blog.";
@@ -158,6 +218,10 @@ public class ExploreView {
     @FXML
     private ComboBox<String> hobbyChoiceBox;
 
+    /**
+     * Method to search for blogs by hobby.
+     * @param event
+     */
     @FXML
     void searchByHobby(ActionEvent event) {
         searchBlogs();
@@ -177,6 +241,9 @@ public class ExploreView {
     @FXML
     private TextField searchTextField;
 
+    /**
+     * Method to search for blogs.
+     */
     @FXML
     private void searchBlogs() {
         String keyword = (searchTextField.getText() != null) ? searchTextField.getText().trim().toLowerCase() : "";
@@ -203,6 +270,9 @@ public class ExploreView {
         filteredBlogs.forEach(this::displayBlog);
     }
 
+    /**
+     * Method to get the current username.
+     */
     private String getCurrentUsername() {
         int userID = app.getLoggedInUserID();
         contactDAO = new ContactDAO();
@@ -216,6 +286,9 @@ public class ExploreView {
 
     public VBox blogContainer;
 
+    /**
+     * Method to create a new blog.
+     */
     public void showCreateBlogDialog() {
         try {
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -279,6 +352,10 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Method to display a blog.
+     * @param blog
+     */
     private void displayBlog(Blog blog) {
         StackPane blogEntry = new StackPane();
         blogEntry.setPrefHeight(200.0);
@@ -319,6 +396,9 @@ public class ExploreView {
         blogContainer.getChildren().add(blogEntry);
     }
 
+    /**
+     * Method to load blogs from the database.
+     */
     private void loadBlogsFromDatabase() {
         blogs.clear();
 
@@ -344,6 +424,10 @@ public class ExploreView {
         blogs.forEach(this::displayBlog);
     }
 
+    /**
+     * Method to get the current user's full name.
+     * @return
+     */
     private String getCurrentUserFullName() {
         int userID = app.getLoggedInUserID();
         contactDAO = new ContactDAO();
@@ -355,6 +439,10 @@ public class ExploreView {
         return "Unknown User";
     }
 
+    /**
+     * Method to save a blog to the database.
+     * @param blog
+     */
     private void saveBlogToDatabase(Blog blog) {
         String dbUrl = "jdbc:sqlite:contacts.db";
 
@@ -372,6 +460,10 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Method to view the content of a blog.
+     * @param blog
+     */
     private void viewBlogContent(Blog blog) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Blog Content");
@@ -380,6 +472,10 @@ public class ExploreView {
         alert.showAndWait();
     }
 
+    /**
+     * Method to load the user's feed.
+     * @param loggedInUserId
+     */
     public void loadMyFeed(int loggedInUserId) {
         try {
             LogEventDAO logEventDAO = new LogEventDAO();
@@ -413,6 +509,11 @@ public class ExploreView {
         }
     }
 
+    /**
+     * Method to add an event to the feed.
+     * @param event
+     * @param hasImage
+     */
     private void addEventToFeed(LogEvent event, boolean hasImage) {
         LogsDAO logsDAO = new LogsDAO();
 
@@ -502,6 +603,11 @@ public class ExploreView {
         commentsContainer1.getChildren().add(postContainer);
     }
 
+    /**
+     * Method to get the contact for a user ID.
+     * @param userId
+     * @return
+     */
     private Contact getContactForUserId(int userId) {
         contactDAO = new ContactDAO();
         Contact contact = contactDAO.getContactById(userId);
@@ -520,6 +626,11 @@ public class ExploreView {
         return contact;
     }
 
+    /**
+     * Method to show a comments popup.
+     * @param event
+     * @param commentCountLabel
+     */
     private void showCommentsPopup(LogEvent event, Label commentCountLabel) {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Comments");
@@ -568,10 +679,21 @@ public class ExploreView {
         dialog.showAndWait();
     }
 
+    /**
+     * Method to save a comment for a log.
+     * @param eventId
+     * @param comment
+     */
     private void saveCommentForLog(int eventId, String comment) {
         logEventDAO.saveCommentForLog(eventId, comment);
     }
 
+    /**
+     * Method to toggle a like.
+     * @param event
+     * @param likeButton
+     * @param likeCountLabel
+     */
     private void toggleLike(LogEvent event, Button likeButton, Label likeCountLabel) {
         int userId = app.getLoggedInUserID();
         List<Integer> likes = event.getLikes();

@@ -3,7 +3,13 @@ package com.example.demoplswork.events;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * LogEventUtils class provides utility methods for serializing and deserializing comments and likes.
+ * It has a method to serialize a list of comments into a string with "||" as a delimiter.
+ * It has a method to deserialize a string of comments separated by "||" into a list.
+ * It has a method to serialize a list of likes (integers) into a comma-separated string.
+ * It has a method to deserialize a comma-separated string of likes into a list of integers.
+ */
 public class LogEventUtils {
 
     // Serialize List to a comma-separated string

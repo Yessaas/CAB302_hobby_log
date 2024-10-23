@@ -2,7 +2,13 @@ package com.example.demoplswork.model;
 
 import java.util.Objects;
 /**
- * A simple model class representing a contact with a first name, last name, email, and phone number.
+ * Contact class represents a contact with a first name, last name, bio, and profile photo.
+ * It has fields for the ID, first name, last name, bio, and photo.
+ * It has a constructor to initialize these fields.
+ * It has getter and setter methods to retrieve and update the values of these fields.
+ * It has a method to get the full name of the contact.
+ * It overrides the equals method to compare contacts based on their fields.
+ * It overrides the hashCode method to generate a hash code based on the contact's fields.
  */
 public class Contact {
     private int id;

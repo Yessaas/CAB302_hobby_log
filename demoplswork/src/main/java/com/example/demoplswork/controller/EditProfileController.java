@@ -5,7 +5,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
- * Controller class for editing a user profile.
+ * EditProfileController class is a controller for editing a user profile.
+ * It has fields for the user's name and bio, and methods to handle saving and canceling the profile edit.
+ * It has a setDialogStage method to set the dialog stage for this controller.
+ * It has an onSaveProfile method that saves the profile information and closes the dialog.
+ * It has an onCancel method that closes the dialog without saving.
  */
 public class EditProfileController {
 

@@ -2,7 +2,13 @@ package com.example.demoplswork.events;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * ProgressLog class manages a list of log events.
+ * It has a field to store the list of LogEvent objects.
+ * It has a constructor to initialize the list of events.
+ * It has a method to add a new event to the log.
+ * It has a method to retrieve the entire log as a formatted string.
+ */
 public class ProgressLog {
     private List<LogEvent> events;
 
