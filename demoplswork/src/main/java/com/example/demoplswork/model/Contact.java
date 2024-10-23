@@ -31,38 +31,39 @@ public class Contact {
         this.photo = photo;
     }
 
+    /*Getter for the ID of the contact*/
     public int getId() {
         return id;
     }
-
+    /*Setter for the ID of the contact*/
     public void setId(int id) {
         this.id = id;
     }
-
+    /*Getter for the first name of the contact*/
     public String getFirstName() {
         return firstName;
     }
-
+    /*Setter for the first name of the contact*/
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
+    /*Getter for the last name of the contact*/
     public String getLastName() {
         return lastName;
     }
-
+    /*Setter for the last name of the contact*/
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+    /*Getter for the bio of the contact*/
     public String getBio() {
         return bio;
     }
-
+    /*Setter for the bio of the contact*/
     public void setBio(String bio) {
         this.bio = bio;
     }
-
+    /*Getter for the profile photo of the contact*/
     public String getPhoto() {
         return photo;
     }
@@ -70,11 +71,11 @@ public class Contact {
     public void setPhoto(String photo) {
         this.photo = photo;
     }
-
+    /*Method to get the full name of the contact*/
     public String getFullName() {
         return firstName + " " + lastName;
     }
-
+    /*Method to compare contacts based on their fields*/
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -85,7 +86,7 @@ public class Contact {
                 bio.equals(contact.bio) &&
                 photo.equals(contact.photo);
     }
-
+    /*Method to generate a hash code based on the contact's fields*/
     @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName, bio, photo);

@@ -15,9 +15,10 @@ import java.util.List;
  * It has a method to get a contact by user ID.
  */
 public class ContactDAO extends BaseDAO implements IContactDAO  {
-
-
-
+    /**
+     * Constructor for the ContactDAO class.
+     * It calls the constructor of the BaseDAO class to establish a connection to the database.
+     */
     @Override
     public boolean createAccount(String firstName, String lastName, String email, String password) {
         String query = "INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)";
@@ -34,7 +35,11 @@ public class ContactDAO extends BaseDAO implements IContactDAO  {
             return false; // Return false if account creation fails (e.g., email already exists)
         }
     }
-
+    /**
+     * Method to authenticate a user.
+     * It takes an email and password as input and checks if the user exists in the database.
+     * It returns true if the user is authenticated, otherwise false.
+     */
     @Override
     public boolean authenticateUser(String email, String password) {
         String query = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -49,7 +54,12 @@ public class ContactDAO extends BaseDAO implements IContactDAO  {
             return false;
         }
     }
-
+    /**
+     * Method to update user information.
+     * It takes the user ID, first name, last name, email, and password as input.
+     * It updates the user information in the database.
+     * It returns true if the update is successful, otherwise false.
+     */
     @Override
     public boolean updateUser(int id, String firstName, String lastName, String email, String password) {
         String query = "UPDATE users SET firstName = ?, lastName = ?, email = ?, password = ? WHERE id = ?";
@@ -67,7 +77,11 @@ public class ContactDAO extends BaseDAO implements IContactDAO  {
             return false;
         }
     }
-
+    /**
+     * Method to delete a user.
+     * It takes the user ID as input and deletes the user from the database.
+     * It returns true if the deletion is successful, otherwise false.
+     */
     @Override
     public boolean deleteUser(int id) {
         String query = "DELETE FROM users WHERE id = ?";
@@ -81,7 +95,10 @@ public class ContactDAO extends BaseDAO implements IContactDAO  {
             return false;
         }
     }
-
+    /**
+     * Method to retrieve all contacts.
+     * It returns a list of all contacts in the database.
+     */
     @Override
     public List<Contact> getAllContacts() {
         List<Contact> contacts = new ArrayList<>();
@@ -101,7 +118,11 @@ public class ContactDAO extends BaseDAO implements IContactDAO  {
         }
         return contacts;
     }
-
+    /**
+     * Method to get a user ID by email.
+     * It takes an email as input and returns the user ID.
+     * If no user is found with the given email, it returns -1.
+     */
     public int getUserIDByEmail(String email) {
         String sql = "SELECT id FROM users WHERE email = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -120,7 +141,11 @@ public class ContactDAO extends BaseDAO implements IContactDAO  {
         }
     }
 
-
+    /**
+     * Method to get a contact by user ID.
+     * It takes a user ID as input and returns the contact information.
+     * If no contact is found with the given user ID, it returns null.
+     */
     public Contact getContactById(int userId) {
         Contact contact = null;
         String query = "SELECT firstName, lastName FROM users WHERE id = ?";

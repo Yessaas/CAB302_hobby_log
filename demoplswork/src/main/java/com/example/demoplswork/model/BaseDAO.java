@@ -16,7 +16,9 @@ import java.sql.Statement;
 public abstract class BaseDAO {
     protected static Connection connection;
 
-
+    /**
+     * Constructor to initialize the database connection and create tables if they do not exist.
+     */
     public BaseDAO() {
         if (connection == null) {
             try {
@@ -28,13 +30,19 @@ public abstract class BaseDAO {
         }
     }
 
-
+    /**
+     * Method to set the database connection.
+     * @param conn the database connection to set
+     */
     public static void setConnection(Connection conn) {
         connection = conn;
     }
 
 
-
+    /**
+     * Method to initialize the database.
+     * @return the database connection
+     */
     // Method to initialize the database and create tables
     private void initializeDatabase() {
         createProfileTable();  // Create the user_profiles table
@@ -43,7 +51,9 @@ public abstract class BaseDAO {
         createLogEventsTable();
     }
 
-
+    /**
+     * Method to create the user_profiles table.
+     */
     // Method to create the user_profiles table
     public void createProfileTable() {
         String query = "CREATE TABLE IF NOT EXISTS user_profiles ("
@@ -60,6 +70,9 @@ public abstract class BaseDAO {
         }
     }
 
+    /**
+     * Method to create the logs table.
+     */
     public void createLogsTable() {
         String query = "CREATE TABLE IF NOT EXISTS logs (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -78,6 +91,9 @@ public abstract class BaseDAO {
         }
     }
 
+    /**
+     * Method to create the log_events table.
+     */
     // Create the 'log_events' table if it doesn't exist
     public void createLogEventsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS log_events ("
@@ -96,6 +112,9 @@ public abstract class BaseDAO {
         }
     }
 
+    /**
+     * Method to create the users table.
+     */
     // Create the users table in the database
     private void createContactsTable() {
         String query = "CREATE TABLE IF NOT EXISTS users ("
@@ -113,6 +132,9 @@ public abstract class BaseDAO {
         }
     }
 
+    /**
+     * Method to close the database connection.
+     */
     protected void closeConnection() {
         try {
             if (connection != null) {

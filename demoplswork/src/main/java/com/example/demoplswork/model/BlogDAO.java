@@ -12,13 +12,21 @@ import java.util.List;
  * It has a method to retrieve all blogs from the database.
  */
 public class BlogDAO {
-
+    /**
+     * Method to get a database connection.
+     * @return Connection object
+     * @throws SQLException
+     */
     private Connection getConnection() throws SQLException {
         // Define the path to your SQLite database file
         String dbPath = "jdbc:sqlite:contacts.db";
         return DriverManager.getConnection(dbPath);
     }
 
+    /**
+     * Method to save a blog to the database.
+     * @param blog Blog object
+     */
     // Method to save a blog to the database
     public void saveBlog(Blog blog) {
         String sql = "INSERT INTO blogs (intro, description, category, imagePath) VALUES (?, ?, ?, ?)";
@@ -34,6 +42,10 @@ public class BlogDAO {
         }
     }
 
+    /**
+     * Method to retrieve all blogs from the database.
+     * @return List of Blog objects
+     */
     // Method to retrieve all blogs from the database
     public List<Blog> getAllBlogs() {
         List<Blog> blogs = new ArrayList<>();

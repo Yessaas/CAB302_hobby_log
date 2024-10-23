@@ -22,7 +22,11 @@ import java.util.List;
  * It has a method to add media to a log.
  */
 public class LogsDAO extends BaseDAO implements ILogsDAO {
-
+    /**
+     * Constructor for the LogsDAO class.
+     * It calls the createMediaTable method.
+     * If an SQLException is thrown, it prints an error message.
+     */
     public LogsDAO() {
         try {
             createMediaTable();
@@ -31,6 +35,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to create the media table in the database.
+     * It creates a table with columns for the ID, log ID, and media name.
+     * It creates a foreign key constraint on the log ID column.
+     * If an SQLException is thrown, it prints an error message.
+     */
     private void createMediaTable() throws SQLException {
         String createMediaTableSQL = "CREATE TABLE IF NOT EXISTS media_table (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -44,6 +54,13 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to insert a log for a user.
+     * It takes a user ID and a log object as parameters.
+     * It serializes the to-do items and materials in the log object.
+     * It inserts the log into the database and returns the generated log ID.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public int insertLog(int userId, Logs log) throws SQLException {
         if (log == null) {
@@ -94,6 +111,11 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return logId;
     }
 
+    /**
+     * Method to serialize to-do items.
+     * @param toDoItems
+     * @return
+     */
     private String serializeToDoItems(List<Pair<String, Boolean>> toDoItems) {
         StringBuilder sb = new StringBuilder();
 
@@ -111,6 +133,13 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return sb.toString();
     }
 
+    /**
+     * Method to check if a log exists.
+     * It takes a log ID as a parameter.
+     * It executes a query to check if a log with the given ID exists in the database.
+     * It returns true if the log exists, false otherwise.
+     * If an SQLException is thrown, it prints an error message.
+     */
     public boolean doesLogExist(int logId) {
         String query = "SELECT COUNT(1) FROM logs WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -127,6 +156,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return false;
     }
 
+    /**
+     * Method to add a to-do item to a log.
+     * It takes a log ID, a to-do item, and a boolean isChecked as parameters.
+     * It executes a query to add the to-do item to the log in the database.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public void addToDoItem(int logId, String toDoItem, boolean isChecked) throws SQLException {
         if (logId <= 0) {
@@ -150,6 +185,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to add an image to a log.
+     * It takes a log ID and an image path as parameters.
+     * It executes a query to add the image to the log in the database.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public void addImage(int logId, String imagePath) throws SQLException {
         if (logId <= 0) {
@@ -172,6 +213,13 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to add material to a log.
+     * It takes a log ID and a material object as parameters.
+     * It serializes the material object.
+     * It executes a query to add the material to the log in the database.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public void addMaterial(int logId, Material material) {
         String query = "UPDATE logs SET materials = CASE " +
@@ -193,6 +241,14 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to retrieve logs for a user.
+     * It takes a user ID as a parameter.
+     * It executes a query to retrieve logs for the user from the database.
+     * It deserializes the to-do items, images, and materials.
+     * It returns a list of log objects.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public List<Object[]> getLogsForUser(int userId) {
         String query = "SELECT id, log_name, to_do_items, images, materials, progress FROM logs WHERE user_id = ?";
@@ -225,6 +281,13 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return logsList;
     }
 
+    /**
+     * Method to retrieve images for a log.
+     * It takes a log ID as a parameter.
+     * It executes a query to retrieve images for the log from the database.
+     * It returns a list of image paths.
+     * If an SQLException is thrown, it prints an error message.
+     */
     public List<String> getImagesForLog(int logId) {
         String query = "SELECT images FROM logs WHERE id = ?";
         List<String> imagesList = new ArrayList<>();
@@ -244,6 +307,13 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return imagesList;
     }
 
+    /**
+     * Method to get the log name by ID.
+     * It takes a log ID as a parameter.
+     * It executes a query to retrieve the log name from the database.
+     * It returns the log name.
+     * If an SQLException is thrown, it prints an error message.
+     */
     public String getLogNameById(int logId) {
         String query = "SELECT log_name FROM logs WHERE id = ?";
         String logName = null;
@@ -263,6 +333,11 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return logName;
     }
 
+    /**
+     * Method to serialize materials.
+     * @param materials
+     * @return
+     */
     private String serializeMaterials(List<Material> materials) {
         StringBuilder sb = new StringBuilder();
         for (Material material : materials) {
@@ -273,6 +348,11 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return sb.toString();
     }
 
+    /**
+     * Method to parse materials.
+     * @param materialsStr
+     * @return
+     */
     private List<Material> parseMaterials(String materialsStr) {
         List<Material> materials = new ArrayList<>();
 
@@ -302,6 +382,14 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return materials;
     }
 
+    /**
+     * Method to update the status of a to-do item in a log.
+     * It takes a log ID, a task, and a boolean isChecked as parameters.
+     * It executes a query to update the status of the to-do item in the log in the database.
+     * It calculates the progress of the log.
+     * It returns the progress.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public double updateToDoItemStatus(int logId, String task, boolean isChecked) {
         String querySelect = "SELECT to_do_items, progress FROM logs WHERE id = ?";
@@ -341,6 +429,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return 0;
     }
 
+    /**
+     * Method to update the name of a log.
+     * It takes a log ID and a new log name as parameters.
+     * It executes a query to update the name of the log in the database.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public void updateLogName(int logId, String newLogName) throws SQLException {
         String query = "UPDATE logs SET log_name = ? WHERE id = ?";
@@ -351,6 +445,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to delete a log.
+     * It takes a log ID as a parameter.
+     * It executes a query to delete the log from the database.
+     * If an SQLException is thrown, it prints an error message.
+     */
     @Override
     public void deleteLog(int logId) {
         String sql = "DELETE FROM logs WHERE id = ?";
@@ -362,6 +462,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to calculate the progress of a log.
+     * It takes a list of to-do items as a parameter.
+     * It calculates the progress based on the number of completed to-do items.
+     * It returns the progress as a percentage.
+     */
     private double calculateProgress(List<Pair<String, Boolean>> toDoItems) {
         int completedCount = 0;
         for (Pair<String, Boolean> item : toDoItems) {
@@ -375,6 +481,12 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return (double) completedCount / toDoItems.size() * 100;
     }
 
+    /**
+     * Method to add media to a log.
+     * It takes a log ID and a media name as parameters.
+     * It executes a query to add the media to the log in the database.
+     * If an SQLException is thrown, it prints an error message.
+     */
     public void addMedia(int logId, String mediaName) throws SQLException {
         String sql = "INSERT INTO media_table (log_id, media_name) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -384,6 +496,11 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         }
     }
 
+    /**
+     * Method to parse to-do items.
+     * @param toDoItemsStr
+     * @return
+     */
     private List<Pair<String, Boolean>> parseToDoItems(String toDoItemsStr) {
         List<Pair<String, Boolean>> toDoItems = new ArrayList<>();
 
@@ -405,6 +522,11 @@ public class LogsDAO extends BaseDAO implements ILogsDAO {
         return toDoItems;
     }
 
+    /**
+     * Method to parse images.
+     * @param imagesStr
+     * @return
+     */
     private List<String> parseImages(String imagesStr) {
         return List.of(imagesStr.split(","));
     }
