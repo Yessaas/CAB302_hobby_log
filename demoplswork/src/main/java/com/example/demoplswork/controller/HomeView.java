@@ -1,6 +1,7 @@
 package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
+import com.example.demoplswork.model.Analytics;
 import com.example.demoplswork.model.Logs;
 import com.example.demoplswork.model.LogsDAO;
 import javafx.beans.binding.Bindings;
@@ -26,6 +27,7 @@ public class HomeView {
     private HelloApplication app;
     private ContextMenu accountMenu;
     private LogsDAO logsDAO;
+    private Analytics analytics;
 
     @FXML
     private Button accountButton;
@@ -42,17 +44,17 @@ public class HomeView {
     private Button featuredLogButton;
 
     @FXML
-    private ListView<String> listView1;  // Total Spent
+    private Label totalSpentLabel;  // Label for Total Spent
     @FXML
-    private ListView<String> listView2;  // Tasks Completed
+    private Label tasksCompletedLabel;  // Label for Tasks Completed
     @FXML
-    private ListView<String> listView3;  // Projects Completed
+    private Label projectsCompletedLabel;  // Label for Projects Completed
     @FXML
-    private ListView<String> listView4;  // Materials Used
+    private Label materialsUsedLabel;  // Label for Materials Used
     @FXML
-    private ListView<String> listView5;  // Likes
+    private Label totalLikesLabel;  // Label for Total Likes
     @FXML
-    private ListView<String> listView6;  // Followers
+    private Label totalCommentsLabel;  // Label for Total Comments
 
     /**
      * Sets the application instance.
@@ -62,6 +64,7 @@ public class HomeView {
     public void setApplication(HelloApplication app) {
         this.app = app;
         loadLogsForUser();
+        loadAnalyticsForUser();
     }
 
     /**
@@ -71,6 +74,7 @@ public class HomeView {
      */
     public HomeView() throws SQLException {
         logsDAO = new LogsDAO();
+        analytics = new Analytics();
     }
 
     /**
@@ -95,37 +99,38 @@ public class HomeView {
 
         accountMenu.getItems().addAll(viewProfile, logout);
 
-        // Adding items to listView1
-        listView1.getItems().add("Camera: $1450.00");
-        listView1.getItems().add("Mic: $250.00");
-        listView1.getItems().add("Hard Disk: $150.00");
-        listView1.getItems().add("Tripod: $75.00");
 
-        // Adding items to listView2
-        listView2.getItems().add("Tasks Completed: 5");
-        listView2.getItems().add("Tasks Pending: 2");
-        listView2.getItems().add("Tasks in Progress: 1");
+    }
 
-        // Adding items to listView3
-        listView3.getItems().add("Projects Completed: 2");
-        listView3.getItems().add("Ongoing Projects: 3");
-        listView3.getItems().add("Upcoming Projects: 1");
+    /**
+     * Load and display analytics data for the logged-in user.
+     */
+    private void loadAnalyticsForUser() {
+        int userID = app.getLoggedInUserID();  // Get the logged-in user ID
 
-        // Adding items to listView4
-        listView4.getItems().add("Materials Used: Camera, Laptop");
-        listView4.getItems().add("Materials Used: Mic, Tripod");
-        listView4.getItems().add("Materials Used: Hard Disk, Light");
+        // Calculate and display Total Spend
+        double totalSpent = analytics.calculateTotalSpend(userID);
+        totalSpentLabel.setText(String.format("$%.2f", totalSpent));
 
-        // Adding items to listView5
-        listView5.getItems().add("Likes: 290");
-        listView5.getItems().add("Comments: 45");
-        listView5.getItems().add("Shares: 30");
+        // Calculate and display Tasks Completed
+        int tasksCompleted = analytics.calculateTasksCompleted(userID);
+        tasksCompletedLabel.setText(String.valueOf(tasksCompleted));
 
-        // Adding items to listView6
-        listView6.getItems().add("Followers: 2940");
-        listView6.getItems().add("Following: 520");
-        listView6.getItems().add("New Followers Today: 12");
-        listView6.getItems().add("Unfollowers Today: 3");
+        // Calculate and display Projects Completed
+        int projectsCompleted = analytics.calculateProjectsCompleted(userID);
+        projectsCompletedLabel.setText(String.valueOf(projectsCompleted));
+
+        // Calculate and display Materials Used
+        int materialsUsed = analytics.calculateMaterialsUsed(userID);
+        materialsUsedLabel.setText(String.valueOf(materialsUsed));
+
+        // Calculate and display Total Likes
+        int totalLikes = analytics.calculateTotalLikes(userID);
+        totalLikesLabel.setText(String.valueOf(totalLikes));
+
+        // Calculate and display Total Comments
+        int totalComments = analytics.calculateTotalComments(userID);
+        totalCommentsLabel.setText(String.valueOf(totalComments));
     }
 
     /**

@@ -98,6 +98,38 @@ public class LogEventDAO extends BaseDAO implements ILogEventDAO {
         return events;
     }
 
+    public List<LogEvent> getLogEventsForUser(int userId) throws SQLException {
+        List<LogEvent> events = new ArrayList<>();
+
+        String sql = "SELECT * FROM log_events WHERE user_id = ? ORDER BY timestamp ASC";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                List<String> commentsList;
+                List<Integer> likesList;
+                String eventType = rs.getString("event_type");
+                String timestamp = rs.getString("timestamp");
+                String description = rs.getString("description");
+                int logId = rs.getInt("log_id");
+                String commentsData = rs.getString("comments");
+                commentsList = LogEventUtils.deserializeComments(commentsData);
+                String likesData = rs.getString("likes");
+                likesList = LogEventUtils.deserializeLikes(likesData);
+                int eventId = rs.getInt("id");
+
+                LogEvent event = createLogEventFromType(eventType, userId, logId, description, commentsList, likesList);
+                event.setTimestamp(timestamp);
+                event.setId(eventId);
+                events.add(event);
+            }
+        }
+        return events;
+    }
+
+
     public void updateLikesForLogEvent(int eventId, List<Integer> likes) {
         String query = "UPDATE log_events SET likes = ? WHERE id = ?";
 
