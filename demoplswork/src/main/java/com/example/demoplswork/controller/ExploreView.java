@@ -537,10 +537,21 @@ public class ExploreView
         HBox userDescription = new HBox(boldUser, new Label(event.getDescription()));
         userDescription.setSpacing(5);
 
+        // Set onMouseEntered to underline the text on hover
+        userDescription.setOnMouseEntered(e -> boldUser.setStyle("-fx-underline: true; -fx-font-weight: bold;"));
+
+        // Set onMouseExited to remove the underline when the mouse leaves
+        userDescription.setOnMouseExited(e -> boldUser.setStyle("-fx-underline: false; -fx-font-weight: bold;"));
+
         userDescription.setOnMouseClicked(event1 -> loadOtherUserProfile(event.getUserId()));
 
         Label logNameLabel = new Label("Project: " + event.getLogName(event.getLogId())); // Use method to get log name
         logNameLabel.setStyle("-fx-font-style: italic;");
+        // Set onMouseEntered to underline the text on hover
+        logNameLabel.setOnMouseEntered(e -> logNameLabel.setStyle("-fx-font-style: italic; -fx-underline: true;"));
+
+        // Set onMouseExited to remove the underline when the mouse leaves
+        logNameLabel.setOnMouseExited(e -> logNameLabel.setStyle("-fx-font-style: italic;"));
         logNameLabel.setOnMouseClicked(e -> {
             try {
                 goToUpdateLogs(event.getLogId(), logsDAO.getLogById(event.getLogId()));
