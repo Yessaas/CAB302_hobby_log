@@ -689,13 +689,10 @@ public class LogsUpdateView {
         try {
             // Fetch log events from the database
             List<LogEvent> logEvents = logEventDAO.getLogEventsForLog(logId);
-
             // Create an observable list to populate the ListView
             ObservableList<LogEvent> eventItems = FXCollections.observableArrayList(logEvents);
-
             // Set the items in the ListView
             logEventsListView.setItems(eventItems);
-
             // Set a custom cell factory for the ListView to display LogEventCell
             logEventsListView.setCellFactory(param -> new ListCell<>() {
                 @Override
@@ -706,20 +703,16 @@ public class LogsUpdateView {
                     } else {
                         // Fetch user details
                         Contact contact = getContactForUserId(event.getUserId());
-
                         // Create a custom LogEventCell
-                        LogEventCell eventCell = new LogEventCell(event, contact.getFirstName(), contact.getPhoto(), 0, 0);
+                        LogEventCell eventCell = new LogEventCell(event, contact.getFirstName(), contact.getPhoto(), event.getLikes().size(), event.getComments().size());
                         setGraphic(eventCell);  // Set the custom cell graphic
                     }
                 }
             });
-
             // **Clear existing content before adding new content**
             logEventsBox.getChildren().clear();
-
             // Add the ListView to the VBox or the container where you want to display it
             logEventsBox.getChildren().add(logEventsListView);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -2,12 +2,14 @@ package com.example.demoplswork.controller;
 
 import com.example.demoplswork.HelloApplication;
 import com.example.demoplswork.model.ContactDAO;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
@@ -35,6 +37,9 @@ public class LoginController {
     @FXML
     private Button createAccountCancelButton;
 
+    @FXML
+    private VBox rootVBox;
+
     private ContactDAO contactDAO;
 
     /**
@@ -51,6 +56,7 @@ public class LoginController {
      */
     public void setApplication(HelloApplication app) {
         this.app = app;
+
     }
 
     /**
@@ -62,6 +68,12 @@ public class LoginController {
         if (app != null) {
             app.showHomeView();
         }
+    }
+
+    @FXML
+    public void initialize() {
+        Platform.runLater(() -> rootVBox.requestFocus());
+        rootVBox.requestFocus();  // Set the focus on the root node when the view is first opened
     }
 
     /**

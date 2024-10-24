@@ -196,13 +196,18 @@ public class ProfileView {
         HBox likesComments = new HBox();
         likesComments.setSpacing(10);
 
-        Label likesLabel = new Label(String.valueOf(0));
+        // Fetch the real likes and comments for this log
+        int totalLikes = analytics.calculateTotalLikesForLog(logID);  // Fetch total likes for this log
+        int totalComments = analytics.calculateTotalCommentsForLog(logID);  // Fetch total comments for this log
+
+        // Update likes and comments labels with actual values
+        Label likesLabel = new Label(String.valueOf(totalLikes));
         InputStream imageStream = getClass().getResourceAsStream("/images/like-icon.png");
         ImageView likeIcon = new ImageView(new Image(imageStream));
         likeIcon.setFitHeight(20);
         likeIcon.setFitWidth(20);
 
-        Label commentsLabel = new Label(String.valueOf(0));
+        Label commentsLabel = new Label(String.valueOf(totalComments));
         InputStream imgStream = getClass().getResourceAsStream("/images/comment-icon.png");
         ImageView commentIcon = new ImageView(new Image(imgStream));
         commentIcon.setFitHeight(20);

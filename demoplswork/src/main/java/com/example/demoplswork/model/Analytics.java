@@ -193,5 +193,55 @@ public class Analytics {
 
         return totalComments;
     }
+
+    /**
+     * Calculates the total number of likes for a specific log.
+     *
+     * @param logId The ID of the log.
+     * @return The total number of likes.
+     */
+    public int calculateTotalLikesForLog(int logId) {
+        int totalLikes = 0;
+
+        try {
+            // Retrieve log events for the specific log
+            List<LogEvent> logEvents = logEventDAO.getLogEventsForLog(logId);
+
+            // Sum up the likes for each event in the log
+            for (LogEvent event : logEvents) {
+                totalLikes += event.getLikes().size(); // Assumes getLikes() returns a list of likes
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalLikes;
+    }
+
+    /**
+     * Calculates the total number of comments for a specific log.
+     *
+     * @param logId The ID of the log.
+     * @return The total number of comments.
+     */
+    public int calculateTotalCommentsForLog(int logId) {
+        int totalComments = 0;
+
+        try {
+            // Retrieve log events for the specific log
+            List<LogEvent> logEvents = logEventDAO.getLogEventsForLog(logId);
+
+            // Sum up the comments for each event in the log
+            for (LogEvent event : logEvents) {
+                totalComments += event.getComments().size(); // Assumes getComments() returns a list of comments
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return totalComments;
+    }
 }
 
