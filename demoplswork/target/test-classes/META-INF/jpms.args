@@ -1,0 +1,4 @@
+--patch-module
+com.example.demoplswork=_
+--add-reads
+com.example.demoplswork=ALL-UNNAMED
