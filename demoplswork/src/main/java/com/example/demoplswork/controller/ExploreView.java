@@ -38,7 +38,30 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Controller class for the Explore view.
+ * ExploreView class is the controller for the Explore View.
+ * It handles the logic for the Explore page of the application.
+ * It has methods to initialize the view, load blogs from the database, and handle user interactions.
+ * It has a setApplication method to set the application instance.
+ * It has a goToHome method to navigate to the home page.
+ * It has a goToLogs method to navigate to the logs page.
+ * It has a showAccountMenu method to display the account menu.
+ * It has a goToAccount method to navigate to the account page.
+ * It has an onLogout method to log out the user.
+ * It has a viewBlog method to display a blog's content.
+ * It has a searchByHobby method to search for blogs by hobby.
+ * It has a searchBlogs method to search for blogs based on user input.
+ * It has a showCreateBlogDialog method to create a new blog.
+ * It has a displayBlog method to display a blog in the UI.
+ * It has a loadBlogsFromDatabase method to load blogs from the database.
+ * It has a getCurrentUsername method to get the current user's username.
+ * It has a saveBlogToDatabase method to save a blog to the database.
+ * It has a viewBlogContent method to view the content of a blog.
+ * It has a loadMyFeed method to load the user's feed.
+ * It has an addEventToFeed method to add an event to the feed.
+ * It has a getContactForUserId method to get the contact for a user ID.
+ * It has a showCommentsPopup method to show a comments popup.
+ * It has a saveCommentForLog method to save a comment for a log.
+ * It has a toggleLike method to toggle a like on an event.
  */
 public class ExploreView
 {
@@ -331,7 +354,10 @@ public class ExploreView
         dialog.showAndWait();
     }
 
-
+    /**
+     * Displays a blog in the UI.
+     *
+     */
     private void loadExistingBlogs() {
         try {
             BlogDAO blogDAO = new BlogDAO();
@@ -346,6 +372,11 @@ public class ExploreView
         }
     }
 
+    /**
+     * Displays a new blog post in the UI.
+     *
+     *
+     */
     private void addNewBlogPost(String title, String description, String imagePath, String tag, int userId) {
         // Fetch user details
         Contact contact = getContactForUserId(userId); // Assuming you have this method available
@@ -651,6 +682,11 @@ public class ExploreView
         commentsContainer1.getChildren().add(postContainer);
     }
 
+    /**
+     * Loads the profile of another user.
+     *
+     * @param userId the ID of the user
+     */
     public void loadOtherUserProfile(int userId) {
         try {
             // Load the FXML for ProfileView
@@ -819,6 +855,13 @@ public class ExploreView
         logEventDAO.updateLikesForLogEvent(event.getId(), likes);
     }
 
+    /**
+     * Navigates to the update logs view.
+     *
+     * @param id the ID of the log
+     * @param log the log to update
+     * @throws IOException if an I/O error occurs
+     */
     public void goToUpdateLogs(int id, Logs log) throws IOException {
         if (app != null) {
             app.showLogsUpdateView(id, log);

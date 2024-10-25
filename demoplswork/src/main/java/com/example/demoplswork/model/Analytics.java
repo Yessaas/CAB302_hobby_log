@@ -10,12 +10,21 @@ import java.util.List;
 
 /**
  * Analytics class to calculate various user statistics for the MyAnalytics section.
+ * It has methods to calculate the total amount of money spent, the number of tasks completed,
+ * the number of projects completed, the total number of materials used, the total number of likes,
+ * and the total number of comments for a user.
+ * It also has methods to calculate the total number of likes and comments for a specific log.
  */
 public class Analytics {
 
     private LogsDAO logsDAO;
     private LogEventDAO logEventDAO;
 
+    /**
+     * Constructor to initialize the LogsDAO and LogEventDAO objects.
+     *
+     * @throws SQLException If there is an error connecting to the database.
+     */
     public Analytics() throws SQLException {
         logsDAO = new LogsDAO();
         logEventDAO = new LogEventDAO();

@@ -22,8 +22,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Controller class for managing the Profile View.
- * This class handles the display and interaction with the user's profile in the application.
+ * ProfileView class is the controller for managing the Profile View.
+ * It handles the display and interaction with the user's profile in the application.
+ * It has methods to set the application instance, load user data, and initialize the view.
+ * It has methods to handle user interactions such as changing the profile photo and editing the bio.
+ * It has methods to load and display the user's logs, likes, and comments.
+ * It has methods to navigate to different views such as Home, Explore, Logs, and Account.
+ * It has a method to log out the user.
  */
 public class ProfileView {
     private HelloApplication app;

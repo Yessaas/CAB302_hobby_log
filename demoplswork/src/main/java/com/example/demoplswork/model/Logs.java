@@ -28,7 +28,9 @@ public class Logs {
         this.images = images;
         this.materials = materials;
     }
-
+    /*
+    * Initialize all to-do items as not completed (false)
+    * */
     // Initialize all to-do items as not completed (false)
     private List<Boolean> initializeCompletionStatus(int size) {
         List<Boolean> completionStatus = new java.util.ArrayList<>(size);
@@ -39,6 +41,9 @@ public class Logs {
     }
 
 
+    /*
+    * Method to update the stats of a to-do item
+    * */
     // Method to update the status of a to-do item
     public void updateToDoItemStatus(String task, boolean isChecked) {
         for (Pair<String, Boolean> toDoItem : toDoItems) {
@@ -50,6 +55,9 @@ public class Logs {
         }
     }
 
+    /*
+    * Method to add a material to the materials list
+    * */
     // Method to add a material to the materials list
     public void addMaterial(Material material) {
         if (material != null) {
@@ -59,50 +67,72 @@ public class Logs {
         }
     }
 
-
+    /*
+    * Method to return the list of to-do items
+    * */
     public List<Pair<String, Boolean>> getToDoItems() {
         return toDoItems;
     }
-
+    /*
+    * Method to set the list of to-do items
+    * */
     public void setToDoItems(List<Pair<String, Boolean>> toDoItems) {
         this.toDoItems = toDoItems;
     }
 
-
+    /*
+    * Method to get the name of the log
+    * */
     // Getters
     public String getLogName() {
         return logName;
     }
 
 
-
+    /*
+    * Method to get the list of images
+    * */
     public List<String> getImages() {
         return images;
     }
 
+    /*
+    * Get the list of materials
+    * */
     public List<Material> getMaterials() {
         return materials;
     }
 
+    /*
+    * Method to get the progress of the log
+    * */
     public double getProgress() {
         return progress;
     }
-
+    /*
+     * Method to set the name of the log
+     * */
     // Setters
     public void setLogName(String logName) {
         this.logName = logName;
     }
 
 
-
+    /*
+     * Method to get the list of images
+     * */
     public void setImages(List<String> images) {
         this.images = images;
     }
-
+    /*
+     * Get the list of materials
+     * */
     public void setMaterials(List<Material> materials) {
         this.materials = materials;
     }
-
+    /*
+     * Method to set the progress of the log
+     * */
     public void setProgress(double progress) {
         this.progress = progress;
     }

@@ -32,8 +32,15 @@ import java.util.Optional;
 
 
 /**
- * Controller class for managing the Logs View.
- * This class handles the display and interaction with logs in the application.
+ * LogsView class is the controller for managing the Logs View.
+ * It handles the display and interaction with logs in the application.
+ * It has methods to set the application instance, load logs for the current user, and initialize the view.
+ * It has methods to navigate to different views such as Home, Explore, Logs Update, and Account.
+ * It has methods to handle user interactions such as adding new projects, renaming logs, and deleting logs.
+ * It has methods to create log modules from the database and rearrange the grid after log deletion.
+ * It has a createNewLog method to create a new log and insert it into the database.
+ * It has an addEventToProgressLog method to add events to the progress log.
+ * It has a getProgressLog method to retrieve the progress log.
  */
 public class LogsView {
     private HelloApplication app;

@@ -32,7 +32,16 @@ import javafx.util.Pair;
 import java.io.File;
 import java.io.IOException;
 /**
- * Controller class for the Logs Update view.
+ * LogsUpdateView class is the controller for viewing and updating logs.
+ * It handles the UI for viewing and updating logs.
+ * It has methods to set the application instance, set the log ID, set the log, and initialize the view.
+ * It has methods to navigate to different views such as Home, Explore, Logs, and Account.
+ * It has methods to handle user interactions such as adding to-do items, adding media, and adding materials.
+ * It has methods to populate log details, load images from the log, and display log events.
+ * It has methods to handle next and previous media navigation.
+ * It has a showAlert method to display alerts with specified titles and messages.
+ * It has a getTotalCost method to calculate the total cost of materials.
+ * It has a getContactForUserId method to get the contact information for a user ID.
  */
 public class LogsUpdateView {
 
@@ -387,6 +396,9 @@ public class LogsUpdateView {
         });
     }
 
+    /**
+     * Method to load images from the log.
+     */
     // Method to load images and videos from the log
     private void loadImagesFromLog() {
         images.clear();  // Clear any previously loaded images
@@ -423,6 +435,9 @@ public class LogsUpdateView {
     @FXML
     private VBox mediaContainer;  // Reference to the VBox containing the media
 
+    /**
+     * Method to update the media being displayed.
+     */
     private void updateMediaView() {
         if (currentIndex >= 0 && currentIndex < log.getImages().size()) {
             String currentFileName = log.getImages().get(currentIndex);  // Get the file name based on the index
@@ -545,6 +560,9 @@ public class LogsUpdateView {
         }
     }
 
+    /**
+     * Method to handle the navigation to the next image.
+     */
     // Method to handle clicking the Next button
     @FXML
     public void handleNext() {
@@ -554,7 +572,9 @@ public class LogsUpdateView {
             updateButtonState();  // Update the button states
         }
     }
-
+    /**
+     * Method to handle the navigation to the previous image.
+     */
     // Method to handle clicking the Back button
     @FXML
     public void handleBack() {
@@ -565,6 +585,9 @@ public class LogsUpdateView {
         }
     }
 
+    /**
+     * Method to update the button state based on the current index.
+     */
     private void updateButtonState() {
         backButton.setDisable(currentIndex == 0);  // Disable Back button if on the first item
         nextButton.setDisable(currentIndex == images.size() - 1);  // Disable Next button if on the last item

@@ -3,10 +3,19 @@ package com.example.demoplswork.model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+/**
+ * The ProfileDAO class implements the IProfileDAO interface and provides methods to perform CRUD operations on the user_profiles table in the database.
+ * It includes methods to insert a new profile, retrieve a profile by user ID, and update a profile.
+ * This class handles SQL exceptions and ensures the database connection is properly managed.
+ */
 public class ProfileDAO extends BaseDAO implements IProfileDAO {
 
-
+    /**
+     * @param userId The user ID associated with the profile
+     * @param bio The bio or description of the user
+     * @param photo The file path or URL of the user's profile photo
+     * @throws SQLException
+     */
     @Override
     public void insertProfile(int userId, String bio, String photo) throws SQLException {
         if (userId <= 0) {
@@ -28,6 +37,10 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
         }
     }
     // Method to check if a profile exists for the given user ID
+    /**
+     * @param userId The user ID to check
+     * @return true if a profile exists for the user ID, false otherwise
+     */
     private boolean profileExists(int userId) {
         String query = "SELECT COUNT(*) FROM user_profiles WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -42,7 +55,10 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
         return false;
     }
 
-
+    /**
+     * @param contact The Contact object to update with bio and photo
+     * @param userId The user ID to retrieve the profile for
+     */
     @Override
     public void getProfileByUserId(Contact contact, int userId) {
         if (userId <= 0) {
@@ -68,6 +84,12 @@ public class ProfileDAO extends BaseDAO implements IProfileDAO {
         }
     }
 
+    /**
+     * @param userId The user ID to update the profile for
+     * @param bio The new bio or description to set
+     * @param photo The new photo file path or URL to set
+     * @throws SQLException
+     */
     @Override
     public void updateProfile(int userId, String bio, String photo) throws SQLException {
         // Build the query dynamically based on which fields are non-null

@@ -15,9 +15,25 @@ import javafx.scene.text.Font;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * LogEventCell class is a custom JavaFX HBox component for displaying log events.
+ * It displays the user's profile image, username, event description, and timestamp.
+ * It has a constructor that takes a LogEvent object, username, profile image, likes, and comments.
+ * It sets up the layout and styling for the log event cell.
+ * It loads the user's profile image from a specified path.
+ * It creates labels for the username, event description, and timestamp.
+ * It aligns the timestamp to the right and sets the alignment for the HBox.
+ */
 public class LogEventCell extends HBox {
 
+    /**
+     * Constructor for LogEventCell class.
+     * @param event LogEvent object containing event details.
+     * @param username Username of the user who triggered the event.
+     * @param profileImage Profile image of the user.
+     * @param likes Number of likes for the event.
+     * @param comments Number of comments for the event.
+     */
     public LogEventCell(LogEvent event, String username, String profileImage, int likes, int comments) {
         super(10);  // Add spacing between elements
         setPadding(new Insets(10));
@@ -89,12 +105,20 @@ public class LogEventCell extends HBox {
 
         // Handle hover effect for comments label and icon
         EventHandler<MouseEvent> underlineHandler = new EventHandler<>() {
+            /**
+             * Handle mouse event to underline the comments label when hovered over.
+             * @param event MouseEvent object.
+             */
             @Override
             public void handle(MouseEvent event) {
                 commentsLabel.setStyle("-fx-underline: true;");
             }
         };
         EventHandler<MouseEvent> removeUnderlineHandler = new EventHandler<>() {
+            /**
+             * Handle mouse event to remove underline from the comments label when mouse exits.
+             * @param event MouseEvent object.
+             */
             @Override
             public void handle(MouseEvent event) {
                 commentsLabel.setStyle("-fx-underline: false;");
@@ -107,6 +131,10 @@ public class LogEventCell extends HBox {
         commentsLabel.setOnMouseExited(removeUnderlineHandler);
     }
 
+    /**
+     * Method to display a popup dialog with comments for the event.
+     * @param event LogEvent object containing event details.
+     */
     private void showCommentsPopup(LogEvent event) {
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Comments");

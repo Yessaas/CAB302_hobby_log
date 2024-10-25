@@ -21,7 +21,20 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Controller class for the Home view.
+ * HomeView class is the controller for the Home view.
+ * It handles the logic for the Home page of the application.
+ * It has methods to initialize the view, load logs for the user, and handle user interactions.
+ * It has a setApplication method to set the application instance.
+ * It has a goToExplore method to navigate to the Explore view.
+ * It has a goToLogs method to navigate to the Logs view.
+ * It has a showAccountMenu method to display the account menu.
+ * It has a goToAccount method to navigate to the Account view.
+ * It has an onLogout method to log out the user.
+ * It has a goToUpdateLogs method to navigate to the Update Logs view.
+ * It has a loadLogsForUser method to load logs for the logged-in user.
+ * It has a getRandomLog method to get a random log from the list of logs.
+ * It has a getFirstIncompleteToDoItem method to get the first incomplete to-do item from the log.
+ * It has a displayFeaturedLog method to display the log in the featured log section.
  */
 public class HomeView {
     private HelloApplication app;

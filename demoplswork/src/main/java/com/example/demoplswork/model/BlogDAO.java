@@ -3,9 +3,19 @@ package com.example.demoplswork.model;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * BlogDAO class is responsible for performing CRUD operations on the Blog table in the database.
+ * It extends the BaseDAO class to utilize the database connection and table creation methods.
+ * It implements the IBlogDAO interface to ensure the implementation of required methods.
+ * It has methods to insert a new blog, retrieve all blogs, and retrieve a blog by its ID.
+ * It uses prepared statements to prevent SQL injection attacks.
+ * It handles SQL exceptions and ensures the database connection is properly closed after operations.
+ */
 public class BlogDAO extends BaseDAO implements IBlogDAO {
 
+    /*
+        * Method to insert a new blog into the database.
+     */
     @Override
     public void insertBlog(Blog blog) throws SQLException {
         String query = "INSERT INTO blogs (user_id, title, description, image_path, tag) VALUES (?, ?, ?, ?, ?)";
@@ -19,6 +29,9 @@ public class BlogDAO extends BaseDAO implements IBlogDAO {
         }
     }
 
+    /*
+        * Method to retrieve all blogs by from the database.
+     */
     @Override
     public List<Blog> getAllBlogs() throws SQLException {
         String query = "SELECT * FROM blogs";

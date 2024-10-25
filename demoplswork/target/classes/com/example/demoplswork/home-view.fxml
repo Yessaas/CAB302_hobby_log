@@ -107,21 +107,22 @@
                 <Label text="Tasks: Completed" GridPane.rowIndex="0" GridPane.columnIndex="1" alignment="CENTER" prefHeight="40.0" prefWidth="480.0" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';-fx-background-color: #FFD643; -fx-border-color: black; -fx-border-width: 1;" />
                 <Label text="Projects Completed" GridPane.rowIndex="0" GridPane.columnIndex="2" alignment="CENTER" prefHeight="40.0" prefWidth="480.0" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';-fx-background-color: #FFD643; -fx-border-color: black; -fx-border-width: 1;" />
 
-                <!-- Row 1: Placeholder ListView for Data -->
-                <ListView fx:id="listView1" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="1" prefHeight="150.0" prefWidth="480.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" />
-                <ListView fx:id="listView2" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="1" prefHeight="150.0" prefWidth="480.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" />
-                <ListView fx:id="listView3" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.columnSpan="1" prefHeight="150.0" prefWidth="480.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" />
+                <!-- Row 1: Labels for displaying actual data -->
+                <Label fx:id="totalSpentLabel" GridPane.rowIndex="1" GridPane.columnIndex="0" alignment="CENTER" prefHeight="150.0" prefWidth="480.0" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-border-color: black; -fx-border-width: 1;" />
+                <Label fx:id="tasksCompletedLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" alignment="CENTER" prefHeight="150.0" prefWidth="480.0" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-border-color: black; -fx-border-width: 1;" />
+                <Label fx:id="projectsCompletedLabel" GridPane.rowIndex="1" GridPane.columnIndex="2" alignment="CENTER" prefHeight="150.0" prefWidth="480.0" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-border-color: black; -fx-border-width: 1;" />
 
                 <!-- Row 2: Second Row of Labels -->
                 <Label text="Materials Used:" GridPane.rowIndex="2" GridPane.columnIndex="0" alignment="CENTER" prefHeight="40.0" prefWidth="480.0" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';-fx-background-color: #FFD643; -fx-border-color: black; -fx-border-width: 1;" />
                 <Label text="Likes:" GridPane.rowIndex="2" GridPane.columnIndex="1" alignment="CENTER" prefHeight="40.0" prefWidth="480.0" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';-fx-background-color: #FFD643; -fx-border-color: black; -fx-border-width: 1;" />
-                <Label text="Followers:" GridPane.rowIndex="2" GridPane.columnIndex="2" alignment="CENTER" prefHeight="40.0" prefWidth="480.0" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';-fx-background-color: #FFD643; -fx-border-color: black; -fx-border-width: 1;" />
+                <Label text="Comments:" GridPane.rowIndex="2" GridPane.columnIndex="2" alignment="CENTER" prefHeight="40.0" prefWidth="480.0" style="-fx-font-size: 18px; -fx-font-family: 'Roboto';-fx-background-color: #FFD643; -fx-border-color: black; -fx-border-width: 1;" />
 
-                <!-- Row 3: Placeholder ListView for Additional Data -->
-                <ListView fx:id="listView4" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="1" prefHeight="150.0" prefWidth="480.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" />
-                <ListView fx:id="listView5" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="1" prefHeight="150.0" prefWidth="480.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" />
-                <ListView fx:id="listView6" GridPane.rowIndex="3" GridPane.columnIndex="2" GridPane.columnSpan="1" prefHeight="150.0" prefWidth="480.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 1;" />
+                <!-- Row 3: Labels for displaying actual data -->
+                <Label fx:id="materialsUsedLabel" GridPane.rowIndex="3" GridPane.columnIndex="0" alignment="CENTER" prefHeight="150.0" prefWidth="480.0" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-border-color: black; -fx-border-width: 1;" />
+                <Label fx:id="totalLikesLabel" GridPane.rowIndex="3" GridPane.columnIndex="1" alignment="CENTER" prefHeight="150.0" prefWidth="480.0" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-border-color: black; -fx-border-width: 1;" />
+                <Label fx:id="totalCommentsLabel" GridPane.rowIndex="3" GridPane.columnIndex="2" alignment="CENTER" prefHeight="150.0" prefWidth="480.0" style="-fx-font-size: 24px; -fx-font-family: 'Roboto'; -fx-border-color: black; -fx-border-width: 1;" />
             </GridPane>
+
         </VBox>
     </ScrollPane>
 </VBox>
